@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="liteshop-common" />
+        <module name="liteshop-core" />
+        <module name="liteshop-db" />
+        <module name="liteshop-admin-api" />
+        <module name="liteshop-web-api" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="liteshop-admin-api" options="-parameters" />
+      <module name="liteshop-common" options="-parameters" />
+      <module name="liteshop-core" options="-parameters" />
+      <module name="liteshop-db" options="-parameters" />
+      <module name="liteshop-web-api" options="-parameters" />
+    </option>
+  </component>
+</project>

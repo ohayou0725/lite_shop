@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ohayou.liteshop.dao.MallCouponMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ohayou.liteshop.entity.MallCoupon">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="detail" property="detail" />
+        <result column="total" property="total" />
+        <result column="discount" property="discount" />
+        <result column="min" property="min" />
+        <result column="limit" property="limit" />
+        <result column="status" property="status" />
+        <result column="type" property="type" />
+        <result column="time_type" property="timeType" />
+        <result column="days" property="days" />
+        <result column="strt_time" property="strtTime" />
+        <result column="end_time" property="endTime" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, detail, total, discount, min, limit, status, type, time_type, days, strt_time, end_time, create_time, update_time
+    </sql>
+
+</mapper>

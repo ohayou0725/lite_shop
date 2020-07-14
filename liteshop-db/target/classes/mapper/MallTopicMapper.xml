@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ohayou.liteshop.dao.MallTopicMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ohayou.liteshop.entity.MallTopic">
+        <id column="id" property="id" />
+        <result column="title" property="title" />
+        <result column="subtitle" property="subtitle" />
+        <result column="content" property="content" />
+        <result column="price" property="price" />
+        <result column="read_count" property="readCount" />
+        <result column="imgs" property="imgs" />
+        <result column="sort" property="sort" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="deleted" property="deleted" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, title, subtitle, content, price, read_count, imgs, sort, create_time, update_time, deleted
+    </sql>
+
+</mapper>

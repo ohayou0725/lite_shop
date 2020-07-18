@@ -45,6 +45,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${ignore.urls}")
     private String[] urls;
 
+    @Value("${admin.base_url}")
+    private String baseUrl;
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -57,8 +60,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(urls)
                 .permitAll()
-                .anyRequest()
+                .antMatchers(baseUrl + "/**")
                 .authenticated()
+                .anyRequest()
+                .access("@rbacService.hasPermission(request,authentication)")
                 .and()
                 .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()

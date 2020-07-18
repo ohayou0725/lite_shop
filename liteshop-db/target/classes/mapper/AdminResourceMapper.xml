@@ -16,7 +16,14 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, category_id, name, url, desc, create_time, update_time, deleted
+        re.id, re.category_id, re.name, re.url, re.desc, re.create_time, re.update_time, re.deleted
     </sql>
+    <select id="findResourceByRole" resultType="com.ohayou.liteshop.entity.AdminResource">
+        select <include refid="Base_Column_List" />
+        from admin_resource re
+        join admin_role_resource_relation arrr on re.id = arrr.resource_id
+        join admin_role r on r.id = arrr.role_id
+        where r.id= #{id}
+    </select>
 
 </mapper>

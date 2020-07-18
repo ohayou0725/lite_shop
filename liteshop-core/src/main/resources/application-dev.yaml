@@ -43,3 +43,5 @@ keyPrefix:
   expireTime:
     invalidToken: 900
 
+admin:
+  base_url: /api/admin

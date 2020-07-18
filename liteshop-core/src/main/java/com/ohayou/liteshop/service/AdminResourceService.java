@@ -2,6 +2,10 @@ package com.ohayou.liteshop.service;
 
 import com.ohayou.liteshop.entity.AdminResource;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ohayou.liteshop.entity.AdminRole;
+import com.ohayou.liteshop.entity.AdminUser;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +17,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface AdminResourceService extends IService<AdminResource> {
 
+    List<AdminResource> findResourceListByUser(AdminUser user);
+
+    List<AdminResource> findResourceListByRoleId(Long roleId);
 }

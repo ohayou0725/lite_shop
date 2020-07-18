@@ -22,7 +22,7 @@ public class GenerateCode {
 
         GlobalConfig gc = new GlobalConfig();
         String projectPath = System.getProperty("user.dir");
-        gc.setOutputDir(projectPath + "/liteshop-db/src/main/java");
+        gc.setOutputDir("/Users/duo"+ "/liteshop-db/src/main/java");
         gc.setAuthor("ohayou");
         gc.setOpen(false);
         gc.setServiceName("%sService");

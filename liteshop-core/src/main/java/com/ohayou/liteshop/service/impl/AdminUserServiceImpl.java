@@ -3,6 +3,7 @@ package com.ohayou.liteshop.service.impl;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.ohayou.liteshop.cache.RedisService;
 import com.ohayou.liteshop.cache.cachekey.InvalidTokenKey;
+import com.ohayou.liteshop.component.RBACService;
 import com.ohayou.liteshop.entity.AdminRole;
 import com.ohayou.liteshop.entity.AdminUser;
 import com.ohayou.liteshop.dao.AdminUserMapper;
@@ -63,6 +64,7 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
     AdminMenuService adminMenuService;
 
 
+
     @Value("${keyPrefix.expireTime.invalidToken}")
     private long expireTime;
 
@@ -115,4 +117,6 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
         redisService.set(invalidTokenKey.getPrefix(),userDetails.getUsername(), expireTime);
         authentication.setAuthenticated(false);
     }
+
+
 }

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  * </p>
  *
  * @author ohayou
- * @since 2020-07-12
+ * @since 2020-07-15
  */
 @Service
 public class MallAftersaleServiceImpl extends ServiceImpl<MallAftersaleMapper, MallAftersale> implements MallAftersaleService {

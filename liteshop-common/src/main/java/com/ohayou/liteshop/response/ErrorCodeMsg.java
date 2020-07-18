@@ -13,6 +13,12 @@ import org.springframework.validation.BindException;
 public enum ErrorCodeMsg {
 
     SERVER_ERROR(99999,"系统异常"),
+    UNAUTHENTICATED_CODE(400200),
+    UNAUTHENTICATED_ERROR(400201,"认证失败，用户名或密码有误"),
+    USER_NOT_ENABLED_ERROR(400202,"认证失败，该账号不可用"),
+    INVALID_TOKEN(400203,"无效的token,拒绝访问"),
+    TOKEN_EXPIRED(400204,"token已过期，请重新登录"),
+    ACCESS_DENIED_ERROR(400300,"权限不足，拒绝访问"),
     PARAMETER_VALIDATED_ERROR(400101);
 
     private int code;

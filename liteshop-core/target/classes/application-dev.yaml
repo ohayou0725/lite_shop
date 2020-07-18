@@ -1,0 +1,45 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost/lite_shop?useUnicode=true&useSSL=false&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  redis:
+    database: 0
+    password: 2633
+    port: 6379
+    host: 127.0.0.1
+
+
+
+
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+
+  global-config:
+    db-config:
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+
+logging:
+  level:
+    com.ohayou.liteshop.dao: debug
+
+
+jwt:
+  tokenHeader: Authorization #JWT存储的请求头
+  secret: mySecret #JWT加解密使用的密钥
+  expiration: 1800 #JWT的超期限时间(60*60*24)
+  refresh_time: 900
+  tokenHead: Bearer  #JWT负载中拿到开头
+
+keyPrefix:
+  expireTime:
+    invalidToken: 900
+

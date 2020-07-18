@@ -5,3 +5,6 @@ spring:
 server:
   servlet:
     context-path: /api/admin/
+
+
+

@@ -2,6 +2,9 @@ package com.ohayou.liteshop.dao;
 
 import com.ohayou.liteshop.entity.AdminRole;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.ohayou.liteshop.entity.AdminUser;
+
+import java.util.List;
 
 /**
  * <p>
@@ -10,8 +13,9 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * </p>
  *
  * @author ohayou
- * @since 2020-07-12
+ * @since 2020-07-18
  */
 public interface AdminRoleMapper extends BaseMapper<AdminRole> {
 
+    List<AdminRole> findListByUser(AdminUser user);
 }

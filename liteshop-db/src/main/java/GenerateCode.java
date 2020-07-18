@@ -62,8 +62,7 @@ public class GenerateCode {
         strategyConfig.setNaming(NamingStrategy.underline_to_camel);
         strategyConfig.setColumnNaming(NamingStrategy.underline_to_camel);
 //        strategyConfig.setInclude("litemall_user");
-        strategyConfig.setTablePrefix("mem_");
-        strategyConfig.setLogicDeleteFieldName("deleted");
+//        strategyConfig.setTablePrefix("mem_");
 
         TableFill addTime = new TableFill("create_time", FieldFill.INSERT);
         TableFill updateTime = new TableFill("update_time", FieldFill.UPDATE);

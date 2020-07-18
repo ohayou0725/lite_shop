@@ -2,6 +2,11 @@ package com.ohayou.liteshop.service;
 
 import com.ohayou.liteshop.entity.AdminUser;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ohayou.liteshop.vo.AdminUserVo;
+import org.springframework.security.core.Authentication;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * <p>
@@ -9,8 +14,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * </p>
  *
  * @author ohayou
- * @since 2020-07-12
+ * @since 2020-07-15
  */
 public interface AdminUserService extends IService<AdminUser> {
 
+    AdminUserVo login(AdminUserVo adminUserVo, HttpServletRequest request, HttpServletResponse response);
+
+    void logout(Authentication authentication, HttpServletRequest request);
 }

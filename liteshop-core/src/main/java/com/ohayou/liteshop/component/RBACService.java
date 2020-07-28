@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 @Component("rbacService")
 public class RBACService {
 
-    @Value("${admin.base_url}")
+    @Value("${server.servlet.context-path}")
     private String baseUrl;
 
     private AntPathMatcher antPathMatcher = new AntPathMatcher();
@@ -33,7 +33,7 @@ public class RBACService {
             String requestURI = request.getRequestURI();
             return userDetails.getAuthorities().stream()
                     .anyMatch(grantedAuthority -> {
-                        return antPathMatcher.matchStart("/api/admin" + grantedAuthority.getAuthority(), requestURI);
+                        return antPathMatcher.matchStart(baseUrl + grantedAuthority.getAuthority(), requestURI);
                     });
         }
         return false;

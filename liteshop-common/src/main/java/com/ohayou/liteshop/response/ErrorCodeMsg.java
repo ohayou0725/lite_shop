@@ -13,6 +13,7 @@ import org.springframework.validation.BindException;
 public enum ErrorCodeMsg {
 
     SERVER_ERROR(99999,"系统异常"),
+    USER_INFO_ERROR(400101,"获取用户信息失败"),
     UNAUTHENTICATED_CODE(400200),
     UNAUTHENTICATED_ERROR(400201,"认证失败，用户名或密码有误"),
     USER_NOT_ENABLED_ERROR(400202,"认证失败，该账号不可用"),

@@ -1,11 +1,10 @@
 package com.ohayou.liteshop.security;
 
-import cn.hutool.http.HttpStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ohayou.liteshop.exception.PermissionDeniedException;
 import com.ohayou.liteshop.response.ErrorCodeMsg;
 import com.ohayou.liteshop.response.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +26,7 @@ public class MyAccessDeniedHandler implements org.springframework.security.web.a
     public void handle(HttpServletRequest httpServletRequest, HttpServletResponse response, AccessDeniedException e) throws IOException, ServletException {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
-        response.setStatus(HttpStatus.HTTP_FORBIDDEN);
+        response.setStatus(HttpStatus.FORBIDDEN.value());
         response.getWriter().println(objectMapper.writeValueAsString(Result.error(ErrorCodeMsg.ACCESS_DENIED_ERROR.getCode(),ErrorCodeMsg.ACCESS_DENIED_ERROR.getMsg())));
         response.getWriter().flush();
     }

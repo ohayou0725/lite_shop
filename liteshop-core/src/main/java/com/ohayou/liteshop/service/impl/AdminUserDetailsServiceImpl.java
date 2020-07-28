@@ -1,6 +1,8 @@
 package com.ohayou.liteshop.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.ohayou.liteshop.cache.RedisService;
+import com.ohayou.liteshop.cache.cachekey.AdminUserDetailsKey;
 import com.ohayou.liteshop.entity.AdminResource;
 import com.ohayou.liteshop.entity.AdminUser;
 import com.ohayou.liteshop.exception.UnAuthenticationException;
@@ -11,15 +13,12 @@ import com.ohayou.liteshop.service.AdminUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author liyan
@@ -34,9 +33,19 @@ public class AdminUserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private AdminResourceService adminResourceService;
 
+    @Autowired
+    private RedisService redisService;
+
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+        //先从redis里获取用户信息，如果没有则进行数据库查询
+        AdminUserDetailsKey adminUserDetailsKey = new AdminUserDetailsKey(s);
+        Object result = redisService.get(adminUserDetailsKey.getPrefix());
+        if (null != result) {
+            return (AdminUserDetails) result;
+        }
+        //没有缓存则进行数据库查询
         AdminUser user = adminUserService.getOne(new LambdaQueryWrapper<AdminUser>().eq(AdminUser::getUsername, s));
         if (user == null) {
             throw new UnAuthenticationException(ErrorCodeMsg.UNAUTHENTICATED_ERROR);
@@ -46,6 +55,7 @@ public class AdminUserDetailsServiceImpl implements UserDetailsService {
         adminUserDetails.setUsername(user.getUsername());
         adminUserDetails.setPassword(user.getPassword());
         adminUserDetails.setIsEnabled(0);
+        adminUserDetails.setAvatar(user.getAvatar());
         adminUserDetails.setLastLoginTime(user.getLastLoginTime());
 //        List<SimpleGrantedAuthority> collect = adminResourceService.findResourceListByUser(user).stream()
 //                .map(resource -> {
@@ -57,8 +67,13 @@ public class AdminUserDetailsServiceImpl implements UserDetailsService {
         String[] resources = resource.stream()
                 .map(AdminResource::getUrl)
                 .toArray(String[]::new);
+
         List<GrantedAuthority> authorityList = AuthorityUtils.createAuthorityList(resources);
         adminUserDetails.setAuthorities(authorityList);
+
+        //将结果存入到redis
+        redisService.set(adminUserDetailsKey.getPrefix(),adminUserDetails);
+
         return adminUserDetails;
     }
 }

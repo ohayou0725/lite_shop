@@ -3,7 +3,6 @@ package com.ohayou.liteshop.service.impl;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.ohayou.liteshop.cache.RedisService;
 import com.ohayou.liteshop.cache.cachekey.InvalidTokenKey;
-import com.ohayou.liteshop.component.RBACService;
 import com.ohayou.liteshop.entity.AdminRole;
 import com.ohayou.liteshop.entity.AdminUser;
 import com.ohayou.liteshop.dao.AdminUserMapper;
@@ -12,6 +11,7 @@ import com.ohayou.liteshop.exception.UnAuthenticationException;
 import com.ohayou.liteshop.response.ErrorCodeMsg;
 import com.ohayou.liteshop.security.AdminUserDetails;
 import com.ohayou.liteshop.security.JWTTokenUtil;
+import com.ohayou.liteshop.security.SecurityUtil;
 import com.ohayou.liteshop.service.AdminMenuService;
 import com.ohayou.liteshop.service.AdminRoleService;
 import com.ohayou.liteshop.service.AdminUserService;
@@ -69,7 +69,7 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
     private long expireTime;
 
     @Override
-    public AdminUserVo login(AdminUserVo adminUserVo, HttpServletRequest request , HttpServletResponse response) {
+    public boolean login(AdminUserVo adminUserVo, HttpServletRequest request , HttpServletResponse response) {
         if (adminUserVo.getUsername() == null || adminUserVo.getPassword() == null) {
             throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
         }
@@ -84,26 +84,16 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
                 = new UsernamePasswordAuthenticationToken(user,null,user.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
         String token = jwtTokenUtil.generateToken(user);
-        AdminUser adminUser1 = new AdminUser();
-        adminUser1.setId(user.getId());
-        List<AdminRole> adminRoles = adminRoleService.roleListByUser(adminUser1);
-
-        List<String> collect = adminRoles.stream()
-                .map(AdminRole::getRoleName)
-                .collect(Collectors.toList());
-        adminUserVo.setRole(collect);
-        adminUserVo.setPassword(null);
-        adminUserVo.setAvatar(user.getAvatar());
-        adminUserVo.setLastLoginTime(user.getLastLoginTime());
-        adminUserVo.setMenu(adminMenuService.ListAdminMenuTree(adminUser1));
         response.setHeader("Access-Token",token);
-        //更新用户上次登录时间和ip
         AdminUser adminUser = new AdminUser();
         adminUser.setLastLoginTime(LocalDateTime.now());
         adminUser.setLastLoginIp(request.getRemoteHost());
         this.update(adminUser,new UpdateWrapper<AdminUser>().lambda().eq(AdminUser::getUsername,user.getUsername()));
-        return adminUserVo;
+        return true;
+
     }
+
+
 
     @Override
     public void logout(Authentication authentication, HttpServletRequest request) {
@@ -116,6 +106,29 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
         InvalidTokenKey invalidTokenKey = new InvalidTokenKey(token,expireTime);
         redisService.set(invalidTokenKey.getPrefix(),userDetails.getUsername(), expireTime);
         authentication.setAuthenticated(false);
+    }
+
+    @Override
+    public AdminUserVo getUserInfo(Authentication authentication) {
+        AdminUserDetails adminUser = SecurityUtil.getAdminUser(authentication);
+        if (adminUser == null) {
+            throw new GlobalException(ErrorCodeMsg.USER_INFO_ERROR);
+        }
+        AdminUser currentAdminUser = new AdminUser();
+        currentAdminUser.setId(adminUser.getId());
+        List<AdminRole> adminRoles = adminRoleService.roleListByUser(currentAdminUser);
+
+        List<String> collect = adminRoles.stream()
+                .map(AdminRole::getRoleName)
+                .collect(Collectors.toList());
+        AdminUserVo adminUserVo = new AdminUserVo();
+        adminUserVo.setUsername(adminUser.getUsername());
+        adminUserVo.setRole(collect);
+        adminUserVo.setPassword(null);
+        adminUserVo.setAvatar(adminUser.getAvatar());
+        adminUserVo.setLastLoginTime(adminUser.getLastLoginTime());
+        adminUserVo.setMenu(adminMenuService.ListAdminMenuTree(currentAdminUser));
+        return adminUserVo;
     }
 
 

@@ -1,7 +1,11 @@
 package com.ohayou.liteshop.service;
 
+import com.ohayou.liteshop.dto.MemUserQueryDto;
 import com.ohayou.liteshop.entity.MemUser;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ohayou.liteshop.response.Result;
+
+import java.util.Map;
 
 /**
  * <p>
@@ -14,4 +18,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface MemUserService extends IService<MemUser> {
 
+    Result queryList(MemUserQueryDto memUserQueryDto ,Map<String, Object> queryParam);
 }

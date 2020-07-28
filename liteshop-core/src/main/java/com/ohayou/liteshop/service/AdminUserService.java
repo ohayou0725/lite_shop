@@ -18,7 +18,9 @@ import javax.servlet.http.HttpServletResponse;
  */
 public interface AdminUserService extends IService<AdminUser> {
 
-    AdminUserVo login(AdminUserVo adminUserVo, HttpServletRequest request, HttpServletResponse response);
+    boolean login(AdminUserVo adminUserVo, HttpServletRequest request, HttpServletResponse response);
 
     void logout(Authentication authentication, HttpServletRequest request);
+
+    AdminUserVo getUserInfo(Authentication authentication);
 }

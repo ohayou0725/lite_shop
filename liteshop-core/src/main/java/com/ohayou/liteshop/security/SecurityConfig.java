@@ -58,12 +58,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(urls)
-                .permitAll()
-                .antMatchers(baseUrl + "/**")
-                .authenticated()
-                .anyRequest()
-                .access("@rbacService.hasPermission(request,authentication)")
+                .antMatchers(urls).permitAll()
+                .and()
+                .authorizeRequests()
+                .antMatchers("/user/**","/user/logout").access("authenticated")
+                .and()
+                .authorizeRequests()
+                .anyRequest().access("@rbacService.hasPermission(request,authentication)")
                 .and()
                 .addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
@@ -88,12 +89,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    //跨域配置
     @Bean
     public CorsConfigurationSource configurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.addAllowedHeader("*");
         corsConfiguration.addAllowedMethod("*");
         corsConfiguration.addAllowedOrigin("*");
+        corsConfiguration.addExposedHeader("Access-Token");
+        corsConfiguration.addExposedHeader("Refresh-Token");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**",corsConfiguration); //配置允许跨域访问的url
         return source;

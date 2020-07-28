@@ -12,6 +12,9 @@ import java.util.Collection;
  */
 public class AdminUserDetails implements UserDetails {
 
+    public AdminUserDetails() {
+    }
+
     private long id;
 
     private String username;

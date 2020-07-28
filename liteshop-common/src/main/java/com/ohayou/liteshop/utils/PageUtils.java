@@ -18,7 +18,7 @@ public class PageUtils implements Serializable {
     /**
      * 每页记录数
      */
-    private int pageSize;
+        private int pageSize;
     /**
      * 总页数
      */

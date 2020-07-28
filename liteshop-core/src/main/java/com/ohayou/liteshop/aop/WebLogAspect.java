@@ -110,7 +110,7 @@ public class WebLogAspect {
         webLog.setParameter(getParameter(method,pjp.getArgs()));
         LOGGER.info("{}",objectMapper.writeValueAsString(webLog));
 
-        adminLogService.save(adminLog);
+//        adminLogService.save(adminLog);
 
         return result;
     }

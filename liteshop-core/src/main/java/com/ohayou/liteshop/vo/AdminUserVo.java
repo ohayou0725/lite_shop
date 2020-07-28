@@ -14,7 +14,7 @@ import java.util.List;
 public class AdminUserVo {
 
     @NotBlank(message = "用户名不能为空")
-    @Length(min = 5, max = 16, message = "用户名必须为5都16位之间")
+    @Length(min = 5, max = 16, message = "用户名必须为5到16位之间")
     private String username;
 
 

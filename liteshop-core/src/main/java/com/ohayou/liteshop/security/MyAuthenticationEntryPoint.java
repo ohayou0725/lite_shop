@@ -1,11 +1,11 @@
 package com.ohayou.liteshop.security;
 
-import cn.hutool.http.HttpStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ohayou.liteshop.exception.UnAuthenticationException;
 import com.ohayou.liteshop.response.ErrorCodeMsg;
 import com.ohayou.liteshop.response.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -37,7 +37,7 @@ public class MyAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
-        response.setStatus(HttpStatus.HTTP_UNAUTHORIZED);
+        response.setStatus(HttpStatus.UNAUTHORIZED.value());
         if (e instanceof UnAuthenticationException) {
             UnAuthenticationException ex = (UnAuthenticationException) e;
             response.getWriter().println(objectMapper.writeValueAsString(Result.error(ex.getErrorCodeMsg())));

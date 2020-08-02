@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 
@@ -13,7 +14,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author ohayou
- * @since 2020-07-18
+ * @since 2020-07-29
  */
 public class MemAddress implements Serializable {
 
@@ -65,6 +66,7 @@ public class MemAddress implements Serializable {
     /**
      * 逻辑删除 1-已删除，0-未删除
      */
+    @TableLogic
     private Integer deleted;
 
     public Long getId() {

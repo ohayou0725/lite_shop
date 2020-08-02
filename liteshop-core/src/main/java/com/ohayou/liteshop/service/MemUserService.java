@@ -1,11 +1,15 @@
 package com.ohayou.liteshop.service;
 
-import com.ohayou.liteshop.dto.MemUserQueryDto;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.ohayou.liteshop.dto.MemAddrDto;
+import com.ohayou.liteshop.dto.MemCollectDto;
+import com.ohayou.liteshop.dto.MemUserDto;
+import com.ohayou.liteshop.entity.MemAddress;
+import com.ohayou.liteshop.entity.MemCollect;
 import com.ohayou.liteshop.entity.MemUser;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.ohayou.liteshop.response.Result;
-
-import java.util.Map;
+import com.ohayou.liteshop.utils.PageQuery;
+import com.ohayou.liteshop.utils.PageUtils;
 
 /**
  * <p>
@@ -18,5 +22,10 @@ import java.util.Map;
  */
 public interface MemUserService extends IService<MemUser> {
 
-    Result queryList(MemUserQueryDto memUserQueryDto ,Map<String, Object> queryParam);
+    PageUtils queryPage(MemUserDto memUserDto, IPage<MemUser> page);
+
+    boolean changeStatus(MemUserDto memUserDto);
+
+    Long getMemIdByMobile(String mobile);
+
 }

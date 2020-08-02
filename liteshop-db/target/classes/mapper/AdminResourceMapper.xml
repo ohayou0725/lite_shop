@@ -23,7 +23,7 @@
         from admin_resource re
         join admin_role_resource_relation arrr on re.id = arrr.resource_id
         join admin_role r on r.id = arrr.role_id
-        where r.id= #{id}
+        where r.id= #{id} and re.deleted = 0
     </select>
 
 </mapper>

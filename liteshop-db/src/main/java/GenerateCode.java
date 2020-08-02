@@ -61,6 +61,8 @@ public class GenerateCode {
         StrategyConfig strategyConfig = new StrategyConfig();
         strategyConfig.setNaming(NamingStrategy.underline_to_camel);
         strategyConfig.setColumnNaming(NamingStrategy.underline_to_camel);
+        strategyConfig.setLogicDeleteFieldName("deleted");
+
 //        strategyConfig.setInclude("litemall_user");
 //        strategyConfig.setTablePrefix("mem_");
 

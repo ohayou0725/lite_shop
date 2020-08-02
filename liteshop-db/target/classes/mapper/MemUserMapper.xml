@@ -23,4 +23,5 @@
         id, password, mobile, nickname, gender, birthday, avatar, rank, status, create_time, update_time, deleted
     </sql>
 
+
 </mapper>

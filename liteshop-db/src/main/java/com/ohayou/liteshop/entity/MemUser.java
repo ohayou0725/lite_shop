@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 
@@ -15,7 +16,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author ohayou
- * @since 2020-07-18
+ * @since 2020-07-29
  */
 public class MemUser implements Serializable {
 
@@ -63,7 +64,7 @@ public class MemUser implements Serializable {
     private String rank;
 
     /**
-     * 用户状态 1-可用，2-不可用
+     * 用户状态 1-可用，0-不可用
      */
     private Integer status;
 
@@ -82,6 +83,7 @@ public class MemUser implements Serializable {
     /**
      * 逻辑删除 0-未删除,1-已删除
      */
+    @TableLogic
     private Integer deleted;
 
     public Long getId() {

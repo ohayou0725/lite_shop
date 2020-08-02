@@ -28,8 +28,8 @@ public class Result {
 
     private boolean success;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private LocalDateTime dateTime = LocalDateTime.now();
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private LocalDateTime timestamp = LocalDateTime.now();
 
     private Map<String, Object> data;
 
@@ -121,12 +121,12 @@ public class Result {
         this.success = success;
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
+    public LocalDateTime getTimestamp() {
+        return timestamp;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
     }
 
     public int getCode() {

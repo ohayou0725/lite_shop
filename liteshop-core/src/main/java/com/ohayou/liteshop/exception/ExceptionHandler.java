@@ -17,39 +17,28 @@ import javax.naming.AuthenticationException;
 
 @RestControllerAdvice
 public class ExceptionHandler {
-    
-    @org.springframework.web.bind.annotation.ExceptionHandler(GlobalException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(Exception.class)
     public Result globalExceptionHandler(Exception exception) {
-        GlobalException e = (GlobalException)exception;
-       return Result.error(e.getErrorCodeMsg());
+        if (exception instanceof GlobalException) {
+            GlobalException e = (GlobalException)exception;
+            return Result.error(e.getErrorCodeMsg());
+        }
+        if (exception instanceof BindException) {
+            BindException e = (BindException)exception;
+            String errorMsg = e.getAllErrors().get(0).getDefaultMessage();
+            e.printStackTrace();
+            return Result.parameterError(errorMsg);
+        }
+        if (exception instanceof MethodArgumentNotValidException) {
+            MethodArgumentNotValidException e = (MethodArgumentNotValidException)exception;
+            String errorMsg = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+            return Result.parameterError(errorMsg);
+        }
+        exception.printStackTrace();
+        return Result.error(ErrorCodeMsg.SERVER_ERROR);
     }
 
 
-    @org.springframework.web.bind.annotation.ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Result BindExceptionHandler(MethodArgumentNotValidException e) {
-        String errorMsg = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
-        return Result.parameterError(errorMsg);
-    }
 
-//    @org.springframework.web.bind.annotation.ExceptionHandler(UnAuthenticationException.class)
-//    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-//    public Result AuthenticationExceptionHandler(Exception e) {
-//        if (e instanceof UnAuthenticationException) {
-//            UnAuthenticationException unAuthenticationException = (UnAuthenticationException)e;
-//            return Result.error(unAuthenticationException.getErrorCodeMsg());
-//        }
-//        throw new GlobalException(ErrorCodeMsg.SERVER_ERROR);
-//    }
-//
-//    @org.springframework.web.bind.annotation.ExceptionHandler(PermissionDeniedException.class)
-//    @ResponseStatus(HttpStatus.FORBIDDEN)
-//    public Result AccessDeniedHandler(Exception e) {
-//        if (e instanceof PermissionDeniedException) {
-//            PermissionDeniedException permissionDeniedException = (PermissionDeniedException) e;
-//            return Result.error(permissionDeniedException.getErrorCodeMsg());
-//        }
-//        throw new GlobalException(ErrorCodeMsg.SERVER_ERROR);
-//    }
 }

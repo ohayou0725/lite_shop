@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 
@@ -14,7 +15,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author ohayou
- * @since 2020-07-18
+ * @since 2020-07-29
  */
 public class MallCoupon implements Serializable {
 
@@ -79,7 +80,7 @@ public class MallCoupon implements Serializable {
     /**
      * 开始领取时间
      */
-    private LocalDateTime strtTime;
+    private LocalDateTime startTime;
 
     /**
      * 结束领取时间
@@ -91,6 +92,12 @@ public class MallCoupon implements Serializable {
 
     @TableField(fill = FieldFill.UPDATE)
     private LocalDateTime updateTime;
+
+    /**
+     * 逻辑删除
+     */
+    @TableLogic
+    private Integer deleted;
 
     public Long getId() {
         return id;
@@ -169,12 +176,12 @@ public class MallCoupon implements Serializable {
     public void setDays(Integer days) {
         this.days = days;
     }
-    public LocalDateTime getStrtTime() {
-        return strtTime;
+    public LocalDateTime getStartTime() {
+        return startTime;
     }
 
-    public void setStrtTime(LocalDateTime strtTime) {
-        this.strtTime = strtTime;
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
     }
     public LocalDateTime getEndTime() {
         return endTime;
@@ -197,6 +204,13 @@ public class MallCoupon implements Serializable {
     public void setUpdateTime(LocalDateTime updateTime) {
         this.updateTime = updateTime;
     }
+    public Integer getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Integer deleted) {
+        this.deleted = deleted;
+    }
 
     @Override
     public String toString() {
@@ -212,10 +226,11 @@ public class MallCoupon implements Serializable {
             ", type=" + type +
             ", timeType=" + timeType +
             ", days=" + days +
-            ", strtTime=" + strtTime +
+            ", startTime=" + startTime +
             ", endTime=" + endTime +
             ", createTime=" + createTime +
             ", updateTime=" + updateTime +
+            ", deleted=" + deleted +
         "}";
     }
 }

@@ -1,5 +1,14 @@
 package com.ohayou.liteshop.dto;
 
+import com.ohayou.validate.MobileValidate;
+import com.ohayou.validate.Number;
+import org.hibernate.validator.constraints.Range;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Pattern;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -8,19 +17,39 @@ import java.time.LocalDateTime;
  */
 
 
-public class MemUserQueryDto {
+public class MemUserDto {
+    private Long id;
 
     private String nickname;
 
+    @MobileValidate
     private String mobile;
 
     private String gender;
 
     private String rank;
 
+    @Number
     private String status;
 
-    private LocalDateTime createTime;
+//    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate registerDate;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public LocalDate getRegisterDate() {
+        return registerDate;
+    }
+
+    public void setRegisterDate(LocalDate registerDate) {
+        this.registerDate = registerDate;
+    }
 
     public String getNickname() {
         return nickname;
@@ -62,11 +91,4 @@ public class MemUserQueryDto {
         this.status = status;
     }
 
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
 }

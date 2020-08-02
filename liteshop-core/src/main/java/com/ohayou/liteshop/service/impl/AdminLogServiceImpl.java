@@ -43,20 +43,21 @@ public class AdminLogServiceImpl extends ServiceImpl<AdminLogMapper, AdminLog> i
         //构造查询条件
         LambdaQueryWrapper<AdminLog> adminLogQueryWrapper = new LambdaQueryWrapper<AdminLog>()
                 .apply(null != userLogDto.getOperatingTime(), DateTimeUtil.sqlDateFormat("create_time") + " = {0}",userLogDto.getOperatingTime())
-                .eq(null != userLogDto.getStatus(),AdminLog::getStatus,userLogDto.getStatus())
+                .eq(StringUtils.isNotBlank(userLogDto.getStatus()),AdminLog::getStatus,userLogDto.getStatus())
                 .eq(StringUtils.isNotBlank(userLogDto.getAdmin()),AdminLog::getAdmin,userLogDto.getAdmin());
 
-        page.setTotal(this.count(adminLogQueryWrapper));
+//        page.setTotal(this.count(adminLogQueryWrapper));
         this.page(page,adminLogQueryWrapper);
 
         PageUtils pageUtils = new PageUtils(page);
 
         //entity转换为dto
-        if (page.getRecords() != null || page.getRecords().size() > 0) {
+        if (page.getRecords() != null && page.getRecords().size() > 0) {
             List<AdminLog> collect = page.getRecords().stream()
                     .map(adminLog -> {
                         AdminLogDto adminLogDto = new AdminLogDto();
                         BeanUtils.copyProperties(adminLog, adminLogDto);
+                        adminLogDto.setStatus(String.valueOf(adminLog.getStatus()));
                         return adminLog;
                     }).collect(Collectors.toList());
 

@@ -13,7 +13,7 @@ public class DateTimeUtil {
 
     public static String SQL_DATE_FORMAT = "'%Y-%m-%d'";
 
-    public static String formatForSql(LocalDate localDate) {
+    public static String formatLocalDateForSql(LocalDate localDate) {
         if (localDate == null) {
             return "";
         }

@@ -1,7 +1,10 @@
 package com.ohayou.liteshop.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.ohayou.liteshop.dto.MemHistoryDto;
 import com.ohayou.liteshop.entity.MemHistory;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ohayou.liteshop.utils.PageUtils;
 
 /**
  * <p>
@@ -12,5 +15,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2020-07-15
  */
 public interface MemHistoryService extends IService<MemHistory> {
+
+    PageUtils historyQueryPage(MemHistoryDto historyDto, IPage<MemHistory> page);
+
 
 }

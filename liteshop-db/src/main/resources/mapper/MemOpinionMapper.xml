@@ -6,7 +6,7 @@
     <resultMap id="BaseResultMap" type="com.ohayou.liteshop.entity.MemOpinion">
         <id column="id" property="id" />
         <result column="user_id" property="userId" />
-        <result column="opinion_type_id" property="opinionTypeId" />
+        <result column="opinion_type_id" property="opinionType" />
         <result column="content" property="content" />
         <result column="img" property="img" />
         <result column="create_time" property="createTime" />
@@ -16,7 +16,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, user_id, opinion_type_id, content, img, create_time, update_time, deleted
+        id, user_id, opinion_type, content, img, create_time, update_time, deleted
     </sql>
 
 </mapper>

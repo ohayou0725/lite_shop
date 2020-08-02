@@ -13,7 +13,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author ohayou
- * @since 2020-07-18
+ * @since 2020-07-29
  */
 public class AdminLog implements Serializable {
 

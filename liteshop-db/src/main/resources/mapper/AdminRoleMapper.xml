@@ -21,7 +21,7 @@
         select r.* from admin_role r
         join admin_user_role_relation aurr on r.id = aurr.role_id
         join admin_user au on aurr.user_id = au.id
-        where au.id = ${id}
+        where au.id = ${id} and r.deleted = 0
     </select>
 
 </mapper>

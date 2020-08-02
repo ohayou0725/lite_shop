@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 
@@ -13,7 +14,7 @@ import java.io.Serializable;
  * </p>
  *
  * @author ohayou
- * @since 2020-07-18
+ * @since 2020-07-29
  */
 public class MemOpinion implements Serializable {
 
@@ -33,7 +34,7 @@ public class MemOpinion implements Serializable {
     /**
      * 反馈类型id
      */
-    private Long opinionTypeId;
+    private Integer opinionType;
 
     /**
      * 反馈内容
@@ -60,6 +61,7 @@ public class MemOpinion implements Serializable {
     /**
      * 逻辑删除 1-已删除 0-未删除
      */
+    @TableLogic
     private Integer deleted;
 
     public Long getId() {
@@ -76,12 +78,12 @@ public class MemOpinion implements Serializable {
     public void setUserId(Long userId) {
         this.userId = userId;
     }
-    public Long getOpinionTypeId() {
-        return opinionTypeId;
+    public Integer getOpinionType() {
+        return opinionType;
     }
 
-    public void setOpinionTypeId(Long opinionTypeId) {
-        this.opinionTypeId = opinionTypeId;
+    public void setOpinionType(Integer opinionType) {
+        this.opinionType = opinionType;
     }
     public String getContent() {
         return content;
@@ -124,7 +126,7 @@ public class MemOpinion implements Serializable {
         return "MemOpinion{" +
             "id=" + id +
             ", userId=" + userId +
-            ", opinionTypeId=" + opinionTypeId +
+            ", opinionType=" + opinionType +
             ", content=" + content +
             ", img=" + img +
             ", createTime=" + createTime +

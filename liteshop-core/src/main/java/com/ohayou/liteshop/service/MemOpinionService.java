@@ -1,7 +1,11 @@
 package com.ohayou.liteshop.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.ohayou.liteshop.dto.MemHistoryDto;
+import com.ohayou.liteshop.dto.MemOpinionDto;
 import com.ohayou.liteshop.entity.MemOpinion;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ohayou.liteshop.utils.PageUtils;
 
 /**
  * <p>
@@ -13,4 +17,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface MemOpinionService extends IService<MemOpinion> {
 
+    PageUtils opinionQueryPage(MemOpinionDto opinionDto, IPage<MemOpinion> page);
 }

@@ -1,8 +1,13 @@
 package com.ohayou.liteshop.dto;
 
 import com.ohayou.liteshop.utils.PageQuery;
+import com.ohayou.validate.Number;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -17,12 +22,13 @@ public class AdminLogDto {
 
     private String ip;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+//    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate operatingTime;
 
     private String action;
 
-    private Integer status;
+    @Number
+    private String status;
 
     private String result;
 
@@ -70,11 +76,11 @@ public class AdminLogDto {
         this.action = action;
     }
 
-    public Integer getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

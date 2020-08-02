@@ -15,7 +15,7 @@
         <result column="type" property="type" />
         <result column="time_type" property="timeType" />
         <result column="days" property="days" />
-        <result column="strt_time" property="strtTime" />
+        <result column="start_time" property="startTime" />
         <result column="end_time" property="endTime" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
@@ -23,7 +23,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, detail, total, discount, min, limit, status, type, time_type, days, strt_time, end_time, create_time, update_time
+        id, name, detail, total, discount, min, limit, status, type, time_type, days, start_time, end_time, create_time, update_time
     </sql>
 
 </mapper>

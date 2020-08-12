@@ -1,15 +1,10 @@
 package com.ohayou.liteshop.dto;
 
-import com.ohayou.validate.MobileValidate;
-import com.ohayou.validate.Number;
-import org.hibernate.validator.constraints.Range;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Pattern;
+
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import com.ohayou.liteshop.validate.*;
+import com.ohayou.liteshop.validate.Number;
 
 /**
  * @author liyan
@@ -28,7 +23,6 @@ public class MemUserDto {
     private String gender;
 
     private String rank;
-
     @Number
     private String status;
 

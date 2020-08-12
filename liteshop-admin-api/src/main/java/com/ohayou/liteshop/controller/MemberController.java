@@ -112,8 +112,8 @@ public class MemberController {
     }
 
     /**
-     * 查询会员意见反馈
-     * @param memHistoryDto
+     * 查询意见反馈
+     * @param memOpinionDto
      * @param paramParam
      * @return
      */

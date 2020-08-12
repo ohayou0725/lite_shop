@@ -32,14 +32,14 @@ public class MallCategory implements Serializable {
     private String name;
 
     /**
-     * 商品级别 0-一级 1 1-二级 2-三级 
+     * 商品级别 0-一级 1 1-二级 2-三级
      */
     private Integer level;
 
     /**
      * 父级分类id
      */
-    private Long parnetId;
+    private Long parentId;
 
     /**
      * 类目图片
@@ -49,17 +49,17 @@ public class MallCategory implements Serializable {
     /**
      * 类目图标
      */
-    private byte[] icon;
+    private String icon;
 
     /**
      * 类目参数id
      */
-    private Integer attrGroupId;
+    private Long attrGroupId;
 
     /**
      * 类目描述
      */
-    private String desc;
+    private String detail;
 
     /**
      * 排序
@@ -102,15 +102,19 @@ public class MallCategory implements Serializable {
         return level;
     }
 
+    public Integer getSort() {
+        return sort;
+    }
+
     public void setLevel(Integer level) {
         this.level = level;
     }
-    public Long getParnetId() {
-        return parnetId;
+    public Long getParentId() {
+        return parentId;
     }
 
-    public void setParnetId(Long parnetId) {
-        this.parnetId = parnetId;
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
     public String getImg() {
         return img;
@@ -119,29 +123,26 @@ public class MallCategory implements Serializable {
     public void setImg(String img) {
         this.img = img;
     }
-    public byte[] getIcon() {
+    public String getIcon() {
         return icon;
     }
 
-    public void setIcon(byte[] icon) {
+    public void setIcon(String icon) {
         this.icon = icon;
     }
-    public Integer getAttrGroupId() {
+    public Long getAttrGroupId() {
         return attrGroupId;
     }
 
-    public void setAttrGroupId(Integer attrGroupId) {
+    public void setAttrGroupId(Long attrGroupId) {
         this.attrGroupId = attrGroupId;
     }
-    public String getDesc() {
-        return desc;
+    public String getDetail() {
+        return detail;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
-    public Integer getSort() {
-        return sort;
+    public void setDetail(String detail) {
+        this.detail = detail;
     }
 
     public void setSort(Integer sort) {
@@ -175,11 +176,11 @@ public class MallCategory implements Serializable {
             "id=" + id +
             ", name=" + name +
             ", level=" + level +
-            ", parnetId=" + parnetId +
+            ", parentId=" + parentId +
             ", img=" + img +
             ", icon=" + icon +
             ", attrGroupId=" + attrGroupId +
-            ", desc=" + desc +
+            ", detail=" + detail +
             ", sort=" + sort +
             ", createTime=" + createTime +
             ", updateTime=" + updateTime +

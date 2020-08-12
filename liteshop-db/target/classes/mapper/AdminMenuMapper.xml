@@ -6,7 +6,7 @@
     <resultMap id="BaseResultMap" type="com.ohayou.liteshop.entity.AdminMenu">
         <id column="id" property="id" />
         <result column="parent_id" property="parentId" />
-        <result column="title" property="title" />
+        <result column="name" property="name" />
         <result column="level" property="level" />
         <result column="sort" property="sort" />
         <result column="name" property="name" />
@@ -19,7 +19,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        m.id, m.parent_id, m.title, m.level, m.sort, m.name, m.icon, m.hidden, m.create_time, m.update_time, m.deleted
+        m.id, m.parent_id, m.name, m.level, m.sort, m.name, m.icon, m.hidden, m.create_time, m.update_time, m.deleted
     </sql>
     <select id="listAdminMenuByRole" resultType="com.ohayou.liteshop.entity.AdminMenu">
         select <include refid="Base_Column_List"/>

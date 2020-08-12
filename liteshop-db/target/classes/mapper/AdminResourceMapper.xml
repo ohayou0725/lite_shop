@@ -8,7 +8,7 @@
         <result column="category_id" property="categoryId" />
         <result column="name" property="name" />
         <result column="url" property="url" />
-        <result column="desc" property="desc" />
+        <result column="detail" property="detail" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <result column="deleted" property="deleted" />
@@ -16,7 +16,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        re.id, re.category_id, re.name, re.url, re.desc, re.create_time, re.update_time, re.deleted
+        re.id, re.category_id, re.name, re.url, re.detail, re.create_time, re.update_time, re.deleted
     </sql>
     <select id="findResourceByRole" resultType="com.ohayou.liteshop.entity.AdminResource">
         select <include refid="Base_Column_List" />

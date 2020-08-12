@@ -5,7 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.ohayou.liteshop.entity.MallTopic">
         <id column="id" property="id" />
-        <result column="title" property="title" />
+        <result column="name" property="name" />
         <result column="subtitle" property="subtitle" />
         <result column="content" property="content" />
         <result column="price" property="price" />
@@ -19,7 +19,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, title, subtitle, content, price, read_count, imgs, sort, create_time, update_time, deleted
+        id, name, subtitle, content, price, read_count, imgs, sort, create_time, update_time, deleted
     </sql>
 
 </mapper>

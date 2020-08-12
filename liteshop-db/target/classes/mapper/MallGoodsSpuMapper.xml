@@ -19,7 +19,7 @@
         <result column="unit" property="unit" />
         <result column="price" property="price" />
         <result column="discount_price" property="discountPrice" />
-        <result column="attr_group_id" property="attrGroupId" />
+        <result column="attr_group_id" property="categoryId" />
         <result column="detail" property="detail" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />

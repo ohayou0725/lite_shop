@@ -3,6 +3,8 @@ package com.ohayou.liteshop.dao;
 import com.ohayou.liteshop.entity.MallGoodsAttr;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
+import java.util.List;
+
 /**
  * <p>
  * 商品参数表 Mapper 接口
@@ -13,4 +15,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface MallGoodsAttrMapper extends BaseMapper<MallGoodsAttr> {
 
+    List<MallGoodsAttr> listAttrByGroupId(Long attrGroupId);
 }

@@ -1,7 +1,7 @@
 package com.ohayou.liteshop.dto;
 
-import com.ohayou.validate.MobileValidate;
-import com.ohayou.validate.Number;
+import com.ohayou.liteshop.validate.MobileValidate;
+import com.ohayou.liteshop.validate.Number;
 
 import java.time.LocalDateTime;
 

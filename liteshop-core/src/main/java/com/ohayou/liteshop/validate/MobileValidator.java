@@ -1,4 +1,4 @@
-package com.ohayou.validate;
+package com.ohayou.liteshop.validate;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -6,11 +6,8 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import com.ohayou.liteshop.validate.MobileValidate;
 
-/**
- * @author liyan
- * @date 2020/7/30 下午10:14
- */
 public class MobileValidator implements ConstraintValidator<MobileValidate,String> {
     @Override
     public void initialize(MobileValidate constraintAnnotation) {

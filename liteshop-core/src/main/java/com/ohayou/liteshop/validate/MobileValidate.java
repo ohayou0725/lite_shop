@@ -1,4 +1,4 @@
-package com.ohayou.validate;
+package com.ohayou.liteshop.validate;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

@@ -29,6 +29,11 @@ logging:
   level:
     com.ohayou.liteshop.dao: debug
 
+qiniu:
+  accesskey: bNiSCBezONeIP9QxeDNMeAHPJAYrWmki925F2BLp
+  secretKey: CWCbnnukD05mhiAgiL54wJmN9Rz_Hi-mJj_3VomQ
+  bucketName: liteshopcool
+  fileDomain: http://qemdt7zgj.bkt.clouddn.com
 
 jwt:
   tokenHeader: Authorization #JWT存储的请求头
@@ -43,3 +48,4 @@ keyPrefix:
 
 admin:
   base_url: /api/admin
+

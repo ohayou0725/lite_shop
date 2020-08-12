@@ -1,10 +1,6 @@
 package com.ohayou.liteshop.dto;
 
-import com.ohayou.validate.MobileValidate;
-
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Pattern;
+import com.ohayou.liteshop.validate.MobileValidate;
 
 /**
  * @author liyan

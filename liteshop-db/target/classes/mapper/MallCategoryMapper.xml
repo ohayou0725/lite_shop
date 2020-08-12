@@ -7,11 +7,11 @@
         <id column="id" property="id" />
         <result column="name" property="name" />
         <result column="level" property="level" />
-        <result column="parnet_id" property="parnetId" />
+        <result column="parent_id" property="parentId" />
         <result column="img" property="img" />
         <result column="icon" property="icon" />
-        <result column="attr_group_id" property="attrGroupId" />
-        <result column="desc" property="desc" />
+        <result column="attr_group_id" property="categoryId" />
+        <result column="detail" property="detail" />
         <result column="sort" property="sort" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
@@ -20,7 +20,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, level, parnet_id, img, icon, attr_group_id, desc, sort, create_time, update_time, deleted
+        id, name, level, parent_id, img, icon, attr_group_id, detail, sort, create_time, update_time, deleted
     </sql>
 
 </mapper>

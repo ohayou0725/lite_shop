@@ -1,4 +1,4 @@
-package com.ohayou.validate;
+package com.ohayou.liteshop.validate;
 
 import org.apache.commons.lang3.StringUtils;
 

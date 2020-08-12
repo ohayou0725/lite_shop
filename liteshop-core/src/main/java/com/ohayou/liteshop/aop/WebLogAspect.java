@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -123,18 +125,26 @@ public class WebLogAspect {
         List<Object> argList = new ArrayList<>();
         Parameter[] parameters = method.getParameters();
         for (int i = 0; i < parameters.length; i++) {
+
             RequestBody requestBody = parameters[i].getAnnotation(RequestBody.class);
             if (requestBody != null) {
                 argList.add(args[i]);
             }
             RequestParam requestParam = parameters[i].getAnnotation(RequestParam.class);
             if (requestParam != null) {
+                if (args[i] instanceof MultipartFile) {
+                    argList.add(((MultipartFile)args[i]).getOriginalFilename());
+                }
                 Map<String ,Object> map = new HashMap<>();
                 String key = parameters[i].getName();
                 if (!StringUtils.isEmpty(requestParam.value())) {
                     key = requestParam.value();
+                    if (key.equals("file")) {
+                        map.put(key,((MultipartFile)args[i]).getOriginalFilename());
+                    } else {
+                        map.put(key,args[i]);
+                    }
                 }
-                map.put(key,args[i]);
                 argList.add(map);
             }
         }

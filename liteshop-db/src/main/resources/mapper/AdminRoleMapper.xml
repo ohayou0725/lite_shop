@@ -6,7 +6,7 @@
     <resultMap id="BaseResultMap" type="com.ohayou.liteshop.entity.AdminRole">
         <id column="id" property="id"/>
         <result column="role_name" property="roleName"/>
-        <result column="desc" property="desc"/>
+        <result column="detail" property="detail"/>
         <result column="enabled" property="enabled"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
@@ -15,7 +15,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, role_name, desc, enabled, create_time, update_time, deleted
+        id, role_name, detail, enabled, create_time, update_time, deleted
     </sql>
     <select id="findListByUser" resultType="com.ohayou.liteshop.entity.AdminRole">
         select r.* from admin_role r

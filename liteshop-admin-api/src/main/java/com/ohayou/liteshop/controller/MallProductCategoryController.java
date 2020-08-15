@@ -1,21 +1,20 @@
 package com.ohayou.liteshop.controller;
 
 import com.ohayou.liteshop.aop.ApiDesc;
-import com.ohayou.liteshop.dto.GoodsAttrDto;
+import com.ohayou.liteshop.dto.MallGoodsAttrDto;
 import com.ohayou.liteshop.dto.ProductCategoryDto;
 import com.ohayou.liteshop.exception.GlobalException;
 import com.ohayou.liteshop.response.ErrorCodeMsg;
 import com.ohayou.liteshop.response.Result;
 import com.ohayou.liteshop.service.MallCategoryService;
 import com.ohayou.liteshop.service.MallGoodsAttrService;
-import com.ohayou.liteshop.utils.FileUtils;
-import com.ohayou.liteshop.upload.QiniuUpload;
+import com.ohayou.liteshop.service.UploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.io.InputStream;
+
 import java.util.List;
 
 /**
@@ -37,7 +36,7 @@ public class MallProductCategoryController {
     MallGoodsAttrService mallGoodsAttrService;
 
     @Autowired
-    QiniuUpload qiniuUpload;
+    UploadService qiniuUploadService;
 
     /**
      * 获取商品分类树
@@ -112,18 +111,8 @@ public class MallProductCategoryController {
     @ApiDesc("上传分类图片")
     @PostMapping("/upload")
     public Result upload(@RequestParam("file")MultipartFile file) {
-        if (file.isEmpty()) {
-            throw new GlobalException(ErrorCodeMsg.UPLOAD_ERROR);
-        }
-        try {
-            InputStream inputStream = file.getInputStream();
-            String originalFilename = file.getOriginalFilename();
-            String fileName = FileUtils.generateUploadFileName(originalFilename);
-            String url = qiniuUpload.upload(inputStream,fileName);
-            return Result.success("url",url);
-        } catch (Exception e) {
-            throw new GlobalException(ErrorCodeMsg.UPLOAD_ERROR);
-        }
+        String url = qiniuUploadService.upload(file);
+        return Result.success("url",url);
     }
 
     /**
@@ -157,49 +146,49 @@ public class MallProductCategoryController {
 
     /**
      * 添加商品分类属性
-     * @param goodsAttrDto
+     * @param mallGoodsAttrDto
      * @return
      */
     @ApiDesc("添加分类属性")
     @PostMapping("/attr/add")
-    public Result addAttr(@RequestBody @Valid GoodsAttrDto goodsAttrDto) {
-        Long categoryId = goodsAttrDto.getCategoryId();
+    public Result addAttr(@RequestBody @Valid MallGoodsAttrDto mallGoodsAttrDto) {
+        Long categoryId = mallGoodsAttrDto.getCategoryId();
         if (null == categoryId ||  categoryId <= 0) {
             throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
         }
-        mallGoodsAttrService.addGoodsAttr(goodsAttrDto);
+        mallGoodsAttrService.addGoodsAttr(mallGoodsAttrDto);
         return Result.success();
     }
 
     /**
      * 修改属性
-     * @param goodsAttrDto
+     * @param mallGoodsAttrDto
      * @return
      */
 
     @ApiDesc("修改属性")
     @PostMapping("/attr/update")
-    public Result updateAddr(@RequestBody @Valid GoodsAttrDto goodsAttrDto) {
-        if (goodsAttrDto == null) {
+    public Result updateAddr(@RequestBody @Valid MallGoodsAttrDto mallGoodsAttrDto) {
+        if (mallGoodsAttrDto == null) {
             throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
         }
-        boolean result = mallGoodsAttrService.updateAttr(goodsAttrDto);
+        boolean result = mallGoodsAttrService.updateAttr(mallGoodsAttrDto);
         return result ? Result.success() : Result.error(ErrorCodeMsg.GOODS_ATTR_UPDATE_ERROR);
     }
 
     /**
      * 删除分类属性
-     * @param goodsAttrDto
+     * @param mallGoodsAttrDto
      * @return
      */
 
     @ApiDesc("删除属性")
     @PostMapping("/attr/delete")
-    public Result deleteAddr(@RequestBody @Valid GoodsAttrDto goodsAttrDto) {
-        if (goodsAttrDto.getCategoryId() == null || goodsAttrDto.getId() == null) {
+    public Result deleteAddr(@RequestBody @Valid MallGoodsAttrDto mallGoodsAttrDto) {
+        if (mallGoodsAttrDto.getCategoryId() == null || mallGoodsAttrDto.getId() == null) {
             throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
         }
-        boolean result = mallGoodsAttrService.deleteAttr(goodsAttrDto);
+        boolean result = mallGoodsAttrService.deleteAttr(mallGoodsAttrDto);
         return result ? Result.success() : Result.error(ErrorCodeMsg.GOODS_ATTR_DELETE_ERROR);
     }
 

@@ -1,6 +1,5 @@
 package com.ohayou.liteshop.service;
 
-import com.ohayou.liteshop.dto.GoodsAttrDto;
 import com.ohayou.liteshop.dto.ProductCategoryDto;
 import com.ohayou.liteshop.entity.MallCategory;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -31,4 +30,7 @@ public interface MallCategoryService extends IService<MallCategory> {
 
     ProductCategoryDto addCategory(ProductCategoryDto categoryDto);
 
+    List<ProductCategoryDto> CategoryListByBrandId(Long brandId);
+
+    boolean categoryExist(Long categoryId);
 }

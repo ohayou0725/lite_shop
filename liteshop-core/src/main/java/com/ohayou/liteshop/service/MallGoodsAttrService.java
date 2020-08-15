@@ -1,6 +1,6 @@
 package com.ohayou.liteshop.service;
 
-import com.ohayou.liteshop.dto.GoodsAttrDto;
+import com.ohayou.liteshop.dto.MallGoodsAttrDto;
 import com.ohayou.liteshop.entity.MallGoodsAttr;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -16,13 +16,13 @@ import java.util.List;
  */
 public interface MallGoodsAttrService extends IService<MallGoodsAttr> {
 
-    List<GoodsAttrDto> listAttrByGroupId(Long attrGroupId,Long id);
+    List<MallGoodsAttrDto> listAttrByGroupId(Long attrGroupId, Long id);
 
-    void addGoodsAttr(GoodsAttrDto goodsAttrDto);
+    void addGoodsAttr(MallGoodsAttrDto mallGoodsAttrDto);
 
-    boolean updateAttr(GoodsAttrDto goodsAttrDto);
+    boolean updateAttr(MallGoodsAttrDto mallGoodsAttrDto);
 
-    boolean deleteAttr(GoodsAttrDto goodsAttrDto);
+    boolean deleteAttr(MallGoodsAttrDto mallGoodsAttrDto);
 
     List<String> attrList();
 }

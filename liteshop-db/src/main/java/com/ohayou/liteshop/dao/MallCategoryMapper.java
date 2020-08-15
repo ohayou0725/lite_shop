@@ -3,6 +3,8 @@ package com.ohayou.liteshop.dao;
 import com.ohayou.liteshop.entity.MallCategory;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
+import java.util.List;
+
 /**
  * <p>
  * 商品类目表 Mapper 接口
@@ -13,4 +15,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface MallCategoryMapper extends BaseMapper<MallCategory> {
 
+    List<MallCategory> findCategoryListByBrandId(Long brandId);
 }

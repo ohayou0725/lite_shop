@@ -1,11 +1,10 @@
 package com.ohayou.liteshop.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.ohayou.liteshop.dto.GoodsAttrDto;
+import com.ohayou.liteshop.dto.MallGoodsAttrDto;
 import com.ohayou.liteshop.dto.ProductCategoryDto;
 import com.ohayou.liteshop.entity.MallCategory;
 import com.ohayou.liteshop.dao.MallCategoryMapper;
-import com.ohayou.liteshop.entity.MallGoodsAttr;
 import com.ohayou.liteshop.exception.GlobalException;
 import com.ohayou.liteshop.response.ErrorCodeMsg;
 import com.ohayou.liteshop.service.MallCategoryService;
@@ -114,7 +113,7 @@ public class MallCategoryServiceImpl extends ServiceImpl<MallCategoryMapper, Mal
         //只有三级分类才有属性列表
         if (category.getLevel() == 2) {
             //查找该分类下的商品属性
-            List<GoodsAttrDto> attrList = attrService.listAttrByGroupId(category.getAttrGroupId(),id);
+            List<MallGoodsAttrDto> attrList = attrService.listAttrByGroupId(category.getAttrGroupId(),id);
             if (null != attrList) {
                 categoryDto.setAttrs(attrList);
             }
@@ -192,6 +191,26 @@ public class MallCategoryServiceImpl extends ServiceImpl<MallCategoryMapper, Mal
     }
 
     /**
+     * 根据品牌Id查询分类
+     * @param brandId
+     * @return
+     */
+    @Override
+    public List<ProductCategoryDto> CategoryListByBrandId(Long brandId) {
+        List<MallCategory> categoryList =  baseMapper.findCategoryListByBrandId(brandId);
+        if (null != categoryList && categoryList.size() > 0) {
+            List<ProductCategoryDto> collect = categoryList.stream()
+                    .map(mallCategory -> {
+                        ProductCategoryDto categoryDto = new ProductCategoryDto();
+                        BeanUtils.copyProperties(mallCategory, categoryDto);
+                        return categoryDto;
+                    }).collect(Collectors.toList());
+            return collect;
+        }
+        return null;
+    }
+
+    /**
      * 递归查找子节点
      * @param id
      * @param childrenList
@@ -214,6 +233,10 @@ public class MallCategoryServiceImpl extends ServiceImpl<MallCategoryMapper, Mal
         return collect;
     }
 
+    @Override
+    public boolean categoryExist(Long categoryId) {
+        return 1 == this.count(new LambdaQueryWrapper<MallCategory>().eq(MallCategory::getId,categoryId));
+    }
 
     /**
      * 获取所有非根节点
@@ -230,4 +253,5 @@ public class MallCategoryServiceImpl extends ServiceImpl<MallCategoryMapper, Mal
     private List<MallCategory> getRootNodes() {
         return this.list(new LambdaQueryWrapper<MallCategory>().eq(MallCategory::getLevel,0));
     }
+
 }

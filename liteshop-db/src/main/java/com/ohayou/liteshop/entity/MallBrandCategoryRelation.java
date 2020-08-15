@@ -29,7 +29,7 @@ public class MallBrandCategoryRelation implements Serializable {
     /**
      * 品牌id
      */
-    private Long bradnId;
+    private Long brandId;
 
     /**
      * 三级分类id
@@ -61,12 +61,12 @@ public class MallBrandCategoryRelation implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-    public Long getBradnId() {
-        return bradnId;
+    public Long getBrandId() {
+        return brandId;
     }
 
-    public void setBradnId(Long bradnId) {
-        this.bradnId = bradnId;
+    public void setBrandId(Long brandId) {
+        this.brandId = brandId;
     }
     public Long getCategoryId() {
         return categoryId;
@@ -101,7 +101,7 @@ public class MallBrandCategoryRelation implements Serializable {
     public String toString() {
         return "MallBrandCategoryRelation{" +
             "id=" + id +
-            ", bradnId=" + bradnId +
+            ", brandId=" + brandId +
             ", categoryId=" + categoryId +
             ", createTime=" + createTime +
             ", updateTime=" + updateTime +

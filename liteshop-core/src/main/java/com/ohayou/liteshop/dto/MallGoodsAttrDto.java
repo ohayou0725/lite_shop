@@ -8,7 +8,7 @@ import java.util.Objects;
  * @author liyan
  * @date 2020/8/8 下午10:22
  */
-public class GoodsAttrDto {
+public class MallGoodsAttrDto {
 
     @Digits(message = "id必须为数字",integer = Integer.MAX_VALUE, fraction = 0 )
     private Long id;
@@ -58,8 +58,8 @@ public class GoodsAttrDto {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof GoodsAttrDto)) return false;
-        GoodsAttrDto that = (GoodsAttrDto) o;
+        if (!(o instanceof MallGoodsAttrDto)) return false;
+        MallGoodsAttrDto that = (MallGoodsAttrDto) o;
         return Objects.equals(attrName, that.attrName);
 
     }

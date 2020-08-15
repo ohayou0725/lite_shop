@@ -1,7 +1,7 @@
 package com.ohayou.liteshop.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.ohayou.liteshop.dto.GoodsAttrDto;
+import com.ohayou.liteshop.dto.MallGoodsAttrDto;
 import com.ohayou.liteshop.entity.MallAttrGroup;
 import com.ohayou.liteshop.entity.MallAttrGroupRelation;
 import com.ohayou.liteshop.entity.MallCategory;
@@ -51,18 +51,18 @@ public class MallGoodsAttrServiceImpl extends ServiceImpl<MallGoodsAttrMapper, M
      * @return
      */
     @Override
-    public List<GoodsAttrDto> listAttrByGroupId(Long attrGroupId, Long id) {
+    public List<MallGoodsAttrDto> listAttrByGroupId(Long attrGroupId, Long id) {
         if (null == attrGroupId || 0 == attrGroupId) {
             return null;
         }
-        List<GoodsAttrDto> collect = baseMapper.listAttrByGroupId(attrGroupId)
+        List<MallGoodsAttrDto> collect = baseMapper.listAttrByGroupId(attrGroupId)
                 .stream()
                 .sorted(Comparator.comparing(MallGoodsAttr::getSort))
                 .map(mallGoodsAttr -> {
-                    GoodsAttrDto goodsAttrDto = new GoodsAttrDto();
-                    BeanUtils.copyProperties(mallGoodsAttr, goodsAttrDto);
-                    goodsAttrDto.setCategoryId(id);
-                    return goodsAttrDto;
+                    MallGoodsAttrDto mallGoodsAttrDto = new MallGoodsAttrDto();
+                    BeanUtils.copyProperties(mallGoodsAttr, mallGoodsAttrDto);
+                    mallGoodsAttrDto.setCategoryId(id);
+                    return mallGoodsAttrDto;
                 })
                 .collect(Collectors.toList());
         return collect;
@@ -71,11 +71,11 @@ public class MallGoodsAttrServiceImpl extends ServiceImpl<MallGoodsAttrMapper, M
     /**
      * 为商品分类添加属性
      *
-     * @param goodsAttrDto
+     * @param mallGoodsAttrDto
      */
     @Override
-    public void addGoodsAttr(GoodsAttrDto goodsAttrDto) {
-        Long categoryId = goodsAttrDto.getCategoryId();
+    public void addGoodsAttr(MallGoodsAttrDto mallGoodsAttrDto) {
+        Long categoryId = mallGoodsAttrDto.getCategoryId();
         if (null == categoryId || categoryId <= 0) {
             throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
         }
@@ -98,10 +98,10 @@ public class MallGoodsAttrServiceImpl extends ServiceImpl<MallGoodsAttrMapper, M
         //有分组ID，说明已有属性只需进行添加,不新建分组
         //查看该分类下是否已有同名属性
         boolean hasAttr = false;
-        List<GoodsAttrDto> attrList = this.listAttrByGroupId(attrGroupId,categoryId );
+        List<MallGoodsAttrDto> attrList = this.listAttrByGroupId(attrGroupId,categoryId );
         if (null != attrList && attrList.size() > 0) {
             hasAttr = attrList.stream().anyMatch(mallGoodsAttr -> {
-                return goodsAttrDto.getAttrName().equals(mallGoodsAttr.getAttrName());
+                return mallGoodsAttrDto.getAttrName().equals(mallGoodsAttr.getAttrName());
             });
         }
 
@@ -109,8 +109,8 @@ public class MallGoodsAttrServiceImpl extends ServiceImpl<MallGoodsAttrMapper, M
             throw new GlobalException(ErrorCodeMsg.GOODS_ATTR_EXIST);
         }
         MallGoodsAttr goodsAttr = new MallGoodsAttr();
-        goodsAttr.setAttrName(goodsAttrDto.getAttrName());
-        goodsAttr.setSort(goodsAttrDto.getSort());
+        goodsAttr.setAttrName(mallGoodsAttrDto.getAttrName());
+        goodsAttr.setSort(mallGoodsAttrDto.getSort());
         this.save(goodsAttr);
         MallAttrGroupRelation mallAttrGroupRelation = new MallAttrGroupRelation();
         mallAttrGroupRelation.setAttrId(goodsAttr.getId());
@@ -120,29 +120,29 @@ public class MallGoodsAttrServiceImpl extends ServiceImpl<MallGoodsAttrMapper, M
 
     /**
      * 更新分类属性
-     * @param goodsAttrDto
+     * @param mallGoodsAttrDto
      * @return
      */
     @Override
-    public boolean updateAttr(GoodsAttrDto goodsAttrDto) {
-        Long id = goodsAttrDto.getId();
+    public boolean updateAttr(MallGoodsAttrDto mallGoodsAttrDto) {
+        Long id = mallGoodsAttrDto.getId();
         if (null == id || id <= 0) {
             throw new GlobalException(ErrorCodeMsg.GOODS_ATTR_NOT_FOUND);
         }
         MallGoodsAttr mallGoodsAttr = new MallGoodsAttr();
-        BeanUtils.copyProperties(goodsAttrDto,mallGoodsAttr);
+        BeanUtils.copyProperties(mallGoodsAttrDto,mallGoodsAttr);
         return this.updateById(mallGoodsAttr);
     }
 
     /**
      * 删除分类属性
-     * @param goodsAttrDto
+     * @param mallGoodsAttrDto
      * @return
      */
     @Override
-    public boolean deleteAttr(GoodsAttrDto goodsAttrDto) {
-        Long id = goodsAttrDto.getId();
-        Long categoryId = goodsAttrDto.getCategoryId();
+    public boolean deleteAttr(MallGoodsAttrDto mallGoodsAttrDto) {
+        Long id = mallGoodsAttrDto.getId();
+        Long categoryId = mallGoodsAttrDto.getCategoryId();
         if (id == null || id <=0 || categoryId == null || categoryId <= 0) {
             throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
         }

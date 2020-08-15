@@ -3,8 +3,6 @@ package com.ohayou.liteshop.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.ohayou.liteshop.entity.MallGoodsAttr;
-
 import javax.validation.constraints.Digits;
 
 /**
@@ -30,7 +28,7 @@ public class ProductCategoryDto {
 
     private LocalDateTime createTime;
 
-    private List<GoodsAttrDto> attrs;
+    private List<MallGoodsAttrDto> attrs;
 
     private List<ProductCategoryDto> children;
 
@@ -90,11 +88,11 @@ public class ProductCategoryDto {
         this.icon = icon;
     }
 
-    public List<GoodsAttrDto> getAttrs() {
+    public List<MallGoodsAttrDto> getAttrs() {
         return attrs;
     }
 
-    public void setAttrs(List<GoodsAttrDto> attrs) {
+    public void setAttrs(List<MallGoodsAttrDto> attrs) {
         this.attrs = attrs;
     }
 

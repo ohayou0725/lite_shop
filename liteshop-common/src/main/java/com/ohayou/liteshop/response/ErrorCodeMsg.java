@@ -18,7 +18,7 @@ public enum ErrorCodeMsg {
     INVALID_TOKEN(400203,"无效的token,拒绝访问"),
     TOKEN_EXPIRED(400204,"token已过期，请重新登录"),
     ACCESS_DENIED_ERROR(400300,"权限不足，拒绝访问"),
-    PARAMETER_VALIDATED_ERROR(400101),
+    PARAMETER_VALIDATED_ERROR(400101,"参数错误"),
     UPLOAD_ERROR(400010,"上传失败"),
 
 
@@ -36,6 +36,13 @@ public enum ErrorCodeMsg {
     GOODS_ATTR_UPDATE_ERROR(400407,"商品属性更新失败"),
     GOODS_ATTR_DELETE_ERROR(400408,"商品属性删除失败"),
     GOODS_ATTR_EXIST(400409,"该商品属性已存在"),
+    CATEGORY_ID_IS_NULL(400501,"分类ID为空"),
+    BRAND_EXIST(400502,"该品牌商已存在"),
+    SAVE_BRAND_ERROR(400503,"添加品牌商信息失败"),
+    BRAND_NOT_FOUND(400504,"没有此品牌商"),
+    BRAND_UPDATE_ERROR(400504,"品牌商更新失败"),
+    BRAND_CATEGORY_EXIST(400506,"品牌商已有该分类，不能重复添加"),
+    BRAND_NOT_HAS_CATEGORY(400505,"该品牌商没有此分类")
     ;
 
 

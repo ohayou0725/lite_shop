@@ -25,5 +25,14 @@
         where ag.id=#{categoryId} and ga.deleted=0
 
     </select>
+    <select id="findAttrsByGoodsId" resultType="com.ohayou.liteshop.entity.MallGoodsAttr">
+        select
+        <include refid="Base_Column_List"></include>
+        from mall_goods_attr ga
+        join mall_attr_group_relation gr on gr.attr_id = ga.id
+        join mall_attr_group g on gr.attr_group_id = g.id
+        join mall_goods_spu s on s.attr_group_id = g.id
+        where s.id = #{goodsId} and s.deleted = 0 and ga.deleted = 0 order by ga.id
+    </select>
 
 </mapper>

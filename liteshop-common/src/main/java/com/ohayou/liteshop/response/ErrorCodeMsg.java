@@ -37,12 +37,18 @@ public enum ErrorCodeMsg {
     GOODS_ATTR_DELETE_ERROR(400408,"商品属性删除失败"),
     GOODS_ATTR_EXIST(400409,"该商品属性已存在"),
     CATEGORY_ID_IS_NULL(400501,"分类ID为空"),
+
     BRAND_EXIST(400502,"该品牌商已存在"),
     SAVE_BRAND_ERROR(400503,"添加品牌商信息失败"),
     BRAND_NOT_FOUND(400504,"没有此品牌商"),
     BRAND_UPDATE_ERROR(400504,"品牌商更新失败"),
     BRAND_CATEGORY_EXIST(400506,"品牌商已有该分类，不能重复添加"),
-    BRAND_NOT_HAS_CATEGORY(400505,"该品牌商没有此分类")
+    BRAND_NOT_HAS_CATEGORY(400505,"该品牌商没有此分类"),
+
+    GOODS_NOT_FOUND(400601,"没有此商品"),
+    GOODS_EXIST(400602,"商品编号已存在或存在相同商品，不能重复添加"),
+    GOODS_SPEC_EMPTY(400603,"商品规格列表不能为空"),
+    SAVE_GOODS_ERROR(400604,"新增商品信息失败")
     ;
 
 

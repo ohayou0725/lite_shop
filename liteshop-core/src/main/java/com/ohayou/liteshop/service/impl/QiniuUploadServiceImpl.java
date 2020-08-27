@@ -2,7 +2,6 @@ package com.ohayou.liteshop.service.impl;
 
 import com.ohayou.liteshop.exception.GlobalException;
 import com.ohayou.liteshop.response.ErrorCodeMsg;
-import com.ohayou.liteshop.response.Result;
 import com.ohayou.liteshop.service.UploadService;
 import com.ohayou.liteshop.upload.QiniuUpload;
 import com.ohayou.liteshop.utils.FileUtils;
@@ -26,14 +25,14 @@ public class QiniuUploadServiceImpl implements UploadService {
 
 
     @Override
-    public String upload(MultipartFile file) {
+    public String upload(MultipartFile file, String filePath) {
         if (file.isEmpty()) {
             throw new GlobalException(ErrorCodeMsg.UPLOAD_ERROR);
         }
         try {
             InputStream inputStream = file.getInputStream();
             String originalFilename = file.getOriginalFilename();
-            String fileName = FileUtils.generateUploadFileName(originalFilename);
+            String fileName = filePath +  FileUtils.generateUploadFileName(originalFilename);
             String url = qiniuUpload.upload(inputStream,fileName);
             return url;
         } catch (Exception e) {

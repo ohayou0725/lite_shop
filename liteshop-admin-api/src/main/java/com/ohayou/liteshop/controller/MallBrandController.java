@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -56,7 +57,8 @@ public class MallBrandController {
     @ApiDesc("上传品牌商logo图片")
     @PostMapping("/upload")
     public Result upload(@RequestParam("file")MultipartFile file) {
-        String url = qiniuUploadService.upload(file);
+        String fileName = "product/brand/";
+        String url = qiniuUploadService.upload(file, fileName);
         return Result.success("url",url);
     }
 
@@ -70,6 +72,18 @@ public class MallBrandController {
     public Result addBrand(@RequestBody @Valid MallBrandDto mallBrandDto) {
         boolean result = brandService.addBrand(mallBrandDto);
         return result ? Result.success() : Result.error(ErrorCodeMsg.SAVE_BRAND_ERROR);
+    }
+
+    /**
+     * 获取所有品牌商
+     * @param mallBrandDto
+     * @return
+     */
+    @ApiDesc("获取所有品牌商")
+    @GetMapping("/all")
+    public Result allBrand() {
+        List<MallBrand> list = brandService.list();
+        return Result.success("list",list);
     }
 
     /**

@@ -3,7 +3,6 @@ package com.ohayou.liteshop.upload;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ohayou.liteshop.exception.GlobalException;
 import com.ohayou.liteshop.response.ErrorCodeMsg;
-import com.ohayou.liteshop.response.Result;
 import com.qiniu.common.QiniuException;
 import com.qiniu.common.Zone;
 import com.qiniu.http.Client;

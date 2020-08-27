@@ -18,6 +18,8 @@ public interface MallGoodsAttrService extends IService<MallGoodsAttr> {
 
     List<MallGoodsAttrDto> listAttrByGroupId(Long attrGroupId, Long id);
 
+    List<MallGoodsAttr> listByGroupId(Long attrGroupId);
+
     void addGoodsAttr(MallGoodsAttrDto mallGoodsAttrDto);
 
     boolean updateAttr(MallGoodsAttrDto mallGoodsAttrDto);
@@ -25,4 +27,6 @@ public interface MallGoodsAttrService extends IService<MallGoodsAttr> {
     boolean deleteAttr(MallGoodsAttrDto mallGoodsAttrDto);
 
     List<String> attrList();
+
+    List<MallGoodsAttr> findAttrsByGoodsId(Long goodsId);
 }

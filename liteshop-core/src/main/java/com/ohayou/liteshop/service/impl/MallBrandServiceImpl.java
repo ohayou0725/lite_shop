@@ -7,7 +7,6 @@ import com.ohayou.liteshop.dto.MallBrandDto;
 import com.ohayou.liteshop.entity.MallBrand;
 import com.ohayou.liteshop.dao.MallBrandMapper;
 import com.ohayou.liteshop.entity.MallBrandCategoryRelation;
-import com.ohayou.liteshop.entity.MallCategory;
 import com.ohayou.liteshop.exception.GlobalException;
 import com.ohayou.liteshop.response.ErrorCodeMsg;
 import com.ohayou.liteshop.service.MallBrandCategoryRelationService;

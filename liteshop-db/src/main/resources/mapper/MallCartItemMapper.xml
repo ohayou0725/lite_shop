@@ -9,7 +9,7 @@
         <result column="goods_id" property="goodsId" />
         <result column="goods_name" property="goodsName" />
         <result column="spec_sn" property="specSn" />
-        <result column="price" property="price" />
+        <result column="reservePrice" property="reservePrice" />
         <result column="number" property="number" />
         <result column="checked" property="checked" />
         <result column="goods_img" property="goodsImg" />
@@ -20,7 +20,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, cart_id, goods_id, goods_name, spec_sn, price, number, checked, goods_img, create_time, update_time, deleted
+        id, cart_id, goods_id, goods_name, spec_sn, reservePrice, number, checked, goods_img, create_time, update_time, deleted
     </sql>
 
 </mapper>

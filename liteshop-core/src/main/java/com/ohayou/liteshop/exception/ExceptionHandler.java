@@ -35,8 +35,16 @@ public class ExceptionHandler {
             String errorMsg = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
             return Result.parameterError(errorMsg);
         }
+
         exception.printStackTrace();
         return Result.error(ErrorCodeMsg.SERVER_ERROR);
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @org.springframework.web.bind.annotation.ExceptionHandler(UnAuthenticationException.class)
+    public Result LoginExceptionHandler(Exception exception) {
+        UnAuthenticationException e= (UnAuthenticationException)exception;
+        return Result.error(e.getErrorCodeMsg());
     }
 
 

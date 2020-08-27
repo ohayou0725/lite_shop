@@ -33,4 +33,6 @@ public interface MallCategoryService extends IService<MallCategory> {
     List<ProductCategoryDto> CategoryListByBrandId(Long brandId);
 
     boolean categoryExist(Long categoryId);
+
+    String getTreeAsString(Long categoryId);
 }

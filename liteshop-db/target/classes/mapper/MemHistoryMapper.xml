@@ -6,7 +6,7 @@
     <resultMap id="BaseResultMap" type="com.ohayou.liteshop.entity.MemHistory">
         <id column="id" property="id" />
         <result column="user_id" property="userId" />
-        <result column="spu_id" property="spuSn" />
+        <result column="spuId" property="spuSn" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <result column="deleted" property="deleted" />
@@ -14,7 +14,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        h.id, h.user_id, h.spu_id, h.create_time, h.update_time, h.deleted
+        h.id, h.user_id, h.spuId, h.create_time, h.update_time, h.deleted
     </sql>
 
 </mapper>

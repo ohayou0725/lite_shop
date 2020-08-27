@@ -36,6 +36,8 @@ public class MallAttrValue implements Serializable {
      */
     private Long attrId;
 
+    private Long spuId;
+
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
@@ -86,6 +88,18 @@ public class MallAttrValue implements Serializable {
 
     public void setDeleted(Integer deleted) {
         this.deleted = deleted;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public Long getSpuId() {
+        return spuId;
+    }
+
+    public void setSpuId(Long spuId) {
+        this.spuId = spuId;
     }
 
     @Override

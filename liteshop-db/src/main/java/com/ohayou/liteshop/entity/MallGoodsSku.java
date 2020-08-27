@@ -43,6 +43,11 @@ public class MallGoodsSku implements Serializable {
     private Integer stock;
 
     /**
+     * 单品库存预警值
+     */
+    private Integer stockWarningCount;
+
+    /**
      * 单品图片地址
      */
     private String img;
@@ -126,6 +131,18 @@ public class MallGoodsSku implements Serializable {
 
     public void setDeleted(Integer deleted) {
         this.deleted = deleted;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public Integer getStockWarningCount() {
+        return stockWarningCount;
+    }
+
+    public void setStockWarningCount(Integer stockWarningCount) {
+        this.stockWarningCount = stockWarningCount;
     }
 
     @Override

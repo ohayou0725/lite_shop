@@ -30,12 +30,17 @@ public class MallGoodsSpu implements Serializable {
     /**
      * 商品编号
      */
-    private Long goodsSn;
+    private String goodsSn;
 
     /**
      * 商品名称
      */
     private String name;
+
+    /**
+     * 商品标题
+     */
+    private String title;
 
     /**
      * 分类id
@@ -61,6 +66,11 @@ public class MallGoodsSpu implements Serializable {
      * 商品轮播图片列表
      */
     private String gallery;
+
+    /**
+     * 商品销量
+     */
+    private Integer sales;
 
     /**
      * 商品状态0-未上架 1-已上架
@@ -129,11 +139,11 @@ public class MallGoodsSpu implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-    public Long getGoodsSn() {
+    public String getGoodsSn() {
         return goodsSn;
     }
 
-    public void setGoodsSn(Long goodsSn) {
+    public void setGoodsSn(String goodsSn) {
         this.goodsSn = goodsSn;
     }
     public String getName() {
@@ -261,6 +271,26 @@ public class MallGoodsSpu implements Serializable {
 
     public void setDeleted(Integer deleted) {
         this.deleted = deleted;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public Integer getSales() {
+        return sales;
+    }
+
+    public void setSales(Integer sales) {
+        this.sales = sales;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     @Override

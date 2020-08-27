@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,7 +30,6 @@ import java.util.stream.Collectors;
  * @since 2020-07-15
  */
 @Service
-@Transactional(rollbackFor = Exception.class)
 public class MallCategoryServiceImpl extends ServiceImpl<MallCategoryMapper, MallCategory> implements MallCategoryService {
 
     @Autowired
@@ -76,6 +76,7 @@ public class MallCategoryServiceImpl extends ServiceImpl<MallCategoryMapper, Mal
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean deleteNode(Long id) {
         if (null == id || 0 == id) {
             throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
@@ -154,6 +155,7 @@ public class MallCategoryServiceImpl extends ServiceImpl<MallCategoryMapper, Mal
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean updateCategory(ProductCategoryDto categoryDto) {
         Long id = categoryDto.getId();
         if (null == id || 0 == id) {
@@ -171,6 +173,7 @@ public class MallCategoryServiceImpl extends ServiceImpl<MallCategoryMapper, Mal
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ProductCategoryDto addCategory(ProductCategoryDto categoryDto) {
         if (categoryDto == null || StringUtils.isBlank(categoryDto.getName())) {
             throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
@@ -236,6 +239,38 @@ public class MallCategoryServiceImpl extends ServiceImpl<MallCategoryMapper, Mal
     @Override
     public boolean categoryExist(Long categoryId) {
         return 1 == this.count(new LambdaQueryWrapper<MallCategory>().eq(MallCategory::getId,categoryId));
+    }
+
+    /**
+     * 根据分类三级ID获取该id所有父节点的字符串表达形式
+     * @param categoryId
+     * @return
+     */
+    @Override
+    public String getTreeAsString(Long categoryId) {
+        MallCategory one = getById(categoryId);
+        //获取所有分类Id
+        List<MallCategory> list = this.list();
+        ArrayList<MallCategory> parentNodes = new ArrayList<>();
+        List<MallCategory> parent = this.findParent(one, list, parentNodes);
+        return parent.get(1).getName() + "/" + parent.get(0).getName() + "/" + one.getName();
+    }
+
+    /**
+     * 递归查询所有父节点
+     * @param category
+     * @param all
+     * @param result
+     * @return
+     */
+    private List<MallCategory> findParent(MallCategory category, List<MallCategory> all, List<MallCategory> result) {
+        for (MallCategory cate : all) {
+            if (cate.getId().equals(category.getParentId())) {
+                result.add(cate);
+                this.findParent(cate,all,result);
+            }
+        }
+        return result;
     }
 
     /**

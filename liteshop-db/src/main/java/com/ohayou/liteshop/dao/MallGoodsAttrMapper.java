@@ -16,4 +16,6 @@ import java.util.List;
 public interface MallGoodsAttrMapper extends BaseMapper<MallGoodsAttr> {
 
     List<MallGoodsAttr> listAttrByGroupId(Long attrGroupId);
+
+    List<MallGoodsAttr> findAttrsByGoodsId(Long goodsId);
 }

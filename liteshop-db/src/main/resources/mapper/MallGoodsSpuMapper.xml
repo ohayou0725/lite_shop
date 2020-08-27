@@ -7,11 +7,13 @@
         <id column="id" property="id" />
         <result column="goods_sn" property="goodsSn" />
         <result column="name" property="name" />
+        <result column="title" property="title"/>
         <result column="category_id" property="categoryId" />
         <result column="brand_id" property="brandId" />
         <result column="brief" property="brief" />
         <result column="title_img" property="titleImg" />
         <result column="gallery" property="gallery" />
+        <result column="sales" property="sales"/>
         <result column="status" property="status" />
         <result column="hot" property="hot" />
         <result column="sort" property="sort" />
@@ -28,7 +30,20 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, goods_sn, name, category_id, brand_id, brief, title_img, gallery, status, hot, sort, is_new, unit, price, discount_price, attr_group_id, detail, create_time, update_time, deleted
+        id, goods_sn, name,title ,category_id, brand_id, brief, title_img, gallery,sales, status, hot, sort, is_new, unit, price, discount_price, attr_group_id, detail, create_time, update_time, deleted
     </sql>
+    <select id="findGoodsByGoodsSnOrName" resultType="com.ohayou.liteshop.entity.MallGoodsSpu">
+        select
+        <include refid="Base_Column_List" />
+
+        from mall_goods_spu
+        where goods_sn = #{goodsSn}
+        union all
+        select
+        <include refid="Base_Column_List" />
+        from mall_goods_spu
+        where name = #{name}
+    </select>
+
 
 </mapper>

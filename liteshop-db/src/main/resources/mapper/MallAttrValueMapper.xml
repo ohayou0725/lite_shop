@@ -7,6 +7,7 @@
         <id column="id" property="id" />
         <result column="attr_value" property="attrValue" />
         <result column="attr_id" property="attrId" />
+        <result column="spuId" property="spuId" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <result column="deleted" property="deleted" />
@@ -14,7 +15,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, attr_value, attr_id, create_time, update_time, deleted
+        id, attr_value, attr_id, spu_id, create_time, update_time, deleted
     </sql>
 
 </mapper>

@@ -6,8 +6,9 @@
     <resultMap id="BaseResultMap" type="com.ohayou.liteshop.entity.MallGoodsSku">
         <id column="id" property="id" />
         <result column="goods_id" property="goodsId" />
-        <result column="price" property="price" />
+        <result column="reservePrice" property="reservePrice" />
         <result column="stock" property="stock" />
+        <result column="stock_warning_count" property="stockWarningCount" />
         <result column="img" property="img" />
         <result column="spec_sn" property="specSn" />
         <result column="create_time" property="createTime" />
@@ -17,7 +18,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, goods_id, price, stock, img, spec_sn, create_time, update_time, deleted
+        id, goods_id, reservePrice, stock,stock_warning_count, img, spec_sn, create_time, update_time, deleted
     </sql>
 
 </mapper>

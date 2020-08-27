@@ -68,6 +68,14 @@ public class MallGoodsAttrServiceImpl extends ServiceImpl<MallGoodsAttrMapper, M
         return collect;
     }
 
+    @Override
+    public List<MallGoodsAttr> listByGroupId(Long attrGroupId) {
+        if (attrGroupId != null) {
+           return baseMapper.listAttrByGroupId(attrGroupId);
+        }
+        return null;
+    }
+
     /**
      * 为商品分类添加属性
      *
@@ -170,5 +178,11 @@ public class MallGoodsAttrServiceImpl extends ServiceImpl<MallGoodsAttrMapper, M
             return collect;
         }
         return null;
+    }
+
+    @Override
+    public List<MallGoodsAttr> findAttrsByGoodsId(Long goodsId) {
+        return baseMapper.findAttrsByGoodsId(goodsId);
+
     }
 }

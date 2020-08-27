@@ -44,7 +44,7 @@ public class AdminResource implements Serializable {
     /**
      * 资源描述
      */
-    private String desc;
+    private String detail;
 
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
@@ -83,12 +83,12 @@ public class AdminResource implements Serializable {
     public void setUrl(String url) {
         this.url = url;
     }
-    public String getDesc() {
-        return desc;
+    public String getDetail() {
+        return detail;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setDetail(String detail) {
+        this.detail = detail;
     }
     public LocalDateTime getCreateTime() {
         return createTime;
@@ -119,7 +119,7 @@ public class AdminResource implements Serializable {
             ", categoryId=" + categoryId +
             ", name=" + name +
             ", url=" + url +
-            ", desc=" + desc +
+            ", detail=" + detail +
             ", createTime=" + createTime +
             ", updateTime=" + updateTime +
             ", deleted=" + deleted +

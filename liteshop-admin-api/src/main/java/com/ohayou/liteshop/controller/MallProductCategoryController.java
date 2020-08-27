@@ -111,7 +111,8 @@ public class MallProductCategoryController {
     @ApiDesc("上传分类图片")
     @PostMapping("/upload")
     public Result upload(@RequestParam("file")MultipartFile file) {
-        String url = qiniuUploadService.upload(file);
+        String filePath = "product/category/";
+        String url = qiniuUploadService.upload(file, filePath);
         return Result.success("url",url);
     }
 

@@ -58,6 +58,11 @@ public class MallGoodsSpu implements Serializable {
     private String brief;
 
     /**
+     * 商品重量
+     */
+    private BigDecimal weight;
+
+    /**
      * 标题图片
      */
     private String titleImg;
@@ -291,6 +296,14 @@ public class MallGoodsSpu implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public BigDecimal getWeight() {
+        return weight;
+    }
+
+    public void setWeight(BigDecimal weight) {
+        this.weight = weight;
     }
 
     @Override

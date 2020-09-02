@@ -49,9 +49,6 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
     MallAttrValueService attrValueService;
 
     @Autowired
-    MallGoodsSkuService skuService;
-
-    @Autowired
     MallGoodsSpecService specService;
 
     @Autowired
@@ -62,6 +59,10 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
 
     @Autowired
     MallBrandGoodsRelationService mallBrandGoodsRelationService;
+
+    @Autowired
+    MallGoodsAttrService goodsAttrService;
+
 
     /**
      * 条件查询商品列表
@@ -75,7 +76,7 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
         LambdaQueryWrapper<MallGoodsSpu> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(StringUtils.isNotBlank(mallGoodsSpuDto.getGoodsSn()), MallGoodsSpu::getGoodsSn, mallGoodsSpuDto.getGoodsSn());
         wrapper.eq(null != mallGoodsSpuDto.getStatus(), MallGoodsSpu::getStatus, mallGoodsSpuDto.getStatus());
-        wrapper.eq(null != mallGoodsSpuDto.getCategoryId(), MallGoodsSpu::getCategoryId, mallGoodsSpuDto.getCategoryId());
+        wrapper.eq(null != mallGoodsSpuDto.getCategoryIds(), MallGoodsSpu::getCategoryId, mallGoodsSpuDto.getCategoryIds());
         wrapper.eq(null != mallGoodsSpuDto.getHot(), MallGoodsSpu::getHot, mallGoodsSpuDto.getHot());
         wrapper.eq(null != mallGoodsSpuDto.getIsNew(), MallGoodsSpu::getIsNew, mallGoodsSpuDto.getIsNew());
         wrapper.like(StringUtils.isNotBlank(mallGoodsSpuDto.getName()), MallGoodsSpu::getName, mallGoodsSpuDto.getName());
@@ -95,7 +96,9 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
                     .map(mallGoodsSpu -> {
                         MallGoodsSpuDto goodsSpuDto = new MallGoodsSpuDto();
                         BeanUtils.copyProperties(mallGoodsSpu, goodsSpuDto);
+                        goodsSpuDto.setCategoryIds(categoryService.getParentTree(mallGoodsSpu.getCategoryId()));
                         goodsSpuDto.setReservePrice(mallGoodsSpu.getPrice().toString());
+                        goodsSpuDto.setGalleryList(Arrays.asList(mallGoodsSpu.getGallery().split(",")));
                         MallBrand one = mallBrandService.getById(mallGoodsSpu.getBrandId());
                         if (null != one) {
                             goodsSpuDto.setBrand(one.getName());
@@ -125,7 +128,7 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
         BeanUtils.copyProperties(goodsSpu, goodsDetailDto);
         goodsDetailDto.setGalleryList(Arrays.asList(goodsSpu.getGallery().split(",")));
         //查询商品分类
-        String category = categoryService.getTreeAsString(goodsSpu.getCategoryId());
+        String category = categoryService.getParentTreeAsString(goodsSpu.getCategoryId());
         goodsDetailDto.setCategory(category);
         goodsDetailDto.setAttrValueList(this.getAllAttrAndValue(goodsId));
         List<GoodsSkuDto> goodsSpecs = this.getGoodsSpecs(goodsId);
@@ -260,13 +263,257 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
             });
             boolean result4 = specService.saveBatch(specs);
             if (!result4) {
-                throw new  GlobalException(ErrorCodeMsg.SAVE_GOODS_ERROR);
+                throw new GlobalException(ErrorCodeMsg.SAVE_GOODS_ERROR);
             }
             return true;
         }
         return false;
     }
 
+    /**
+     * 更新商品基本信息
+     *
+     * @param goodsFormDto
+     * @return
+     */
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean updateBasicInfo(GoodsFormDto goodsFormDto) {
+        if (null == goodsFormDto.getId() || goodsFormDto.getId() < 1) {
+            throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
+        }
+
+        //根据id查询商品信息
+        MallGoodsSpu goodsSpu = this.getById(goodsFormDto.getId());
+        if (null == goodsSpu) {
+            throw new GlobalException(ErrorCodeMsg.GOODS_NOT_FOUND);
+        }
+
+        MallGoodsSpu newGoodsSpu = new MallGoodsSpu();
+        BeanUtils.copyProperties(goodsFormDto, newGoodsSpu);
+        boolean result = this.updateById(newGoodsSpu);
+        if (result) {
+            //spu更新成功后判断更新前后分类id和品牌id是否有更改，如有更改还需更新商品他们之间的关联关系
+            if (!newGoodsSpu.getCategoryId().equals(goodsSpu.getCategoryId())) {
+                //分类ID有更改则更改分类与之关联关系
+                MallCategoryGoodsRelation one = categoryGoodsRelationService.getOne(new LambdaQueryWrapper<MallCategoryGoodsRelation>()
+                        .eq(MallCategoryGoodsRelation::getCategoryId, goodsSpu.getCategoryId())
+                        .eq(MallCategoryGoodsRelation::getGoodsId, goodsSpu.getCategoryId()));
+                if (one == null) {
+                    throw new GlobalException(ErrorCodeMsg.CATEGORY_NOT_FOUND);
+                }
+                MallCategoryGoodsRelation mallCategoryGoodsRelation = new MallCategoryGoodsRelation();
+                mallCategoryGoodsRelation.setCategoryId(newGoodsSpu.getCategoryId());
+                mallCategoryGoodsRelation.setGoodsId(newGoodsSpu.getId());
+                mallCategoryGoodsRelation.setId(one.getId());
+                if (!categoryGoodsRelationService.updateById(mallCategoryGoodsRelation)) {
+                    throw new GlobalException(ErrorCodeMsg.UPDATE_GOODS_INFO_ERROR);
+                }
+                //分类关系更新成功后还需更新商品与属性关系，并删除之前商品属性值
+                MallCategory category = categoryService.getById(newGoodsSpu.getCategoryId());
+                if (null == category) {
+                    throw new GlobalException(ErrorCodeMsg.CATEGORY_NOT_FOUND);
+                }
+                newGoodsSpu.setAttrGroupId(category.getAttrGroupId());
+                if (!this.updateById(newGoodsSpu)) {
+                    throw new GlobalException(ErrorCodeMsg.UPDATE_GOODS_INFO_ERROR);
+                }
+                //删除商品之前属性值
+                List<MallAttrValue> list = attrValueService.list(new LambdaQueryWrapper<MallAttrValue>()
+                        .eq(MallAttrValue::getSpuId, newGoodsSpu.getId()));
+                List<Long> collect = list.stream()
+                        .map(MallAttrValue::getId).collect(Collectors.toList());
+                goodsAttrService.removeByIds(collect);
+
+            }
+            //判断品牌与商品关联有无修改
+            if (!newGoodsSpu.getBrandId().equals(goodsSpu.getBrandId())) {
+                MallBrandGoodsRelation one = mallBrandGoodsRelationService.getOne(new LambdaQueryWrapper<MallBrandGoodsRelation>()
+                        .eq(MallBrandGoodsRelation::getBrandId, goodsSpu.getBrandId())
+                        .eq(MallBrandGoodsRelation::getGoodsId, goodsSpu.getId()));
+                if (null != one) {
+                    MallBrandGoodsRelation mallBrandGoodsRelation = new MallBrandGoodsRelation();
+                    mallBrandGoodsRelation.setBrandId(newGoodsSpu.getBrandId());
+                    mallBrandGoodsRelation.setGoodsId(newGoodsSpu.getId());
+                    mallBrandGoodsRelation.setId(one.getId());
+                    if (!mallBrandGoodsRelationService.updateById(mallBrandGoodsRelation)) {
+                        throw new GlobalException(ErrorCodeMsg.UPDATE_GOODS_INFO_ERROR);
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 修改商品属性值
+     * @param goodsFormDto
+     * @return
+     */
+    @Override
+    public boolean updateAttr(GoodsFormDto goodsFormDto) {
+        Long id = goodsFormDto.getId();
+        if (null == id || id < 1) {
+            throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
+        }
+
+        MallGoodsSpu goodsSpu = this.getById(id);
+        if (null == goodsSpu) {
+            throw new GlobalException(ErrorCodeMsg.GOODS_NOT_FOUND);
+        }
+
+        List<AttrValueDto> attrValues = goodsFormDto.getAttrValues();
+        if (CollUtil.isEmpty(attrValues)) {
+            throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
+        }
+
+        List<AttrValueDto> allAttrAndValue = this.getAllAttrAndValue(id);
+
+        //判断前端传来的属性id列表是否与数据库一致
+        List<Long> collect = attrValues.stream().map(AttrValueDto::getValueId).collect(Collectors.toList());
+        List<Long> collect1 = allAttrAndValue.stream().map(AttrValueDto::getValueId).collect(Collectors.toList());
+        if (!ListUtil.equals(collect,collect1)) {
+            throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
+        }
+
+        List<MallAttrValue> collect2 = attrValues.stream()
+                .map(attrValueDto -> {
+                    MallAttrValue mallAttrValue = new MallAttrValue();
+                    mallAttrValue.setId(attrValueDto.getValueId());
+                    mallAttrValue.setAttrValue(attrValueDto.getValue());
+                    mallAttrValue.setAttrId(attrValueDto.getAttrId());
+                    mallAttrValue.setSpuId(id);
+                    return mallAttrValue;
+                }).collect(Collectors.toList());
+        return attrValueService.updateBatchById(collect2);
+    }
+
+    /**
+     * 修改商品规格
+     * @param goodsFormDto
+     * @return
+     */
+    @Override
+    public boolean updateSpec(GoodsFormDto goodsFormDto) {
+        Long id = goodsFormDto.getId();
+        if (null == id || id < 1) {
+            throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
+        }
+        List<MallGoodsSpec> specs = goodsFormDto.getSpecs();
+        if (CollUtil.isEmpty(specs)) {
+            throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
+        }
+
+        return specService.updateBatchById(specs);
+    }
+
+    /**
+     * 更改用户状态
+     * @param goodsFormDto
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean changeStatus(GoodsFormDto goodsFormDto) {
+        Long id = goodsFormDto.getId();
+        if (null == id || id < 1) {
+            throw new GlobalException(ErrorCodeMsg.GOODS_NOT_FOUND);
+        }
+        Integer status = goodsFormDto.getStatus();
+        if (null == status) {
+            throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
+        }
+        MallGoodsSpu goodsSpu = new MallGoodsSpu();
+        goodsSpu.setId(id);
+        goodsSpu.setStatus(status);
+        return this.updateById(goodsSpu);
+    }
+
+    /**
+     * 修改商品详情页显示信息
+     * @param goodsFormDto
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean updateDetail(GoodsFormDto goodsFormDto) {
+        Long id = goodsFormDto.getId();
+        if (id == null || id < 1) {
+            throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
+        }
+        MallGoodsSpu mallGoodsSpu = new MallGoodsSpu();
+        mallGoodsSpu.setId(id);
+        mallGoodsSpu.setDetail(goodsFormDto.getDetail());
+        return this.updateById(mallGoodsSpu);
+    }
+
+    @Override
+    public List<MallGoodsSpec> getSpecsById(Long id) {
+        if (null == id || id < 1) {
+            throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
+        }
+        LambdaQueryWrapper<MallGoodsSpec> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(MallGoodsSpec::getGoodsId,id);
+        return specService.list(wrapper);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean deleteGoods(Long id) {
+        if (null == id || id < 1) {
+            throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
+        }
+        MallGoodsSpu goodsSpu = this.getById(id);
+        if (null == goodsSpu) {
+            throw new GlobalException(ErrorCodeMsg.GOODS_NOT_FOUND);
+        }
+        //判断该商品是否在售，如果在售需先对其进行下架
+        if (goodsSpu.getStatus().equals(1) || this.getStock(id) != 0) {
+            throw new GlobalException(ErrorCodeMsg.GOODS_IN_STOCK);
+        }
+        boolean result = this.removeById(id);
+        if (!result) {
+            return false;
+        }
+        //删除该商品与所属分类的关系
+        boolean categoryRelationRemove = categoryGoodsRelationService.remove(new LambdaQueryWrapper<MallCategoryGoodsRelation>()
+                .eq(MallCategoryGoodsRelation::getGoodsId, id));
+        if (!categoryRelationRemove) {
+            throw new GlobalException(ErrorCodeMsg.DELETE_GOODS_ERROR);
+        }
+        //删除该商品与品牌所属的关系
+        boolean brandRelationRemove = mallBrandGoodsRelationService.remove(new LambdaQueryWrapper<MallBrandGoodsRelation>()
+                .eq(MallBrandGoodsRelation::getGoodsId, id));
+        if (!brandRelationRemove) {
+            throw new GlobalException(ErrorCodeMsg.DELETE_GOODS_ERROR);
+        }
+        //删除属性信息
+        boolean attrRemove = attrValueService.remove(new LambdaQueryWrapper<MallAttrValue>()
+                .eq(MallAttrValue::getSpuId, id));
+        if (!attrRemove) {
+            throw new GlobalException(ErrorCodeMsg.DELETE_GOODS_ERROR);
+        }
+        //删除规格信息
+        boolean specRemove = specService.remove(new LambdaQueryWrapper<MallGoodsSpec>()
+                .eq(MallGoodsSpec::getGoodsId, id));
+        if (!specRemove) {
+            throw new GlobalException(ErrorCodeMsg.DELETE_GOODS_ERROR);
+        }
+        //删除sku信息,如果没有sku信息则直接返回
+        LambdaQueryWrapper<MallGoodsSku> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(MallGoodsSku::getGoodsId,id);
+        int count = mallGoodsSkuService.count(wrapper);
+        if (count > 0) {
+          boolean skuRemove = mallGoodsSkuService.remove(wrapper);
+            if (!skuRemove) {
+                throw new GlobalException(ErrorCodeMsg.DELETE_GOODS_ERROR);
+            }
+        }
+
+        return true;
+    }
     /**
      * 根据商品ID查询所有sku规格
      *
@@ -275,7 +522,7 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
      */
     public List<GoodsSkuDto> getGoodsSpecs(Long goodsId) {
         //获取sku信息
-        List<MallGoodsSku> skuList = skuService.list(new LambdaQueryWrapper<MallGoodsSku>().eq(MallGoodsSku::getGoodsId, goodsId));
+        List<MallGoodsSku> skuList = mallGoodsSkuService.list(new LambdaQueryWrapper<MallGoodsSku>().eq(MallGoodsSku::getGoodsId, goodsId));
         if (skuList == null || skuList.size() < 1) {
             return null;
         }

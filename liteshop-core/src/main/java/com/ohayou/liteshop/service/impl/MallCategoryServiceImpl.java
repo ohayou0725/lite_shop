@@ -1,5 +1,7 @@
 package com.ohayou.liteshop.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ohayou.liteshop.dto.MallGoodsAttrDto;
 import com.ohayou.liteshop.dto.ProductCategoryDto;
@@ -247,15 +249,38 @@ public class MallCategoryServiceImpl extends ServiceImpl<MallCategoryMapper, Mal
      * @return
      */
     @Override
-    public String getTreeAsString(Long categoryId) {
+    public String getParentTreeAsString(Long categoryId) {
+        MallCategory one = getById(categoryId);
+
+        List<MallCategory> parent = this.getAllParent(categoryId);
+        return parent.get(1).getName() + "/" + parent.get(0).getName() + "/" + one.getName();
+    }
+
+    /**
+     * 获取三级分类所有父节点id
+     * @param categoryId
+     * @return
+     */
+    @Override
+    public Long[] getParentTree(long categoryId) {
+        List<MallCategory> parent = this.getAllParent(categoryId);
+
+        MallCategory category = new MallCategory();
+        category.setId(categoryId);
+        parent.add(0,category);
+        ListUtil.reverse(parent);
+        return parent.stream()
+                .map(MallCategory::getId)
+                .toArray(Long[]::new);
+    }
+
+    private List<MallCategory> getAllParent(Long categoryId) {
         MallCategory one = getById(categoryId);
         //获取所有分类Id
         List<MallCategory> list = this.list();
         ArrayList<MallCategory> parentNodes = new ArrayList<>();
-        List<MallCategory> parent = this.findParent(one, list, parentNodes);
-        return parent.get(1).getName() + "/" + parent.get(0).getName() + "/" + one.getName();
+        return this.findParent(one, list, parentNodes);
     }
-
     /**
      * 递归查询所有父节点
      * @param category

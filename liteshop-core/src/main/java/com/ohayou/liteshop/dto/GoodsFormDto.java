@@ -51,6 +51,8 @@ public class GoodsFormDto {
 
     private BigDecimal price;
 
+    private BigDecimal weight;
+
     private Integer sort;
 
     private BigDecimal discountPrice;
@@ -219,5 +221,13 @@ public class GoodsFormDto {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public BigDecimal getWeight() {
+        return weight;
+    }
+
+    public void setWeight(BigDecimal weight) {
+        this.weight = weight;
     }
 }

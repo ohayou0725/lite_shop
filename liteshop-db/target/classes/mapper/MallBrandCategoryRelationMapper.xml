@@ -6,7 +6,7 @@
     <resultMap id="BaseResultMap" type="com.ohayou.liteshop.entity.MallBrandCategoryRelation">
         <id column="id" property="id" />
         <result column="bradn_id" property="brandId" />
-        <result column="category_id" property="categoryId" />
+        <result column="category_id" property="categoryIds" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <result column="deleted" property="deleted" />

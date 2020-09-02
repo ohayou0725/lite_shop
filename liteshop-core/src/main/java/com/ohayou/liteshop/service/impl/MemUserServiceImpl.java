@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ohayou.liteshop.dto.MemUserDto;
 import com.ohayou.liteshop.entity.MemUser;
 import com.ohayou.liteshop.dao.MemUserMapper;
+import com.ohayou.liteshop.exception.GlobalException;
+import com.ohayou.liteshop.response.ErrorCodeMsg;
 import com.ohayou.liteshop.service.MemUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ohayou.liteshop.utils.DateTimeUtil;
@@ -73,6 +75,9 @@ public class MemUserServiceImpl extends ServiceImpl<MemUserMapper, MemUser> impl
     public boolean changeStatus(MemUserDto memUserDto) {
         if (memUserDto.getId() != null && memUserDto.getStatus() != null) {
             MemUser memUser = this.getById(memUserDto.getId());
+            if (memUser == null) {
+                throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
+            }
             memUser.setStatus(Integer.parseInt(memUserDto.getStatus()));
             return this.updateById(memUser);
         }

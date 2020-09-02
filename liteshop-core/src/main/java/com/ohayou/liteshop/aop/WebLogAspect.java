@@ -104,7 +104,7 @@ public class WebLogAspect {
         adminLog.setAction(webLog.getDesc());
         webLog.setIp(request.getRemoteHost());
         webLog.setMethod(request.getMethod());
-        webLog.setResult(result);
+//        webLog.setResult(result);
         webLog.setSpendTime(between.toMillis() + "ms");
         webLog.setStatTime(startTime);
         webLog.setUri(request.getRequestURI());

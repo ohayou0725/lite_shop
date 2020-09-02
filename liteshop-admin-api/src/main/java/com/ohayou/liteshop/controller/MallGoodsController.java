@@ -5,6 +5,8 @@ import com.ohayou.liteshop.aop.ApiDesc;
 import com.ohayou.liteshop.dto.GoodsDetailDto;
 import com.ohayou.liteshop.dto.GoodsFormDto;
 import com.ohayou.liteshop.dto.MallGoodsSpuDto;
+import com.ohayou.liteshop.dto.SpecAndValueDto;
+import com.ohayou.liteshop.entity.MallGoodsSpec;
 import com.ohayou.liteshop.entity.MallGoodsSpu;
 import com.ohayou.liteshop.exception.GlobalException;
 import com.ohayou.liteshop.response.ErrorCodeMsg;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -70,7 +73,7 @@ public class MallGoodsController {
      * 新增商品
      * @return
      */
-    @ApiDesc("/添加商品")
+    @ApiDesc("添加商品")
     @PostMapping("/add")
     public Result addGoods(@RequestBody @Valid GoodsFormDto goodsFormDto) {
         boolean result = goodsSpuService.addGoodsSpu(goodsFormDto);
@@ -83,7 +86,7 @@ public class MallGoodsController {
      * @return
      */
 
-    @ApiDesc("/上传商品图片")
+    @ApiDesc("上传商品图片")
     @PostMapping("/upload")
     public Result uploadTitleImg(@RequestParam("file")MultipartFile file) {
         String fileName = "product/img/";
@@ -97,11 +100,91 @@ public class MallGoodsController {
      * @return
      */
 
-    @ApiDesc("/上传商品图片")
+    @ApiDesc("上传商品轮播图")
     @PostMapping("/upload/gallery")
-    public Result updateGallery(@RequestParam("file")MultipartFile file) {
+    public Result uploadGallery(@RequestParam("file")MultipartFile file) {
         String fileName = "product/gallery/";
         String url = qiniuUploadService.upload(file, fileName);
         return Result.success("url",url);
+    }
+
+    /**
+     * 修改商品基本信息
+     * @param goodsFormDto
+     * @return
+     */
+    @ApiDesc("修改商品基本信息")
+    @PostMapping("/update/basicInfo")
+    public Result updateBasicInfo(@RequestBody @Valid GoodsFormDto goodsFormDto) {
+        boolean result = goodsSpuService.updateBasicInfo(goodsFormDto);
+        return result ? Result.success() : Result.error(ErrorCodeMsg.UPDATE_GOODS_INFO_ERROR);
+    }
+
+    /**
+     * 修改商品属性
+     * @param goodsFormDto
+     * @return
+     */
+    @ApiDesc("修改商品属性")
+    @PostMapping("/update/attr")
+    public Result updateAttr(@RequestBody GoodsFormDto goodsFormDto) {
+        boolean result = goodsSpuService.updateAttr(goodsFormDto);
+        return result ? Result.success() : Result.error(ErrorCodeMsg.UPDATE_GOODS_ATTR_ERROR);
+    }
+
+    /**
+     * 修改商品规格
+     * @param goodsFormDto
+     * @return
+     */
+    @ApiDesc("修改商品规格")
+    @PostMapping("/update/spec")
+    public Result updateSpec(@RequestBody GoodsFormDto goodsFormDto) {
+        boolean result = goodsSpuService.updateSpec(goodsFormDto);
+        return result ? Result.success() : Result.error(ErrorCodeMsg.UPDATE_GOODS_SPEC_ERROR);
+    }
+
+    /**
+     * 修改商品在售状态
+     * @param goodsFormDto
+     * @return
+     */
+    @ApiDesc("修改商品状态")
+    @PostMapping("changeStatus")
+    public Result changeStatus(@RequestBody GoodsFormDto goodsFormDto) {
+        boolean result = goodsSpuService.changeStatus(goodsFormDto);
+        return result ? Result.success() : Result.error(ErrorCodeMsg.CHANGE_GOODS_STATUS_ERROR);
+    }
+
+    /**
+     * 修改商品详情页信息
+     * @param goodsFormDto
+     * @return
+     */
+    @ApiDesc("修改商品详情页")
+    @PostMapping("update/detail")
+    public Result updateDetail(@RequestBody GoodsFormDto goodsFormDto) {
+        boolean result = goodsSpuService.updateDetail(goodsFormDto);
+        return result ? Result.success() : Result.error(ErrorCodeMsg.UPDATE_GOODS_INFO_ERROR);
+    }
+
+    @ApiDesc("获取商品所有规格名")
+    @GetMapping("/specs/{id}")
+    public Result getSpecs(@PathVariable("id") Long id) {
+        if (id == null || id < 1) {
+            throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
+        }
+        List<MallGoodsSpec> spec = goodsSpuService.getSpecsById(id);
+        return Result.success("list",spec);
+    }
+
+    @ApiDesc("删除商品")
+    @PostMapping("/delete/{id}")
+    public Result deleteGoods(@PathVariable("id") Long id) {
+        if (id == null || id < 1) {
+            throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
+        }
+        boolean result = goodsSpuService.deleteGoods(id);
+        return result ? Result.success() : Result.error(ErrorCodeMsg.DELETE_GOODS_ERROR);
     }
 }

@@ -5,7 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.ohayou.liteshop.entity.AdminResource">
         <id column="id" property="id" />
-        <result column="category_id" property="categoryId" />
+        <result column="category_id" property="categoryIds" />
         <result column="name" property="name" />
         <result column="url" property="url" />
         <result column="detail" property="detail" />

@@ -15,13 +15,19 @@ public class GoodsDetailDto {
 
     private String brief;
 
+    private String title;
+
     private List<String> galleryList;
+
+    private String detail;
 
     private String unit;
 
     private BigDecimal price;
 
     private BigDecimal discountPrice;
+
+    private BigDecimal weight;
 
     private String category;
 
@@ -53,9 +59,6 @@ public class GoodsDetailDto {
         this.brief = brief;
     }
 
-    public List<String> getgalleryList() {
-        return galleryList;
-    }
 
     public void setGalleryList(List<String> galleryList) {
         this.galleryList = galleryList;
@@ -107,5 +110,33 @@ public class GoodsDetailDto {
 
     public void setGoodsSpecList(List<GoodsSkuDto> goodsSpecList) {
         this.goodsSpecList = goodsSpecList;
+    }
+
+    public List<String> getGalleryList() {
+        return galleryList;
+    }
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public BigDecimal getWeight() {
+        return weight;
+    }
+
+    public void setWeight(BigDecimal weight) {
+        this.weight = weight;
     }
 }

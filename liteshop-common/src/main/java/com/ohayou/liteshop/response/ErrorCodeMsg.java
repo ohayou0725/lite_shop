@@ -48,7 +48,13 @@ public enum ErrorCodeMsg {
     GOODS_NOT_FOUND(400601,"没有此商品"),
     GOODS_EXIST(400602,"商品编号已存在或存在相同商品，不能重复添加"),
     GOODS_SPEC_EMPTY(400603,"商品规格列表不能为空"),
-    SAVE_GOODS_ERROR(400604,"新增商品信息失败")
+    SAVE_GOODS_ERROR(400604,"新增商品信息失败"),
+    UPDATE_GOODS_INFO_ERROR(400605,"修改商品信息失败"),
+    UPDATE_GOODS_ATTR_ERROR(400606,"修改商品属性失败"),
+    UPDATE_GOODS_SPEC_ERROR(400607,"修改商品规格失败"),
+    CHANGE_GOODS_STATUS_ERROR(400608,"修改商品状态失败"),
+    DELETE_GOODS_ERROR(400609,"删除商品失败"),
+    GOODS_IN_STOCK(400610,"商品还未下架或还有剩余库存，不能进行删除")
     ;
 
 

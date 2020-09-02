@@ -1,5 +1,8 @@
 package com.ohayou.liteshop.dto;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 /**
  * @author liyan
  * @date 2020/8/15 下午11:08
@@ -10,13 +13,23 @@ public class MallGoodsSpuDto {
 
     private String goodsSn;
 
-    private Long categoryId;
+    private Long[] categoryIds;
 
     private String name;
 
+    private String title;
+
+    private String brief;
+
     private String brand;
 
+    private Long brandId;
+
     private String brandLogo;
+
+    private List<String> galleryList;
+
+    private String unit;
 
     private Integer sales;
 
@@ -28,10 +41,21 @@ public class MallGoodsSpuDto {
 
     private String reservePrice;
 
+    private BigDecimal discountPrice;
+
     private String titleImg;
 
     private Integer stock;
 
+    private Integer sort;
+
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
+    }
 
     public Integer getStock() {
         return stock;
@@ -65,12 +89,12 @@ public class MallGoodsSpuDto {
         this.goodsSn = goodsSn;
     }
 
-    public Long getCategoryId() {
-        return categoryId;
+    public Long[] getCategoryIds() {
+        return categoryIds;
     }
 
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
+    public void setCategoryIds(Long[] categoryIds) {
+        this.categoryIds = categoryIds;
     }
 
     public String getName() {
@@ -136,5 +160,53 @@ public class MallGoodsSpuDto {
 
     public void setBrandLogo(String brandLogo) {
         this.brandLogo = brandLogo;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getBrief() {
+        return brief;
+    }
+
+    public void setBrief(String brief) {
+        this.brief = brief;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Long getBrandId() {
+        return brandId;
+    }
+
+    public void setBrandId(Long brandId) {
+        this.brandId = brandId;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
+    public BigDecimal getDiscountPrice() {
+        return discountPrice;
+    }
+
+    public void setDiscountPrice(BigDecimal discountPrice) {
+        this.discountPrice = discountPrice;
+    }
+
+    public List<String> getGalleryList() {
+        return galleryList;
+    }
+
+    public void setGalleryList(List<String> galleryList) {
+        this.galleryList = galleryList;
     }
 }

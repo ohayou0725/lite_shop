@@ -23,19 +23,19 @@ import java.util.TimeZone;
 @Configuration
 public class JacksonConfig {
 
-    @Bean
-    public Jackson2ObjectMapperBuilderCustomizer customizer() {
-        return jacksonObjectMapperBuilder -> {
-            jacksonObjectMapperBuilder.locale(Locale.CHINA);
-            jacksonObjectMapperBuilder.timeZone(TimeZone.getTimeZone(ZoneId.systemDefault()));
-            jacksonObjectMapperBuilder.simpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-            JavaTimeModule javaTimeModule = new JavaTimeModule();
-            javaTimeModule.addSerializer(LocalDateTime.class,new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-            javaTimeModule.addSerializer(LocalDate.class,new LocalDateSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-            javaTimeModule.addSerializer(LocalTime.class,new LocalTimeSerializer(DateTimeFormatter.ofPattern("HH:mm:ss")));
-            jacksonObjectMapperBuilder.modules(javaTimeModule);
-        };
-    }
+//    @Bean
+//    public Jackson2ObjectMapperBuilderCustomizer customizer() {
+//        return jacksonObjectMapperBuilder -> {
+//            jacksonObjectMapperBuilder.locale(Locale.CHINA);
+//            jacksonObjectMapperBuilder.timeZone(TimeZone.getTimeZone(ZoneId.systemDefault()));
+//            jacksonObjectMapperBuilder.simpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//
+//            JavaTimeModule javaTimeModule = new JavaTimeModule();
+//            javaTimeModule.addSerializer(LocalDateTime.class,new LocalDateTimeSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+//            javaTimeModule.addSerializer(LocalDate.class,new LocalDateSerializer(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+//            javaTimeModule.addSerializer(LocalTime.class,new LocalTimeSerializer(DateTimeFormatter.ofPattern("HH:mm:ss")));
+//            jacksonObjectMapperBuilder.modules(javaTimeModule);
+//        };
+//    }
 
 }

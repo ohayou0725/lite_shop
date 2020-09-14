@@ -32,8 +32,8 @@ logging:
 qiniu:
   accesskey: bNiSCBezONeIP9QxeDNMeAHPJAYrWmki925F2BLp
   secretKey: CWCbnnukD05mhiAgiL54wJmN9Rz_Hi-mJj_3VomQ
-  bucketName: liteshopcool
-  fileDomain: http://qemdt7zgj.bkt.clouddn.com
+  bucketName: liteshopcool1
+  fileDomain: http://qg6txnoqg.hb-bkt.clouddn.com
 
 jwt:
   tokenHeader: Authorization #JWT存储的请求头

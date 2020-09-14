@@ -7,7 +7,7 @@
         <id column="id" property="id" />
         <result column="cart_id" property="cartId" />
         <result column="goods_id" property="goodsId" />
-        <result column="goods_name" property="goodsName" />
+        <result column="goods_name" property="title" />
         <result column="spec_sn" property="specSn" />
         <result column="reservePrice" property="reservePrice" />
         <result column="number" property="number" />

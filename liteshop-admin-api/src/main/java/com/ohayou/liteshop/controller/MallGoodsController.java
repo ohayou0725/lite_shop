@@ -2,20 +2,19 @@ package com.ohayou.liteshop.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ohayou.liteshop.aop.ApiDesc;
-import com.ohayou.liteshop.dto.GoodsDetailDto;
-import com.ohayou.liteshop.dto.GoodsFormDto;
-import com.ohayou.liteshop.dto.MallGoodsSpuDto;
-import com.ohayou.liteshop.dto.SpecAndValueDto;
-import com.ohayou.liteshop.entity.MallGoodsSpec;
+import com.ohayou.liteshop.dto.*;
 import com.ohayou.liteshop.entity.MallGoodsSpu;
 import com.ohayou.liteshop.exception.GlobalException;
 import com.ohayou.liteshop.response.ErrorCodeMsg;
 import com.ohayou.liteshop.response.Result;
+import com.ohayou.liteshop.service.MallGoodsSkuService;
 import com.ohayou.liteshop.service.MallGoodsSpuService;
 import com.ohayou.liteshop.service.UploadService;
 import com.ohayou.liteshop.utils.PageQuery;
 import com.ohayou.liteshop.utils.PageUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,6 +35,9 @@ public class MallGoodsController {
 
     @Autowired
     UploadService qiniuUploadService;
+
+    @Autowired
+    MallGoodsSkuService goodsSkuService;
 
 
     /**
@@ -144,17 +146,17 @@ public class MallGoodsController {
         return result ? Result.success() : Result.error(ErrorCodeMsg.UPDATE_GOODS_SPEC_ERROR);
     }
 
-    /**
-     * 修改商品在售状态
-     * @param goodsFormDto
-     * @return
-     */
-    @ApiDesc("修改商品状态")
-    @PostMapping("changeStatus")
-    public Result changeStatus(@RequestBody GoodsFormDto goodsFormDto) {
-        boolean result = goodsSpuService.changeStatus(goodsFormDto);
-        return result ? Result.success() : Result.error(ErrorCodeMsg.CHANGE_GOODS_STATUS_ERROR);
-    }
+//    /**
+//     * 修改商品在售状态
+//     * @param goodsFormDto
+//     * @return
+//     */
+//    @ApiDesc("修改商品状态")
+//    @PostMapping("changeStatus")
+//    public Result changeStatus(@RequestBody GoodsFormDto goodsFormDto) {
+//        boolean result = goodsSpuService.changeStatus(goodsFormDto);
+//        return result ? Result.success() : Result.error(ErrorCodeMsg.CHANGE_GOODS_STATUS_ERROR);
+//    }
 
     /**
      * 修改商品详情页信息
@@ -168,13 +170,13 @@ public class MallGoodsController {
         return result ? Result.success() : Result.error(ErrorCodeMsg.UPDATE_GOODS_INFO_ERROR);
     }
 
-    @ApiDesc("获取商品所有规格名")
+    @ApiDesc("获取商品所有规格")
     @GetMapping("/specs/{id}")
     public Result getSpecs(@PathVariable("id") Long id) {
         if (id == null || id < 1) {
             throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
         }
-        List<MallGoodsSpec> spec = goodsSpuService.getSpecsById(id);
+        List<MallGoodsSpecDto> spec = goodsSpuService.getSpecsById(id);
         return Result.success("list",spec);
     }
 
@@ -186,5 +188,87 @@ public class MallGoodsController {
         }
         boolean result = goodsSpuService.deleteGoods(id);
         return result ? Result.success() : Result.error(ErrorCodeMsg.DELETE_GOODS_ERROR);
+    }
+
+    /**
+     * 获取商品下的sku信息
+     * @param spuId
+     * @return
+     */
+    @ApiDesc("获取商品下所有sku")
+    @GetMapping("/sku")
+    public Result skuList(@RequestParam("goodsSn") String goodsSn) {
+        List<GoodsSkuDto> goodsSkuDtoList = goodsSkuService.getSkuByGoodsSn(goodsSn);
+        return Result.success("list",goodsSkuDtoList);
+    }
+
+    /**
+     * 根据sn获取商品所有规格信息
+     * @param goodsSn
+     * @return
+     */
+    @ApiDesc("获取商品规格信息")
+    @GetMapping("/getSpec")
+    public Result specList(@RequestParam("goodsSn") String goodsSn) {
+        if (StringUtils.isBlank(goodsSn)) {
+            throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
+        }
+        List<MallGoodsSpecDto> goodsSpecDtos = goodsSpuService.specListByGoodsSn(goodsSn);
+        return Result.success("list",goodsSpecDtos);
+    }
+
+    /**
+     * 上架单品
+     * @param goodsSkuDto
+     * @return
+     */
+    @ApiDesc("添加商品Sku信息")
+    @PostMapping("/sku/add")
+    public Result addSku(@RequestBody @Validated(value = GoodsSkuDto.AddSkuValid.class) GoodsSkuDto goodsSkuDto) {
+        boolean result = goodsSkuService.addGoodsSku(goodsSkuDto);
+        return result ? Result.success() : Result.error(ErrorCodeMsg.GOODS_ADD_SKU_ERROR);
+
+    }
+
+    /**
+     * 修改sku信息
+     * @param goodsSkuDto
+     * @return
+     */
+    @ApiDesc("修改sku信息")
+    @PostMapping("/sku/update")
+    public Result updateSku(@RequestBody @Validated(value = GoodsSkuDto.UpdateSkuValid.class) GoodsSkuDto goodsSkuDto) {
+        boolean result = goodsSkuService.updateGoodsSku(goodsSkuDto);
+        return result ? Result.success() : Result.error(ErrorCodeMsg.GOODS_SKU_UPDATE_ERROR);
+    }
+
+    /**
+     * 根据skuId删除单品
+     * @param skuId
+     * @return
+     */
+    @ApiDesc("下架单品")
+    @PostMapping("/sku/offShelf/{id}")
+    public Result offShelfSku(@PathVariable("id") Long skuId) {
+        if (null == skuId || skuId < 1) {
+            throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
+        }
+        boolean  result = goodsSkuService.deleteSku(skuId);
+        return result ? Result.success() : Result.error(ErrorCodeMsg.GOODS_SKU_DELETE_ERROR);
+    }
+
+    /**
+     * 根据goods_sn下架该商品下所有单品
+     * @param spuId
+     * @return
+     */
+    @ApiDesc("下架全部单品")
+    @PostMapping("/sku/allOffShelf/{goodsSn}")
+    public Result allOffShelf(@PathVariable("goodsSn") String goodsSn) {
+        if (StringUtils.isBlank(goodsSn)) {
+            throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
+        }
+        boolean result = goodsSkuService.deleteAllSku(goodsSn);
+        return result ? Result.success() : Result.error(ErrorCodeMsg.GOODS_SKU_DELETE_ERROR);
     }
 }

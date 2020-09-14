@@ -1,11 +1,9 @@
 package com.ohayou.liteshop.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.ohayou.liteshop.dto.AttrValueDto;
-import com.ohayou.liteshop.dto.GoodsDetailDto;
-import com.ohayou.liteshop.dto.GoodsFormDto;
-import com.ohayou.liteshop.dto.MallGoodsSpuDto;
+import com.ohayou.liteshop.dto.*;
 import com.ohayou.liteshop.entity.MallGoodsSpec;
+import com.ohayou.liteshop.entity.MallGoodsSpecValue;
 import com.ohayou.liteshop.entity.MallGoodsSpu;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ohayou.liteshop.utils.PageUtils;
@@ -40,7 +38,14 @@ public interface MallGoodsSpuService extends IService<MallGoodsSpu> {
 
     boolean updateDetail(GoodsFormDto goodsFormDto);
 
-    List<MallGoodsSpec> getSpecsById(Long id);
+    List<MallGoodsSpecDto> getSpecsById(Long id);
 
     boolean deleteGoods(Long id);
+
+    String getSpecBySpuSpecId(Long specId, List<MallGoodsSpec> specs);
+
+    String getValueBySpuValueId(Long valueId, List<MallGoodsSpecValue> specValues);
+
+
+    List<MallGoodsSpecDto> specListByGoodsSn(String goodsSn);
 }

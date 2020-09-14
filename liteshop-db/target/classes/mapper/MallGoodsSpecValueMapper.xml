@@ -14,7 +14,16 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, spec_value, spec_id, create_time, update_time, deleted
+        va.id, va.spec_value, va.spec_id, va.create_time, va.update_time, va.deleted
     </sql>
+    <select id="listByGoodsId" resultType="com.ohayou.liteshop.entity.MallGoodsSpecValue">
+        select
+        <include refid="Base_Column_List" />
+        from mall_goods_spec_value va
+        join mall_goods_spec sp on va.spec_id = sp.id
+        join mall_goods_spu spu on spu.id = sp.goods_id
+        where spu.id = #{id} and va.deleted = 0
+    </select>
+
 
 </mapper>

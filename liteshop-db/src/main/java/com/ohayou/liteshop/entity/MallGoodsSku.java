@@ -43,6 +43,11 @@ public class MallGoodsSku implements Serializable {
     private Integer stock;
 
     /**
+     * 销量
+     */
+    private Integer sales;
+
+    /**
      * 单品库存预警值
      */
     private Integer stockWarningCount;
@@ -142,7 +147,16 @@ public class MallGoodsSku implements Serializable {
     }
 
     public void setStockWarningCount(Integer stockWarningCount) {
+
         this.stockWarningCount = stockWarningCount;
+    }
+
+    public Integer getSales() {
+        return sales;
+    }
+
+    public void setSales(Integer sales) {
+        this.sales = sales;
     }
 
     @Override

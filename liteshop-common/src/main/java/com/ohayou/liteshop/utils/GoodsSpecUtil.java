@@ -10,17 +10,33 @@ public class GoodsSpecUtil {
 
 
     //解析sku规格和规格值
-    public static Map<Long,Long> getSpecIdAndValueId(String goodsSn) {
-        int index = goodsSn.lastIndexOf("#");
-        String specAndValues = goodsSn.substring(index + 1, goodsSn.length());
-        String[] specValueGroup = specAndValues.split("&");
+    public static Map<Long,Long> getSpecIdAndValueId(String specSn) {
+        try {
+            int index = specSn.lastIndexOf("#");
+            String specAndValues = specSn.substring(index + 1, specSn.length());
+            String[] specValueGroup = specAndValues.split("&");
 
-        HashMap<Long, Long> map = new LinkedHashMap<>();
-        for (int i = 0; i < specValueGroup.length; i++) {
-            String specValue = specValueGroup[i];
-            String[] split = specValue.split("-");
-            map.put(Long.parseLong(split[0]),Long.parseLong(split[1]));
+            HashMap<Long, Long> map = new LinkedHashMap<>();
+            for (String specValue : specValueGroup) {
+                String[] split = specValue.split("-");
+                map.put(Long.parseLong(split[0]), Long.parseLong(split[1]));
+            }
+            return map;
+        } catch (Exception e) {
+            return null;
         }
-        return map;
+
     }
+
+    //获取商品id
+    public static Long getSpuIdBySpecSn(String specSn) {
+        int i = specSn.lastIndexOf("#");
+        String id = specSn.substring(0,i);
+        try {
+            return Long.parseLong(id);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 }

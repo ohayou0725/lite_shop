@@ -54,7 +54,14 @@ public enum ErrorCodeMsg {
     UPDATE_GOODS_SPEC_ERROR(400607,"修改商品规格失败"),
     CHANGE_GOODS_STATUS_ERROR(400608,"修改商品状态失败"),
     DELETE_GOODS_ERROR(400609,"删除商品失败"),
-    GOODS_IN_STOCK(400610,"商品还未下架或还有剩余库存，不能进行删除")
+    GOODS_IN_STOCK(400610,"商品还未下架或还有剩余库存，不能进行删除"),
+    GOODS_SKU_NOT_EXIST(400611,"该商品还未上架过单品"),
+    GOODS_SPEC_VALUE_CANT_DELETE(400612,"无法删除该规格值，请确认该规格单品是否已删除"),
+    GOODS_ADD_SKU_ERROR(400613,"单品上架失败"),
+    SKU_EXIST(400614,"该单品已上架，不能重复上架"),
+    GOODS_SKU_UPDATE_ERROR(400615,"单品信息更新失败"),
+    GOODS_SKU_NOT_FOUND(400616,"单品不存在"),
+    GOODS_SKU_DELETE_ERROR(400617,"单品不存在")
     ;
 
 

@@ -27,6 +27,8 @@ public class MallGoodsSpuDto {
 
     private String brandLogo;
 
+    private BigDecimal weight;
+
     private List<String> galleryList;
 
     private String unit;
@@ -208,5 +210,13 @@ public class MallGoodsSpuDto {
 
     public void setGalleryList(List<String> galleryList) {
         this.galleryList = galleryList;
+    }
+
+    public BigDecimal getWeight() {
+        return weight;
+    }
+
+    public void setWeight(BigDecimal weight) {
+        this.weight = weight;
     }
 }

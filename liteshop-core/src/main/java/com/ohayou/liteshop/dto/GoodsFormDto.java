@@ -1,6 +1,7 @@
 package com.ohayou.liteshop.dto;
 
 import com.ohayou.liteshop.entity.MallGoodsSpec;
+import com.ohayou.liteshop.entity.MallGoodsSpecValue;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
@@ -61,7 +62,8 @@ public class GoodsFormDto {
 
     private List<AttrValueDto> attrValues;
 
-    private List<MallGoodsSpec> specs;
+
+    private List<MallGoodsSpecDto> specs;
 
     public Long getId() {
         return id;
@@ -199,11 +201,11 @@ public class GoodsFormDto {
         this.attrValues = attrValues;
     }
 
-    public List<MallGoodsSpec> getSpecs() {
+    public List<MallGoodsSpecDto> getSpecs() {
         return specs;
     }
 
-    public void setSpecs(List<MallGoodsSpec> specs) {
+    public void setSpecs(List<MallGoodsSpecDto> specs) {
         this.specs = specs;
     }
 
@@ -230,4 +232,6 @@ public class GoodsFormDto {
     public void setWeight(BigDecimal weight) {
         this.weight = weight;
     }
+
+
 }

@@ -63,6 +63,9 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
     @Autowired
     MallGoodsAttrService goodsAttrService;
 
+    @Autowired
+    MallGoodsSpecValueService goodsSpecValueService;
+
 
     /**
      * 条件查询商品列表
@@ -76,7 +79,6 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
         LambdaQueryWrapper<MallGoodsSpu> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(StringUtils.isNotBlank(mallGoodsSpuDto.getGoodsSn()), MallGoodsSpu::getGoodsSn, mallGoodsSpuDto.getGoodsSn());
         wrapper.eq(null != mallGoodsSpuDto.getStatus(), MallGoodsSpu::getStatus, mallGoodsSpuDto.getStatus());
-        wrapper.eq(null != mallGoodsSpuDto.getCategoryIds(), MallGoodsSpu::getCategoryId, mallGoodsSpuDto.getCategoryIds());
         wrapper.eq(null != mallGoodsSpuDto.getHot(), MallGoodsSpu::getHot, mallGoodsSpuDto.getHot());
         wrapper.eq(null != mallGoodsSpuDto.getIsNew(), MallGoodsSpu::getIsNew, mallGoodsSpuDto.getIsNew());
         wrapper.like(StringUtils.isNotBlank(mallGoodsSpuDto.getName()), MallGoodsSpu::getName, mallGoodsSpuDto.getName());
@@ -88,6 +90,10 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
             }
             wrapper.eq(MallGoodsSpu::getBrandId, one.getId());
         }
+        if (null != mallGoodsSpuDto.getCategoryIds() && mallGoodsSpuDto.getCategoryIds().length > 0) {
+            wrapper.eq(MallGoodsSpu::getCategoryId,mallGoodsSpuDto.getCategoryIds()[0]);
+        }
+
         this.page(page, wrapper);
         PageUtils pageUtils = new PageUtils(page);
 
@@ -131,7 +137,7 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
         String category = categoryService.getParentTreeAsString(goodsSpu.getCategoryId());
         goodsDetailDto.setCategory(category);
         goodsDetailDto.setAttrValueList(this.getAllAttrAndValue(goodsId));
-        List<GoodsSkuDto> goodsSpecs = this.getGoodsSpecs(goodsId);
+        List<GoodsSkuDto> goodsSpecs = mallGoodsSkuService.getGoodsSku(goodsId);
         goodsDetailDto.setGoodsSpecList(goodsSpecs);
         return goodsDetailDto;
     }
@@ -233,10 +239,15 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
             //新增属性值,首先判断属性ID是否与数据库一致
             List<MallGoodsAttr> attrList = mallGoodsAttrService.listByGroupId(goodsSpu.getAttrGroupId());
             List<Long> collect1 = attrList.stream()
-                    .map(MallGoodsAttr::getId).collect(Collectors.toList());
+                    .map(MallGoodsAttr::getId)
+                    .sorted(Comparator.comparing(Long::longValue))
+                    .collect(Collectors.toList());
             List<AttrValueDto> attrValues = goodsFormDto.getAttrValues();
             List<Long> collect2 = attrValues.stream()
-                    .map(AttrValueDto::getAttrId).collect(Collectors.toList());
+                    .map(AttrValueDto::getAttrId)
+                    .sorted(Comparator.comparing(Long::longValue))
+                    .collect(Collectors.toList());
+
             if (!ListUtil.equals(collect1, collect2)) {
                 throw new GlobalException(ErrorCodeMsg.SAVE_GOODS_ERROR);
             }
@@ -254,15 +265,37 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
                 throw new GlobalException(ErrorCodeMsg.SAVE_GOODS_ERROR);
             }
             //添加商品规格信息
-            List<MallGoodsSpec> specs = goodsFormDto.getSpecs();
+            List<MallGoodsSpecDto> specs = goodsFormDto.getSpecs();
             if (CollUtil.isEmpty(specs)) {
                 throw new GlobalException(ErrorCodeMsg.GOODS_SPEC_EMPTY);
             }
-            specs.forEach(spec -> {
+            List<MallGoodsSpec> specList = specs.stream().
+                    map(MallGoodsSpecDto::getSpec).collect(Collectors.toList());
+            specList.forEach(spec -> {
                 spec.setGoodsId(goodsSpu.getId());
             });
-            boolean result4 = specService.saveBatch(specs);
+
+            boolean result4 = specService.saveBatch(specList);
             if (!result4) {
+                throw new GlobalException(ErrorCodeMsg.SAVE_GOODS_ERROR);
+            }
+            //添加商品规格属性
+            //判断属性时候为空
+            specs.forEach(spec -> {
+                if (spec.getValues().size() < 1) {
+                    throw new GlobalException(ErrorCodeMsg.GOODS_SPEC_EMPTY);
+                }
+            });
+            List<MallGoodsSpecValue> collect = specs.stream().
+                    flatMap(spec -> {
+                        if (CollUtil.isEmpty(spec.getValues())) {
+                            throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
+                        }
+                        return spec.getValues().stream()
+                            .peek(value-> value.setSpecId(spec.getSpec().getId()));
+                    }).collect(Collectors.toList());
+            boolean result5 = goodsSpecValueService.saveBatch(collect);
+            if (!result5) {
                 throw new GlobalException(ErrorCodeMsg.SAVE_GOODS_ERROR);
             }
             return true;
@@ -349,6 +382,7 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
 
     /**
      * 修改商品属性值
+     *
      * @param goodsFormDto
      * @return
      */
@@ -374,7 +408,7 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
         //判断前端传来的属性id列表是否与数据库一致
         List<Long> collect = attrValues.stream().map(AttrValueDto::getValueId).collect(Collectors.toList());
         List<Long> collect1 = allAttrAndValue.stream().map(AttrValueDto::getValueId).collect(Collectors.toList());
-        if (!ListUtil.equals(collect,collect1)) {
+        if (!ListUtil.equals(collect, collect1)) {
             throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
         }
 
@@ -392,6 +426,7 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
 
     /**
      * 修改商品规格
+     *
      * @param goodsFormDto
      * @return
      */
@@ -401,16 +436,64 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
         if (null == id || id < 1) {
             throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
         }
-        List<MallGoodsSpec> specs = goodsFormDto.getSpecs();
+        List<MallGoodsSpecDto> specs = goodsFormDto.getSpecs();
         if (CollUtil.isEmpty(specs)) {
             throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
         }
+        List<MallGoodsSpec> specList = specs.stream()
+                .map(spec -> {
+                    MallGoodsSpec mallGoodsSpec = new MallGoodsSpec();
+                    mallGoodsSpec.setName(spec.getSpec().getName());
+                    mallGoodsSpec.setId(spec.getSpec().getId());
+                    mallGoodsSpec.setSort(spec.getSpec().getSort());
+                    return mallGoodsSpec;
+                }).collect(Collectors.toList());
+        if (specService.updateBatchById(specList)) {
+            //更新商品规格属性
+            List<MallGoodsSpecValue> newSpecValues = specs.stream().
+                    flatMap(spec -> {
+                        List<MallGoodsSpecValue> values = spec.getValues();
+                        if (CollUtil.isEmpty(values)) {
+                            throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
+                        }
+                        return values.stream();
+                    }).collect(Collectors.toList());
 
-        return specService.updateBatchById(specs);
+            List<MallGoodsSpecValue> oldSpecValues = goodsSpecValueService.listByGoodsId(id);
+            //判断是否有删除了属性
+            if (oldSpecValues.size() > newSpecValues.size()) {
+                //如果有删除则判断单品中是否有该规格值
+                List<Long> longList = CollUtil.subtractToList(oldSpecValues, newSpecValues).stream().map(MallGoodsSpecValue::getId).collect(Collectors.toList());
+                List<MallGoodsSku> skuList = mallGoodsSkuService.list(new LambdaQueryWrapper<MallGoodsSku>()
+                        .eq(MallGoodsSku::getGoodsId, id));
+                if (CollUtil.isNotEmpty(skuList)) {
+                    List<Long> valueIdList = skuList.stream()
+                            .flatMap(sku -> {
+                                Map<Long, Long> specIdAndValueId = GoodsSpecUtil.getSpecIdAndValueId(sku.getSpecSn());
+                                return specIdAndValueId.values().stream();
+                            }).collect(Collectors.toList());
+
+                    Collection<Long> intersection = CollUtil.intersection(valueIdList, longList);
+                    if (CollUtil.isNotEmpty(intersection)) {
+                        throw new GlobalException(ErrorCodeMsg.GOODS_SPEC_VALUE_CANT_DELETE);
+                    }
+                }
+                boolean result = goodsSpecValueService.removeByIds(longList);
+                if (!result) {
+                    throw new GlobalException(ErrorCodeMsg.UPDATE_GOODS_INFO_ERROR);
+                }
+
+            }
+            //如果新增了规格值，则对新增的规格值进行保存
+            return  goodsSpecValueService.saveOrUpdateBatch(newSpecValues);
+
+        }
+        return false;
     }
 
     /**
-     * 更改用户状态
+     * 更改商品状态
+     *
      * @param goodsFormDto
      * @return
      */
@@ -433,6 +516,7 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
 
     /**
      * 修改商品详情页显示信息
+     *
      * @param goodsFormDto
      * @return
      */
@@ -450,13 +534,21 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
     }
 
     @Override
-    public List<MallGoodsSpec> getSpecsById(Long id) {
+    public List<MallGoodsSpecDto> getSpecsById(Long id) {
         if (null == id || id < 1) {
             throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
         }
         LambdaQueryWrapper<MallGoodsSpec> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(MallGoodsSpec::getGoodsId,id);
-        return specService.list(wrapper);
+        wrapper.eq(MallGoodsSpec::getGoodsId, id);
+        List<MallGoodsSpec> specs = specService.list(wrapper);
+        return specs.stream()
+                .map(spec->{
+                    MallGoodsSpecDto mallGoodsSpecDto = new MallGoodsSpecDto();
+                    mallGoodsSpecDto.setSpec(spec);
+                    List<MallGoodsSpecValue> list = specValueService.list(new LambdaQueryWrapper<MallGoodsSpecValue>().eq(MallGoodsSpecValue::getSpecId, spec.getId()));
+                    mallGoodsSpecDto.setValues(list);
+                    return mallGoodsSpecDto;
+                }).collect(Collectors.toList());
     }
 
     @Override
@@ -503,10 +595,10 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
         }
         //删除sku信息,如果没有sku信息则直接返回
         LambdaQueryWrapper<MallGoodsSku> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(MallGoodsSku::getGoodsId,id);
+        wrapper.eq(MallGoodsSku::getGoodsId, id);
         int count = mallGoodsSkuService.count(wrapper);
         if (count > 0) {
-          boolean skuRemove = mallGoodsSkuService.remove(wrapper);
+            boolean skuRemove = mallGoodsSkuService.remove(wrapper);
             if (!skuRemove) {
                 throw new GlobalException(ErrorCodeMsg.DELETE_GOODS_ERROR);
             }
@@ -514,57 +606,28 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
 
         return true;
     }
+
+
     /**
-     * 根据商品ID查询所有sku规格
-     *
-     * @param goodsId
+     * 根据商品sn获取该商品所有规格信息
+     * @param goodsSn
      * @return
      */
-    public List<GoodsSkuDto> getGoodsSpecs(Long goodsId) {
-        //获取sku信息
-        List<MallGoodsSku> skuList = mallGoodsSkuService.list(new LambdaQueryWrapper<MallGoodsSku>().eq(MallGoodsSku::getGoodsId, goodsId));
-        if (skuList == null || skuList.size() < 1) {
-            return null;
+    @Override
+    public List<MallGoodsSpecDto> specListByGoodsSn(String goodsSn) {
+        if (StringUtils.isBlank(goodsSn)) {
+            throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
         }
-        //查询sku所有规格参数
-        List<MallGoodsSpec> goodsSpecs = specService.list(new LambdaQueryWrapper<MallGoodsSpec>().eq(MallGoodsSpec::getGoodsId, goodsId));
-        List<GoodsSkuDto> goodsSkuDtoList = new ArrayList<>();
-        //查询所有规格值
-        if (goodsSpecs != null && goodsSpecs.size() > 0) {
-            List<MallGoodsSpecValue> specValues = goodsSpecs.stream()
-                    .flatMap(spec -> {
-                        return specValueService.list(new LambdaQueryWrapper<MallGoodsSpecValue>().eq(MallGoodsSpecValue::getSpecId, spec.getId())).stream();
-                    }).collect(Collectors.toList());
-            List<GoodsSkuDto> goodsSkuDtos = skuList.stream()
-                    .map(sku -> {
-                        GoodsSkuDto goodsSkuDto = new GoodsSkuDto();
-                        goodsSkuDto.setSkuId(sku.getId());
-                        goodsSkuDto.setPrice(sku.getPrice());
-                        goodsSkuDto.setStock(sku.getStock());
-                        goodsSkuDto.setStockWarningCount(sku.getStockWarningCount());
-                        goodsSkuDto.setImg(sku.getImg());
-                        goodsSkuDto.setSpecSn(sku.getSpecSn());
-                        return goodsSkuDto;
-                    }).collect(Collectors.toList());
-            goodsSkuDtos.stream().forEach(goodsSkuDto -> {
-                List<SpecAndValueDto> specAndValueDtos = new ArrayList<>();
-                String specSn = goodsSkuDto.getSpecSn();
-                Map<Long, Long> specIdAndValueId = GoodsSpecUtil.getSpecIdAndValueId(specSn);
-
-                specIdAndValueId.forEach((specId, valueId) -> {
-                    SpecAndValueDto specAndValueDto = new SpecAndValueDto();
-                    specAndValueDto.setSpecId(specId);
-                    specAndValueDto.setValueId(valueId);
-                    specAndValueDto.setSpec(getSpecBySpuSpecId(specId, goodsSpecs));
-                    specAndValueDto.setValue(getValueBySpuValueId(valueId, specValues));
-                    specAndValueDtos.add(specAndValueDto);
-                });
-                goodsSkuDto.setSpecAndValueList(specAndValueDtos);
-            });
-
-            goodsSkuDtoList.addAll(goodsSkuDtos);
+        MallGoodsSpu one = this.getOne(new LambdaQueryWrapper<MallGoodsSpu>().eq(MallGoodsSpu::getGoodsSn, goodsSn));
+        if (null == one) {
+            throw new GlobalException(ErrorCodeMsg.GOODS_NOT_FOUND);
         }
-        return goodsSkuDtoList;
+        List<MallGoodsSpecDto> specs = this.getSpecsById(one.getId());
+        specs.forEach(spec->{
+            spec.setGoodsId(one.getId());
+            spec.setTitle(one.getTitle());
+        });
+        return specs;
     }
 
     /**
@@ -595,7 +658,7 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
      * @param specs
      * @return
      */
-    private String getSpecBySpuSpecId(Long specId, List<MallGoodsSpec> specs) {
+    public  String getSpecBySpuSpecId(Long specId, List<MallGoodsSpec> specs) {
         MallGoodsSpec mallGoodsSpec = specs.stream()
                 .filter(spec -> {
                     return spec.getId().equals(specId);
@@ -611,7 +674,7 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
      * @param specValues
      * @return
      */
-    private String getValueBySpuValueId(Long valueId, List<MallGoodsSpecValue> specValues) {
+    public  String getValueBySpuValueId(Long valueId, List<MallGoodsSpecValue> specValues) {
         MallGoodsSpecValue mallGoodsSpecValue = specValues.stream()
                 .filter(value -> {
                     return value.getId().equals(valueId);

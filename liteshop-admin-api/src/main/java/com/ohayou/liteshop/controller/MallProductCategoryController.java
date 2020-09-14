@@ -204,4 +204,6 @@ public class MallProductCategoryController {
         return Result.success("list",attrList);
     }
 
+
+
 }

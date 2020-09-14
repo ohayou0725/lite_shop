@@ -7,7 +7,7 @@
         <id column="id" property="id" />
         <result column="order_id" property="orderId" />
         <result column="goods_sn" property="goodsSn" />
-        <result column="goods_name" property="goodsName" />
+        <result column="goods_name" property="title" />
         <result column="number" property="number" />
         <result column="reservePrice" property="reservePrice" />
         <result column="goods_spec_sn" property="goodsSpecSn" />

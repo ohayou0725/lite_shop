@@ -88,6 +88,16 @@ public class MallOrder implements Serializable {
     private BigDecimal orderPrice;
 
     /**
+     * 实付款
+     */
+    private BigDecimal actualPayment;
+
+    /**
+     * 支付方式
+     */
+    private Integer payType;
+
+    /**
      * 支付id
      */
     private Long payId;
@@ -360,6 +370,26 @@ public class MallOrder implements Serializable {
 
     public void setDeleted(Integer deleted) {
         this.deleted = deleted;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public BigDecimal getActualPayment() {
+        return actualPayment;
+    }
+
+    public void setActualPayment(BigDecimal actualPayment) {
+        this.actualPayment = actualPayment;
+    }
+
+    public Integer getPayType() {
+        return payType;
+    }
+
+    public void setPayType(Integer payType) {
+        this.payType = payType;
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ohayou.liteshop.constant.GoodsStatus;
 import com.ohayou.liteshop.dto.GoodsFormDto;
 import com.ohayou.liteshop.dto.GoodsSkuDto;
+import com.ohayou.liteshop.dto.MallGoodsSpecDto;
 import com.ohayou.liteshop.dto.SpecAndValueDto;
 import com.ohayou.liteshop.entity.MallGoodsSku;
 import com.ohayou.liteshop.dao.MallGoodsSkuMapper;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -91,21 +93,51 @@ public class MallGoodsSkuServiceImpl extends ServiceImpl<MallGoodsSkuMapper, Mal
                 List<SpecAndValueDto> specAndValueDtos = new ArrayList<>();
                 String specSn = goodsSkuDto.getSpecSn();
                 Map<Long, Long> specIdAndValueId = GoodsSpecUtil.getSpecIdAndValueId(specSn);
-
-                specIdAndValueId.forEach((specId, valueId) -> {
-                    SpecAndValueDto specAndValueDto = new SpecAndValueDto();
-                    specAndValueDto.setSpecId(specId);
-                    specAndValueDto.setValueId(valueId);
-                    specAndValueDto.setSpec(mallGoodsSpuService.getSpecBySpuSpecId(specId, goodsSpecs));
-                    specAndValueDto.setValue(mallGoodsSpuService.getValueBySpuValueId(valueId, specValues));
-                    specAndValueDtos.add(specAndValueDto);
-                });
+                if (specIdAndValueId != null) {
+                    specIdAndValueId.forEach((specId, valueId) -> {
+                        SpecAndValueDto specAndValueDto = new SpecAndValueDto();
+                        specAndValueDto.setSpecId(specId);
+                        specAndValueDto.setValueId(valueId);
+                        specAndValueDto.setSpec(mallGoodsSpuService.getSpecBySpuSpecId(specId, goodsSpecs));
+                        specAndValueDto.setValue(mallGoodsSpuService.getValueBySpuValueId(valueId, specValues));
+                        specAndValueDtos.add(specAndValueDto);
+                    });
+                }
                 goodsSkuDto.setSpecAndValueList(specAndValueDtos);
             });
 
             goodsSkuDtoList.addAll(goodsSkuDtos);
         }
         return goodsSkuDtoList;
+    }
+
+    /**
+     * 根据规格编号查询规格值
+     * @param specSn
+     * @return
+     */
+    @Override
+    public Map<String,String> getSpecAndValue(String specSn) {
+        Map<Long, Long> specIdAndValueId = GoodsSpecUtil.getSpecIdAndValueId(specSn);
+        if (CollectionUtil.isEmpty(specIdAndValueId)) {
+            return null;
+        }
+        Long spuId = GoodsSpecUtil.getSpuIdBySpecSn(specSn);
+        if (spuId == null) {
+            return null;
+        }
+        List<MallGoodsSpec> goodsSpecs = specService.list(new LambdaQueryWrapper<MallGoodsSpec>().eq(MallGoodsSpec::getGoodsId, spuId));
+
+        List<MallGoodsSpecValue> specValues = goodsSpecs.stream()
+                .flatMap(spec -> {
+                    return specValueService.list(new LambdaQueryWrapper<MallGoodsSpecValue>().eq(MallGoodsSpecValue::getSpecId, spec.getId())).stream();
+                }).collect(Collectors.toList());
+
+        Map<String, String> result = new HashMap<>();
+        specIdAndValueId.forEach((spec,value)->{
+            result.put(mallGoodsSpuService.getSpecBySpuSpecId(spec, goodsSpecs),mallGoodsSpuService.getValueBySpuValueId(value, specValues));
+        });
+        return result;
     }
 
     /**
@@ -270,5 +302,7 @@ public class MallGoodsSkuServiceImpl extends ServiceImpl<MallGoodsSkuMapper, Mal
         }
         return remove;
     }
+
+
 
 }

@@ -5,6 +5,7 @@ import com.ohayou.liteshop.entity.MallGoodsSku;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -26,4 +27,6 @@ public interface MallGoodsSkuService extends IService<MallGoodsSku> {
     boolean deleteSku(Long skuId);
 
     boolean deleteAllSku(String goodsSn);
+
+    Map<String,String> getSpecAndValue(String specSn);
 }

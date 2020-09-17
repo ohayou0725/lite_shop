@@ -5,7 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.ohayou.liteshop.entity.MemCollect">
         <id column="id" property="id" />
-        <result column="user_id" property="userId" />
+        <result column="user_id" property="userMobile" />
         <result column="spuId" property="spuSn" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />

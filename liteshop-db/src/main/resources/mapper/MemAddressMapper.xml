@@ -9,7 +9,7 @@
         <result column="receiver_mobile" property="receiverMobile" />
         <result column="area" property="area" />
         <result column="address" property="address" />
-        <result column="user_id" property="userId" />
+        <result column="user_id" property="userMobile" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <result column="deleted" property="deleted" />

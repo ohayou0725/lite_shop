@@ -10,56 +10,41 @@ import java.io.Serializable;
 
 /**
  * <p>
- * 商品评论表
+ * 
  * </p>
  *
  * @author ohayou
  * @since 2020-09-14
  */
-public class MallGoodsComment implements Serializable {
+public class MallGoodsCommentReply implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 评论id
+     * 回复id
      */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
-     * 用户id
+     * 回复用户ID
      */
     private Long userId;
 
     /**
-     * 商品ID
+     * 评论ID
      */
-    private Long goodsId;
+    private Long commentId;
 
     /**
-     * 单品id
-     */
-    private String specSn;
-
-    /**
-     * 点赞数
-     */
-    private Integer likes;
-
-    /**
-     * 评分
-     */
-    private Integer score;
-
-    /**
-     * 评论内容
+     * 回复内容
      */
     private String content;
 
     /**
-     * 评论图片
+     * 回复评论ID
      */
-    private String img;
+    private Long parentId;
 
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
@@ -84,40 +69,12 @@ public class MallGoodsComment implements Serializable {
     public void setUserId(Long userId) {
         this.userId = userId;
     }
-    public Long getGoodsId() {
-        return goodsId;
+    public Long getCommentId() {
+        return commentId;
     }
 
-
-    public void setGoodsId(Long goodsId) {
-        this.goodsId = goodsId;
-    }
-
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-
-    public String getSpecSn() {
-        return specSn;
-    }
-
-    public void setSpecSn(String specSn) {
-        this.specSn = specSn;
-    }
-
-    public Integer getLikes() {
-        return likes;
-    }
-
-    public void setLikes(Integer likes) {
-        this.likes = likes;
-    }
-    public Integer getScore() {
-        return score;
-    }
-
-    public void setScore(Integer score) {
-        this.score = score;
+    public void setCommentId(Long commentId) {
+        this.commentId = commentId;
     }
     public String getContent() {
         return content;
@@ -126,12 +83,12 @@ public class MallGoodsComment implements Serializable {
     public void setContent(String content) {
         this.content = content;
     }
-    public String getImg() {
-        return img;
+    public Long getParentId() {
+        return parentId;
     }
 
-    public void setImg(String img) {
-        this.img = img;
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
     public LocalDateTime getCreateTime() {
         return createTime;
@@ -157,18 +114,15 @@ public class MallGoodsComment implements Serializable {
 
     @Override
     public String toString() {
-        return "MallGoodsComment{" +
-                "id=" + id +
-                ", userId=" + userId +
-                ", goodsId=" + goodsId +
-                ", specSn=" + specSn +
-                ", likes=" + likes +
-                ", score=" + score +
-                ", content=" + content +
-                ", img=" + img +
-                ", createTime=" + createTime +
-                ", updateTime=" + updateTime +
-                ", deleted=" + deleted +
-                "}";
+        return "MallGoodsCommentReply{" +
+            "id=" + id +
+            ", userId=" + userId +
+            ", commentId=" + commentId +
+            ", content=" + content +
+            ", parentId=" + parentId +
+            ", createTime=" + createTime +
+            ", updateTime=" + updateTime +
+            ", deleted=" + deleted +
+        "}";
     }
 }

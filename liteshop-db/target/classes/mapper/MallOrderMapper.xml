@@ -6,7 +6,7 @@
     <resultMap id="BaseResultMap" type="com.ohayou.liteshop.entity.MallOrder">
         <id column="id" property="id" />
         <result column="order_sn" property="orderSn" />
-        <result column="user_id" property="userId" />
+        <result column="user_id" property="userMobile" />
         <result column="status" property="status" />
         <result column="aftersale_status" property="aftersaleStatus" />
         <result column="receiver" property="receiver" />

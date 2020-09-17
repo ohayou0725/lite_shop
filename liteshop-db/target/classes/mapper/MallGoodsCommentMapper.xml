@@ -6,12 +6,12 @@
     <resultMap id="BaseResultMap" type="com.ohayou.liteshop.entity.MallGoodsComment">
         <id column="id" property="id" />
         <result column="user_id" property="userId" />
-        <result column="goods_sku_id" property="goodsSkuId" />
+        <result column="goods_id" property="goodsId" />
+        <result column="spec_sn" property="specSn" />
+        <result column="likes" property="likes" />
         <result column="score" property="score" />
         <result column="content" property="content" />
         <result column="img" property="img" />
-        <result column="reply_admin_id" property="replyAdminId" />
-        <result column="reply" property="reply" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <result column="deleted" property="deleted" />
@@ -19,7 +19,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, user_id, goods_sku_id, score, content, img, reply_admin_id, reply, create_time, update_time, deleted
+        id, user_id, goods_id, spec_sn, likes, score, content, imgs, create_time, update_time, deleted
     </sql>
 
 </mapper>

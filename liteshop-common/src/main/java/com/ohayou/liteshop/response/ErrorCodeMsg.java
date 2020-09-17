@@ -23,6 +23,7 @@ public enum ErrorCodeMsg {
 
 
     USER_INFO_ERROR(400101,"获取用户信息失败"),
+    USER_NOT_FOUND(400102,"没有该用户"),
     UNAUTHENTICATED_CODE(400200),
 
     CHANGE_STATUS_ERROR(400301,"更改状态失败"),
@@ -61,7 +62,9 @@ public enum ErrorCodeMsg {
     SKU_EXIST(400614,"该单品已上架，不能重复上架"),
     GOODS_SKU_UPDATE_ERROR(400615,"单品信息更新失败"),
     GOODS_SKU_NOT_FOUND(400616,"单品不存在"),
-    GOODS_SKU_DELETE_ERROR(400617,"单品不存在")
+    GOODS_SKU_DELETE_ERROR(400617,"单品不存在"),
+
+    COMMENT_NOT_FOUND(400701,"没有此评论，或该评论已删除")
     ;
 
 

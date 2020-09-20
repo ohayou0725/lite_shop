@@ -88,8 +88,13 @@ public class MemUserServiceImpl extends ServiceImpl<MemUserMapper, MemUser> impl
 
     @Override
     public Long getMemIdByMobile(String mobile) {
-        MemUser one = this.getOne(new LambdaQueryWrapper<MemUser>().eq(MemUser::getMobile, mobile));
+        MemUser one = this.getUserByMobile(mobile);
         return null != one ? one.getId() :0;
+    }
+
+    @Override
+    public MemUser getUserByMobile(String mobile) {
+        return this.getOne(new LambdaQueryWrapper<MemUser>().eq(MemUser::getMobile,mobile));
     }
 
 }

@@ -21,11 +21,10 @@ public class DateTimeUtil {
     }
 
     public static String sqlDateFormat(String field) {
-        StringBuffer stringBuffer = new StringBuffer();
-        return stringBuffer.append("date_format(")
-                    .append(field)
-                    .append(", ")
-                    .append(SQL_DATE_FORMAT)
-                    .append(")").toString();
+        return "date_format(" +
+                field +
+                ", " +
+                SQL_DATE_FORMAT +
+                ")";
     }
 }

@@ -44,8 +44,8 @@ public class MemberController {
      * @return Result
      */
     @GetMapping("/list")
-    @ApiDesc("会员列表查询")
-    public Result MemberList(@Valid MemUserDto memUserDto, Map<String,Object> pageParam) throws InterruptedException {
+    @ApiDesc("查询会员列表")
+    public Result MemberList(@Valid MemUserDto memUserDto, Map<String,Object> pageParam) {
         PageQuery<MemUser> pageQuery = new PageQuery<>();
         PageUtils pageUtils = memUserService.queryPage(memUserDto ,pageQuery.getPage(pageParam));
         return Result.success("page",pageUtils);

@@ -28,4 +28,6 @@ public interface MemUserService extends IService<MemUser> {
 
     Long getMemIdByMobile(String mobile);
 
+    MemUser getUserByMobile(String mobile);
+
 }

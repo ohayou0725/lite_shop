@@ -1,7 +1,10 @@
 package com.ohayou.liteshop.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.ohayou.liteshop.dto.OrderDto;
 import com.ohayou.liteshop.entity.MallOrder;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ohayou.liteshop.utils.PageUtils;
 
 /**
  * <p>
@@ -13,4 +16,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface MallOrderService extends IService<MallOrder> {
 
+    PageUtils queryPage(OrderDto orderDto, IPage<MallOrder> page);
 }

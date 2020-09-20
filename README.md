@@ -6,9 +6,9 @@
 
 lite_shop是一套小型电商系统，该项目为B2C模式电商系统，包括前台商城系统和后台管理系统，基于springboot  + vue打造。后台管理系统包含会员管理、商品管理、订单管理、运营管理、系统管理、统计报表、后台用户管理、权限管理、系统设置等模块。前台管理系统包含首页、商品推荐、商品搜索、专题推荐、用户下单、支付等一套完整电商流程。
 
-##项目演示
+## 项目演示
 
-后台管理系统lite_shop_admin地址: https://github.com/llyyffhh/lite_shop_admin
+后台管理系统lite_shop_admin地址: https://github.com/ohayou0725/lite_shop_admin
 
 ![后台截图1.png](https://i.loli.net/2020/09/20/YPAkIb32zMHXvFr.png)
 
@@ -20,11 +20,11 @@ lite_shop是一套小型电商系统，该项目为B2C模式电商系统，包�
 
 敬请期待......
 
-##项目架构
+## 项目架构
 
 ![lite_shop架构.jpg](https://i.loli.net/2020/09/20/73PWtHj2cUqh1XL.png)
 
-##技术栈
+## 技术栈
 
 后端技术
 
@@ -50,9 +50,9 @@ lite_shop是一套小型电商系统，该项目为B2C模式电商系统，包�
 |       Axios        |   前端HTTP框架   | 0.19.0 |
 | Ant Design of  Vue |      UI框架      | 1.6.2  |
 
-##功能介绍
+## 功能介绍
 
-####管理后台:
+#### 管理后台:
 
 ###### 会员管理:
 
@@ -134,7 +134,7 @@ lite_shop是一套小型电商系统，该项目为B2C模式电商系统，包�
    npm run serve
    ```
 
-   运行成功后浏览器打开，输入网址`http://localhost:8000,进入后台管理系统
+   运行成功后浏览器打开，输入网址`http://localhost:8000 ,进入后台管理系统
 
    用户名:admin 密码:admin
 
@@ -149,7 +149,7 @@ lite_shop是一套小型电商系统，该项目为B2C模式电商系统，包�
 
 - 也可加微信进行交流
 
-<img src="https://i.loli.net/2020/09/20/NPBrpl2iCHfbkdW.jpg" alt="WechatIMG1.jpg" style="zoom:50%;" />
+<img src="https://i.loli.net/2020/09/20/NPBrpl2iCHfbkdW.jpg" alt="WechatIMG1.jpg" style="zoom:20%;" />
 
 
 

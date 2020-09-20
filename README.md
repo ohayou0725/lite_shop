@@ -149,8 +149,7 @@ lite_shop是一套小型电商系统，该项目为B2C模式电商系统，包�
 
 - 也可加微信进行交流
 
-  ![WechatIMG1.jpg](https://i.loli.net/2020/09/20/NPBrpl2iCHfbkdW.jpg)  
-
+<img src="https://i.loli.net/2020/09/20/NPBrpl2iCHfbkdW.jpg" alt="WechatIMG1.jpg" style="zoom:50%;" />
 
 
 

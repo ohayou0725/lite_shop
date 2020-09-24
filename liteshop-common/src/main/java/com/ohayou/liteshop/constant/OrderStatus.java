@@ -7,15 +7,24 @@ package com.ohayou.liteshop.constant;
 public enum  OrderStatus {
     UNPAID("待付款",0),
     PAID("已付款",1),
-    UN_SHIPPED("待发货",2),
-    SHIPPED("已发货",3),
-    COMPLETED("已完成",4),
-    CLOSED("已关闭",5)
+    SHIPPED("已发货",2),
+    COMPLETED("已完成",3),
+    CLOSED("已关闭",4)
     ;
 
     OrderStatus(String description, Integer status) {
         this.description = description;
         this.status = status;
+    }
+
+    public static OrderStatus getStatus(int value) {
+        OrderStatus[] values = values();
+        for (OrderStatus orderStatus : values) {
+            if (orderStatus.getStatus().equals(value)) {
+                return orderStatus;
+            }
+        }
+        return null;
     }
 
     private String description;

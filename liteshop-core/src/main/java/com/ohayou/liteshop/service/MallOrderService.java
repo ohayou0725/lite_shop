@@ -1,10 +1,13 @@
 package com.ohayou.liteshop.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.ohayou.liteshop.dto.OrderDetailDto;
 import com.ohayou.liteshop.dto.OrderDto;
 import com.ohayou.liteshop.entity.MallOrder;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ohayou.liteshop.utils.PageUtils;
+
+import java.util.Map;
 
 /**
  * <p>
@@ -17,4 +20,12 @@ import com.ohayou.liteshop.utils.PageUtils;
 public interface MallOrderService extends IService<MallOrder> {
 
     PageUtils queryPage(OrderDto orderDto, IPage<MallOrder> page);
+
+    OrderDetailDto getOrderDetail(Long orderId);
+
+    boolean ship(OrderDetailDto orderDetailDto);
+
+    boolean deleteOrder(Long orderId);
+
+    Map<String, Object> queryExpressTrack(Long orderId);
 }

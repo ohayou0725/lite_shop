@@ -38,7 +38,12 @@
             <artifactId>freemarker</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>cn.smallbun.screw</groupId>
+            <artifactId>screw-core</artifactId>
+        </dependency>
 
     </dependencies>
+
 
 </project>

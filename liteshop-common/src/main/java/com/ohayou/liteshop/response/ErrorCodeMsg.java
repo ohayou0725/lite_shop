@@ -64,7 +64,14 @@ public enum ErrorCodeMsg {
     GOODS_SKU_NOT_FOUND(400616,"单品不存在"),
     GOODS_SKU_DELETE_ERROR(400617,"单品不存在"),
 
-    COMMENT_NOT_FOUND(400701,"没有此评论，或该评论已删除")
+    COMMENT_NOT_FOUND(400701,"没有此评论，或该评论已删除"),
+
+    ORDER_NOT_EXIST(400801,"该订单不存在"),
+    ORDER_STATUS_ERROR(400802,"订单状态错误"),
+    ORDER_ERROR(400803,"订单异常"),
+    ORDER_NOT_DELETE(400804,"无法删除该订单"),
+    QUERY_TRACK_ERROR(400805,"物流查询发生未知错误")
+
     ;
 
 

@@ -52,6 +52,12 @@ public class MallOrderGoods implements Serializable {
      */
     private BigDecimal price;
 
+
+    /**
+     * 商品小计
+     */
+    private BigDecimal subtotal;
+
     /**
      * 商品规格码
      */
@@ -168,6 +174,15 @@ public class MallOrderGoods implements Serializable {
 
     public void setDeleted(Integer deleted) {
         this.deleted = deleted;
+    }
+
+
+    public BigDecimal getSubtotal() {
+        return subtotal;
+    }
+
+    public void setSubtotal(BigDecimal subtotal) {
+        this.subtotal = subtotal;
     }
 
     @Override

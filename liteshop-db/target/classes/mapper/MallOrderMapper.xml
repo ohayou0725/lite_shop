@@ -29,6 +29,7 @@
         <result column="refund_message" property="refundMessage" />
         <result column="refund_time" property="refundTime" />
         <result column="confirm_time" property="confirmTime" />
+        <result column="apply_after_sale_time" property="applyAfterSaleTime"/>
         <result column="comments" property="comments" />
         <result column="end_time" property="endTime" />
         <result column="create_time" property="createTime" />
@@ -38,7 +39,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, order_sn, user_id, status, aftersale_status, receiver, mobile, address, message, freight_price, goods_price, actual_payment, coupon_price, order_price, pay_type, pay_id, pay_time, ship_sn, ship_channel, ship_time, refund_amount, refund_type, refund_message, refund_time, confirm_time, comments, end_time, create_time, update_time, deleted
+        id, order_sn, user_id, status, aftersale_status, receiver, mobile, address, message, freight_price, goods_price, actual_payment, coupon_price, order_price, pay_type,apply_after_sale_time, pay_id, pay_time, ship_sn, ship_channel, ship_time, refund_amount, refund_type, refund_message, refund_time, confirm_time, comments, end_time, create_time, update_time, deleted
     </sql>
 
 </mapper>

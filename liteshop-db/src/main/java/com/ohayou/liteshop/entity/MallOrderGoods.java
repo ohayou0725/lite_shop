@@ -74,6 +74,11 @@ public class MallOrderGoods implements Serializable {
     private Integer comment;
 
     /**
+     * 是否申请退款
+     */
+    private Integer applyRefund;
+
+    /**
      * 创建时间
      */
     @TableField(fill = FieldFill.INSERT)
@@ -176,6 +181,17 @@ public class MallOrderGoods implements Serializable {
         this.deleted = deleted;
     }
 
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public Integer getApplyRefund() {
+        return applyRefund;
+    }
+
+    public void setApplyRefund(Integer applyRefund) {
+        this.applyRefund = applyRefund;
+    }
 
     public BigDecimal getSubtotal() {
         return subtotal;

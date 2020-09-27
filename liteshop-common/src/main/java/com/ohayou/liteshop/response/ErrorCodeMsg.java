@@ -70,7 +70,9 @@ public enum ErrorCodeMsg {
     ORDER_STATUS_ERROR(400802,"订单状态错误"),
     ORDER_ERROR(400803,"订单异常"),
     ORDER_NOT_DELETE(400804,"无法删除该订单"),
-    QUERY_TRACK_ERROR(400805,"物流查询发生未知错误")
+    QUERY_TRACK_ERROR(400805,"物流查询发生未知错误"),
+    ORDER_NOT_APPLY_AFTER_SALE(400806,"该订单未申请售后服务"),
+    AUDIT_ERROR(400807,"审核失败")
 
     ;
 

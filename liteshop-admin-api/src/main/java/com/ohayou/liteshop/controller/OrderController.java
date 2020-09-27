@@ -2,7 +2,8 @@ package com.ohayou.liteshop.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ohayou.liteshop.aop.ApiDesc;
-import com.ohayou.liteshop.constant.ShipChannelCode;
+import com.ohayou.liteshop.dto.AfterSaleDetailDto;
+import com.ohayou.liteshop.dto.OrderAfterSaleDto;
 import com.ohayou.liteshop.dto.OrderDetailDto;
 import com.ohayou.liteshop.dto.OrderDto;
 import com.ohayou.liteshop.entity.MallOrder;
@@ -13,7 +14,6 @@ import com.ohayou.liteshop.service.ExpressTrackService;
 import com.ohayou.liteshop.service.MallOrderService;
 import com.ohayou.liteshop.utils.PageQuery;
 import com.ohayou.liteshop.utils.PageUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -94,6 +94,11 @@ public class OrderController {
         return result ? Result.success() : Result.error(ErrorCodeMsg.ORDER_NOT_DELETE);
     }
 
+    /**
+     * 查询物流轨迹
+     * @param orderId
+     * @return
+     */
     @ApiDesc("查询订单物流轨迹")
     @GetMapping("/queryExpressTrack/{id}")
     public Result getExpressTrack(@PathVariable("id") Long orderId) {
@@ -105,6 +110,47 @@ public class OrderController {
         if (isSuccess) {
             return Result.success("data",result);
         }
-        return Result.error(200,String.valueOf(result.get("Reason")));
+        return Result.error(Result.SUCCESS_CODE,String.valueOf(result.get("Reason")));
+    }
+
+    @ApiDesc("查询申请售后列表")
+    @GetMapping("/afterSale/list")
+    public Result afterSaleList(OrderAfterSaleDto afterSaleDto, Map<String,Object> queryParam) {
+        PageQuery<MallOrder> pageQuery = new PageQuery<>();
+        IPage<MallOrder> page = pageQuery.getPage(queryParam);
+
+        PageUtils pageUtils = orderService.afterSalePage(afterSaleDto,page);
+        return Result.success("page",pageUtils);
+    }
+
+    @ApiDesc("查询退款详情")
+    @GetMapping("/afterSale/detail/{id}")
+    public Result afterSaleDetail(@PathVariable("id") Long orderId) {
+        if (null == orderId || orderId < 1) {
+            throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
+        }
+        AfterSaleDetailDto afterSaleDetailDto = orderService.afterSaleDetail(orderId);
+        return Result.success("detail",afterSaleDetailDto);
+    }
+
+    @ApiDesc("退款审核通过")
+    @PostMapping("/afterSale/passed/{id}")
+    public Result afterSalePassed(@PathVariable("id") Long orderId) {
+        if (null == orderId || orderId < 1) {
+            throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
+        }
+
+        boolean result = orderService.approvedOrder(orderId);
+        return result ? Result.success() : Result.error(ErrorCodeMsg.AUDIT_ERROR);
+    }
+
+    @ApiDesc("退款未通过")
+    @PostMapping("/afterSale/refuse/{id}")
+    public Result refuse(@PathVariable("id") Long orderId) {
+        if (null == orderId || orderId < 1) {
+            throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
+        }
+        boolean result = orderService.refuseOrder(orderId);
+        return result ? Result.success() : Result.error(ErrorCodeMsg.AUDIT_ERROR);
     }
 }

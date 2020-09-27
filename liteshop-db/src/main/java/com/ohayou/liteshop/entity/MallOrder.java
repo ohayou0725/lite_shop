@@ -130,7 +130,7 @@ public class MallOrder implements Serializable {
     /**
      * 退款方式
      */
-    private String refundType;
+    private Integer refundType;
 
     /**
      * 退款备注
@@ -141,6 +141,11 @@ public class MallOrder implements Serializable {
      * 退款时间
      */
     private LocalDateTime refundTime;
+
+    /**
+     *申请售后时间
+     */
+    private LocalDateTime applyAfterSaleTime;
 
     /**
      * 用户确认收货时间
@@ -308,11 +313,11 @@ public class MallOrder implements Serializable {
     public void setRefundAmount(BigDecimal refundAmount) {
         this.refundAmount = refundAmount;
     }
-    public String getRefundType() {
+    public Integer getRefundType() {
         return refundType;
     }
 
-    public void setRefundType(String refundType) {
+    public void setRefundType(Integer refundType) {
         this.refundType = refundType;
     }
     public String getRefundMessage() {
@@ -390,6 +395,14 @@ public class MallOrder implements Serializable {
 
     public void setPayType(Integer payType) {
         this.payType = payType;
+    }
+
+    public LocalDateTime getApplyAfterSaleTime() {
+        return applyAfterSaleTime;
+    }
+
+    public void setApplyAfterSaleTime(LocalDateTime applyAfterSaleTime) {
+        this.applyAfterSaleTime = applyAfterSaleTime;
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.ohayou.liteshop.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.ohayou.liteshop.dto.AfterSaleDetailDto;
+import com.ohayou.liteshop.dto.OrderAfterSaleDto;
 import com.ohayou.liteshop.dto.OrderDetailDto;
 import com.ohayou.liteshop.dto.OrderDto;
 import com.ohayou.liteshop.entity.MallOrder;
@@ -28,4 +30,12 @@ public interface MallOrderService extends IService<MallOrder> {
     boolean deleteOrder(Long orderId);
 
     Map<String, Object> queryExpressTrack(Long orderId);
+
+    PageUtils afterSalePage(OrderAfterSaleDto afterSaleDto, IPage<MallOrder> page);
+
+    AfterSaleDetailDto afterSaleDetail(Long orderId);
+
+    boolean approvedOrder(Long orderId);
+
+    boolean refuseOrder(Long orderId);
 }

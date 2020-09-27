@@ -18,9 +18,9 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Result {
 
-    private static final int SUCCESS_CODE = 200;
+    public  static final int SUCCESS_CODE = 200;
 
-    private static final String SUCCESS_MSG = "操作成功!";
+    public  static final String SUCCESS_MSG = "操作成功!";
 
     private int code;
 

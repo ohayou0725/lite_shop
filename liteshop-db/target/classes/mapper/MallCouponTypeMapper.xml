@@ -5,7 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.ohayou.liteshop.entity.MallCouponType">
         <id column="id" property="id" />
-        <result column="category_id" property="categoryIds" />
+        <result column="category_id" property="categoryId" />
         <result column="coupon_id" property="couponId" />
         <result column="goods_id" property="goodsId" />
         <result column="create_time" property="createTime" />

@@ -72,7 +72,18 @@ public enum ErrorCodeMsg {
     ORDER_NOT_DELETE(400804,"无法删除该订单"),
     QUERY_TRACK_ERROR(400805,"物流查询发生未知错误"),
     ORDER_NOT_APPLY_AFTER_SALE(400806,"该订单未申请售后服务"),
-    AUDIT_ERROR(400807,"审核失败")
+    AUDIT_ERROR(400807,"审核失败"),
+
+
+    TOPIC_NOT_EXIST(400901,"该专题不存在"),
+    TOPIC_CHANGE_ERROR(400902,"更改专题状态失败"),
+    TOPIC_ADD_ERROR(400903,"添加专题失败"),
+    TOPIC_EXIST(400904,"该专题已存在，不能重复添加"),
+    TOPIC_ADD_GOODS_ERROR(400905,"添加专题商品失败"),
+    TOPIC_DELETE_GOODS_ERROR(400906,"移除专题商品失败"),
+    TOPIC_GOODS_EXIST(400907,"专题下已存在该商品,不能重复添加"),
+    TOPIC_DELETE_ERROR(400908,"删除专题失败"),
+    TOPIC_UPDATE_ERROR(400909,"专题修改失败")
 
     ;
 

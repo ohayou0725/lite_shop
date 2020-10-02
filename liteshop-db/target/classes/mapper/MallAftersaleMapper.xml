@@ -7,11 +7,11 @@
         <id column="id" property="id" />
         <result column="aftersale_sn" property="aftersaleSn" />
         <result column="order_id" property="orderId" />
-        <result column="user_id" property="userMobile" />
+        <result column="user_id" property="userId" />
         <result column="type" property="type" />
         <result column="reason" property="reason" />
         <result column="amount" property="amount" />
-        <result column="imgs" property="imgs" />
+        <result column="imgs" property="img" />
         <result column="comment" property="comment" />
         <result column="status" property="status" />
         <result column="handle_time" property="handleTime" />

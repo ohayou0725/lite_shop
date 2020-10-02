@@ -5,7 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.ohayou.liteshop.entity.MallAttrGroupRelation">
         <id column="id" property="id" />
-        <result column="attr_group_id" property="categoryIds" />
+        <result column="attr_group_id" property="attrGroupId" />
         <result column="attr_id" property="attrId" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />

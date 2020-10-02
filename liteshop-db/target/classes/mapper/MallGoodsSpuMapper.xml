@@ -8,7 +8,7 @@
         <result column="goods_sn" property="goodsSn" />
         <result column="name" property="name" />
         <result column="title" property="title"/>
-        <result column="category_id" property="categoryIds" />
+        <result column="category_id" property="categoryId" />
         <result column="brand_id" property="brandId" />
         <result column="brief" property="brief" />
         <result column="title_img" property="titleImg" />
@@ -21,7 +21,7 @@
         <result column="unit" property="unit" />
         <result column="price" property="price" />
         <result column="discount_price" property="discountPrice" />
-        <result column="attr_group_id" property="categoryIds" />
+        <result column="attr_group_id" property="attrGroupId" />
         <result column="detail" property="detail" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
@@ -30,19 +30,28 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, goods_sn, name,title ,category_id, brand_id, brief,weight, title_img, gallery,sales, status, hot, sort, is_new, unit, price, discount_price, attr_group_id, detail, create_time, update_time, deleted
+        g.id, g.goods_sn, g.name,g.title ,g.category_id, g.brand_id, g.brief,g.weight, g.title_img, g.gallery,sales, g.status, g.hot, g.sort, g.is_new, g.unit, g.price, g.discount_price, g.attr_group_id, g.detail, g.create_time, g.update_time, g.deleted
     </sql>
     <select id="findGoodsByGoodsSnOrName" resultType="com.ohayou.liteshop.entity.MallGoodsSpu">
         select
         <include refid="Base_Column_List" />
 
-        from mall_goods_spu
+        from mall_goods_spu g
         where goods_sn = #{goodsSn}
         union all
         select
         <include refid="Base_Column_List" />
-        from mall_goods_spu
+        from mall_goods_spu g
         where name = #{name}
+    </select>
+    <select id="goodsListByTopicId" resultType="com.ohayou.liteshop.entity.MallGoodsSpu">
+        select
+        <include refid="Base_Column_List" />
+        from mall_goods_spu g
+        join mall_topic_goods tg on g.id = tg.goods_id
+        join mall_topic t on t.id = tg.topic_id
+        where t.id = #{topicId} and tg.deleted = 0
+
     </select>
 
 

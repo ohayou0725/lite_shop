@@ -10,7 +10,7 @@
         <result column="sales" property="sales"/>
         <result column="stock" property="stock" />
         <result column="stock_warning_count" property="stockWarningCount" />
-        <result column="imgs" property="imgs" />
+        <result column="imgs" property="img" />
         <result column="spec_sn" property="specSn" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />

@@ -4,6 +4,8 @@ import com.ohayou.liteshop.entity.MallGoodsSpu;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * <p>
  * 商品spu信息表 Mapper 接口
@@ -15,4 +17,6 @@ import org.apache.ibatis.annotations.Param;
 public interface MallGoodsSpuMapper extends BaseMapper<MallGoodsSpu> {
 
     MallGoodsSpu findGoodsByGoodsSnOrName(@Param("goodsSn") String goodsSn, @Param("name") String name);
+
+    List<MallGoodsSpu> goodsListByTopicId(Long topicId);
 }

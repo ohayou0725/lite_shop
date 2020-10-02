@@ -28,6 +28,11 @@ public class MallTopic implements Serializable {
     private Long id;
 
     /**
+     * 品牌id
+     */
+    private Long brandId;
+
+    /**
      * 标题
      */
     private String title;
@@ -61,6 +66,11 @@ public class MallTopic implements Serializable {
      * 排序
      */
     private Integer sort;
+
+    /**
+     * 前台是否显示
+     */
+    private Integer isShow;
 
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
@@ -147,6 +157,23 @@ public class MallTopic implements Serializable {
 
     public void setDeleted(Integer deleted) {
         this.deleted = deleted;
+    }
+
+    public Long getBrandId() {
+        return brandId;
+    }
+
+    public void setBrandId(Long brandId) {
+        this.brandId = brandId;
+    }
+
+
+    public Integer getIsShow() {
+        return isShow;
+    }
+
+    public void setIsShow(Integer isShow) {
+        this.isShow = isShow;
     }
 
     @Override

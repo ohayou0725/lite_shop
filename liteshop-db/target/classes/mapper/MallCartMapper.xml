@@ -5,7 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.ohayou.liteshop.entity.MallCart">
         <id column="id" property="id" />
-        <result column="user_id" property="userMobile" />
+        <result column="user_id" property="userId" />
         <result column="total_price" property="totalPrice" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />

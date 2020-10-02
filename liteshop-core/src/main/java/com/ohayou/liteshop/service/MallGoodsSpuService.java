@@ -2,6 +2,7 @@ package com.ohayou.liteshop.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ohayou.liteshop.dto.*;
+import com.ohayou.liteshop.entity.MallGoodsSku;
 import com.ohayou.liteshop.entity.MallGoodsSpec;
 import com.ohayou.liteshop.entity.MallGoodsSpecValue;
 import com.ohayou.liteshop.entity.MallGoodsSpu;
@@ -48,4 +49,6 @@ public interface MallGoodsSpuService extends IService<MallGoodsSpu> {
 
 
     List<MallGoodsSpecDto> specListByGoodsSn(String goodsSn);
+
+    List<MallGoodsSpu> goodsListByTopicId(Long topicId);
 }

@@ -630,6 +630,14 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
         return specs;
     }
 
+    @Override
+    public List<MallGoodsSpu> goodsListByTopicId(Long topicId) {
+        if (null == topicId || topicId < 1) {
+            return null;
+        }
+        return baseMapper.goodsListByTopicId(topicId);
+    }
+
     /**
      * 查询sku的规格值列表
      *

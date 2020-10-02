@@ -5,10 +5,10 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.ohayou.liteshop.entity.MemOpinion">
         <id column="id" property="id" />
-        <result column="user_id" property="userMobile" />
+        <result column="user_id" property="userId" />
         <result column="opinion_type_id" property="opinionType" />
         <result column="content" property="content" />
-        <result column="imgs" property="imgs" />
+        <result column="imgs" property="img" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <result column="deleted" property="deleted" />

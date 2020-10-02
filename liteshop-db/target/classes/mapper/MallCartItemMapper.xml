@@ -7,9 +7,9 @@
         <id column="id" property="id" />
         <result column="cart_id" property="cartId" />
         <result column="goods_id" property="goodsId" />
-        <result column="goods_name" property="title" />
+        <result column="goods_name" property="goodsName" />
         <result column="spec_sn" property="specSn" />
-        <result column="reservePrice" property="reservePrice" />
+        <result column="reservePrice" property="price" />
         <result column="number" property="number" />
         <result column="checked" property="checked" />
         <result column="goods_img" property="goodsImg" />

@@ -274,6 +274,45 @@ public class MallCategoryServiceImpl extends ServiceImpl<MallCategoryMapper, Mal
                 .toArray(Long[]::new);
     }
 
+    /**
+     * 判断是否为三级科目
+     * @param categoryId
+     * @return
+     */
+    @Override
+    public boolean isLevel3(Long categoryId) {
+        MallCategory category = this.getById(categoryId);
+        if (null == category) {
+            return false;
+        }
+        return category.getLevel().equals(2);
+    }
+
+    /**
+     * 根据id查询所有子节点的三级id
+     * @param categoryId
+     * @return
+     */
+    @Override
+    public List<Long> getChildrenIds(Long categoryId) {
+        List<MallCategory> childrenList = this.childrenList();
+        List<Long> childrenIds = this.getChildrenIds(categoryId, new ArrayList<Long>(), childrenList);
+        return childrenIds.stream().filter(this::isLevel3).collect(Collectors.toList());
+    }
+
+    private List<Long> getChildrenIds(Long categoryId, List<Long> childrenIds, List<MallCategory> all) {
+        all.stream()
+                .filter(category -> {
+                    return category.getParentId().equals(categoryId);
+                })
+                .map(MallCategory::getId)
+                .forEach(id->{
+                    childrenIds.add(id);
+                    this.getChildrenIds(id,childrenIds,all);
+                });
+       return childrenIds;
+    }
+
     private List<MallCategory> getAllParent(Long categoryId) {
         MallCategory one = getById(categoryId);
         //获取所有分类Id

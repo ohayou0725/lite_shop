@@ -1,12 +1,10 @@
 package com.ohayou.liteshop.entity;
 
 import java.math.BigDecimal;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
+
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.time.LocalDateTime;
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableField;
 import java.io.Serializable;
 
 /**
@@ -55,7 +53,7 @@ public class MallCoupon implements Serializable {
     /**
      * 用户最多领取数量
      */
-    private Integer limit;
+    private Integer stint;
 
     /**
      * 优惠券状态，如果是0则是正常可用；如果是1则是过期; 如果是2则是下架。
@@ -65,7 +63,7 @@ public class MallCoupon implements Serializable {
     /**
      * 商品限制类型，如果0则全商品，如果是1则是类目限制，如果是2则是商品限制。
      */
-    private Long type;
+    private Integer type;
 
     /**
      * 有效时间限制，如果是0，则基于领取时间的有效天数days；如果是1，则start_time和end_time是优惠券有效期；
@@ -80,11 +78,13 @@ public class MallCoupon implements Serializable {
     /**
      * 开始领取时间
      */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private LocalDateTime startTime;
 
     /**
      * 结束领取时间
      */
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private LocalDateTime endTime;
 
     @TableField(fill = FieldFill.INSERT)
@@ -141,12 +141,12 @@ public class MallCoupon implements Serializable {
     public void setMin(BigDecimal min) {
         this.min = min;
     }
-    public Integer getLimit() {
-        return limit;
+    public Integer getStint() {
+        return stint;
     }
 
-    public void setLimit(Integer limit) {
-        this.limit = limit;
+    public void setStint(Integer stint) {
+        this.stint = stint;
     }
     public Integer getStatus() {
         return status;
@@ -155,11 +155,11 @@ public class MallCoupon implements Serializable {
     public void setStatus(Integer status) {
         this.status = status;
     }
-    public Long getType() {
+    public Integer getType() {
         return type;
     }
 
-    public void setType(Long type) {
+    public void setType(Integer type) {
         this.type = type;
     }
     public Integer getTimeType() {
@@ -221,7 +221,7 @@ public class MallCoupon implements Serializable {
             ", total=" + total +
             ", discount=" + discount +
             ", min=" + min +
-            ", limit=" + limit +
+            ", limit=" + stint +
             ", status=" + status +
             ", type=" + type +
             ", timeType=" + timeType +

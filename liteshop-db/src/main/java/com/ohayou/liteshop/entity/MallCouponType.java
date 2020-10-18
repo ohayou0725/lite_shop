@@ -41,6 +41,11 @@ public class MallCouponType implements Serializable {
      */
     private Long goodsId;
 
+    /**
+     * 品牌id
+     */
+    private Long brandId;
+
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
@@ -78,6 +83,16 @@ public class MallCouponType implements Serializable {
     public void setGoodsId(Long goodsId) {
         this.goodsId = goodsId;
     }
+
+
+    public Long getBrandId() {
+        return brandId;
+    }
+
+    public void setBrandId(Long brandId) {
+        this.brandId = brandId;
+    }
+
     public LocalDateTime getCreateTime() {
         return createTime;
     }

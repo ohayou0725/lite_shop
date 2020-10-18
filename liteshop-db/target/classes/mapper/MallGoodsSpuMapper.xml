@@ -53,6 +53,42 @@
         where t.id = #{topicId} and tg.deleted = 0
 
     </select>
+    <select id="page" resultType="com.ohayou.liteshop.entity.MallGoodsSpu">
+        select
+        <include refid="Base_Column_List" />
+        from mall_goods_spu g
+        where id > ${lastGoodsId} and g.deleted = 0
+        limit  ${limit}
+    </select>
+    <select id="goodsListByCouponTypeIdAndCate" resultType="com.ohayou.liteshop.entity.MallGoodsSpu">
+        select
+        <include refid="Base_Column_List" />
+        from mall_goods_spu g
+        join mall_coupon_type ct on ct.category_id = g.category_id
+        where
+        ct.id = #{couponTypeId}
+        and g.id > #{lastGoodsId}
+        and g.deleted = 0
+        limit #{limit}
+    </select>
+    <select id="goodsListByCouponTypeIdAndBrand" resultType="com.ohayou.liteshop.entity.MallGoodsSpu">
+        select
+        <include refid="Base_Column_List" />
+        from mall_goods_spu g
+        join mall_coupon_type ct on ct.brand_id = g.brand_id
+        where
+        ct.id = #{couponTypeId}
+        and g.id > #{lastGoodsId}
+        and g.deleted = 0
+        limit #{limit}
+    </select>
+    <select id="getGoodsByCouponType" resultType="com.ohayou.liteshop.entity.MallGoodsSpu">
+        select
+        <include refid="Base_Column_List" />
+        from mall_goods_spu g
+        join mall_coupon_type ct on ct.goods_id = g.id
+        and g.deleted = 0
+    </select>
 
 
 </mapper>

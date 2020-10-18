@@ -8,6 +8,7 @@
         <result column="category_id" property="categoryId" />
         <result column="coupon_id" property="couponId" />
         <result column="goods_id" property="goodsId" />
+        <result column="brand_id" property="brandId"/>
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <result column="deleted" property="deleted" />
@@ -15,7 +16,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, category_id, coupon_id, goods_id, create_time, update_time, deleted
+        id, category_id, coupon_id, goods_id,brand_id, create_time, update_time, deleted
     </sql>
 
 </mapper>

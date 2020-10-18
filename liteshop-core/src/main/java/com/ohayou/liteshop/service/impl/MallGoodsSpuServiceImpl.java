@@ -3,6 +3,7 @@ package com.ohayou.liteshop.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.ohayou.liteshop.constant.CouponType;
 import com.ohayou.liteshop.dto.*;
 import com.ohayou.liteshop.entity.*;
 import com.ohayou.liteshop.dao.MallGoodsSpuMapper;
@@ -65,6 +66,12 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
 
     @Autowired
     MallGoodsSpecValueService goodsSpecValueService;
+
+    @Autowired
+    MallCouponService couponService;
+
+    @Autowired
+    MallCouponTypeService couponTypeService;
 
 
     /**
@@ -636,6 +643,57 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
             return null;
         }
         return baseMapper.goodsListByTopicId(topicId);
+    }
+
+    /**
+     * 查询优惠券可用商品
+     * @param couponId
+     * @param limit
+     * @param lastGoodsId
+     * @return
+     */
+    @Override
+    public List<MallGoodsSpu> getGoodsListByCouponId(Long couponId, int limit, Long lastGoodsId) {
+        MallCoupon coupon = couponService.getById(couponId);
+        if (null == coupon) {
+            throw new GlobalException(ErrorCodeMsg.COUPON_NOT_EXIST);
+        }
+        Integer type = coupon.getType();
+        if (type.equals(CouponType.ALL.getCode())) {
+            //如果为全品券,则查询所有商品
+            return this.baseMapper.page(limit,lastGoodsId);
+        }
+        MallCouponType couponType = couponTypeService.getOne(new LambdaQueryWrapper<MallCouponType>()
+                .eq(MallCouponType::getCouponId, coupon.getId())
+        );
+        if (type.equals(CouponType.CATE.getCode())) {
+            //如果该分类不是三级分类，则查询该分类下所有三级分类商品
+            Long categoryId = couponType.getCategoryId();
+            if (categoryService.isLevel3(categoryId)) {
+                return this.baseMapper.goodsListByCouponTypeIdAndCate(couponType.getId(),limit,lastGoodsId);
+            } else {
+                List<MallGoodsSpu> mallGoodsSpus = new ArrayList<>();
+                List<Long> childrenIds = categoryService.getChildrenIds(categoryId);
+                childrenIds.forEach(childrenId->{
+                    List<MallGoodsSpu> list = this.list(new LambdaQueryWrapper<MallGoodsSpu>().eq(MallGoodsSpu::getCategoryId, childrenId));
+                    mallGoodsSpus.addAll(list);
+                });
+                List<MallGoodsSpu> collect = mallGoodsSpus.stream()
+                        .sorted(Comparator.comparing(MallGoodsSpu::getId))
+                        .filter(spu -> {
+                            return spu.getId() > lastGoodsId;
+                        })
+                        .limit(limit).collect(Collectors.toList());
+                return collect;
+            }
+        }
+        if (type.equals(CouponType.BRAND.getCode())) {
+            return this.baseMapper.goodsListByCouponTypeIdAndBrand(couponType.getId(),limit,lastGoodsId);
+        }
+        if (type.equals(CouponType.GOODS.getCode())) {
+            return this.baseMapper.getGoodsByCouponType(couponType.getId());
+        }
+        return null;
     }
 
     /**

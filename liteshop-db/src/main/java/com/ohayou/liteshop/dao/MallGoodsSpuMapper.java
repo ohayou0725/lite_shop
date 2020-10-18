@@ -19,4 +19,13 @@ public interface MallGoodsSpuMapper extends BaseMapper<MallGoodsSpu> {
     MallGoodsSpu findGoodsByGoodsSnOrName(@Param("goodsSn") String goodsSn, @Param("name") String name);
 
     List<MallGoodsSpu> goodsListByTopicId(Long topicId);
+
+    List<MallGoodsSpu> page(@Param("limit") int limit, @Param("lastGoodsId") Long lastGoodsId);
+
+    List<MallGoodsSpu> goodsListByCouponTypeIdAndCate(@Param("couponTypeId") Long couponTypeId, @Param("limit") int limit, @Param("lastGoodsId") Long lastGoodsId);
+
+    List<MallGoodsSpu> goodsListByCouponTypeIdAndBrand(@Param("couponTypeId") Long couponTypeId, @Param("limit") int limit, @Param("lastGoodsId") Long lastGoodsId);
+
+    List<MallGoodsSpu> getGoodsByCouponType(Long id);
+
 }

@@ -37,4 +37,8 @@ public interface MallCategoryService extends IService<MallCategory> {
     String getParentTreeAsString(Long categoryId);
 
     Long[] getParentTree(long categoryId);
+
+    boolean isLevel3(Long categoryId);
+
+    List<Long> getChildrenIds(Long categoryId);
 }

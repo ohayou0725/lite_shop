@@ -83,7 +83,14 @@ public enum ErrorCodeMsg {
     TOPIC_DELETE_GOODS_ERROR(400906,"移除专题商品失败"),
     TOPIC_GOODS_EXIST(400907,"专题下已存在该商品,不能重复添加"),
     TOPIC_DELETE_ERROR(400908,"删除专题失败"),
-    TOPIC_UPDATE_ERROR(400909,"专题修改失败")
+    TOPIC_UPDATE_ERROR(400909,"专题修改失败"),
+
+
+    COUPON_NOT_EXIST(401001,"优惠券不存在"),
+    COUPON_ADD_ERROR(401002,"优惠券添加失败"),
+    COUPON_UPDATE_ERROR(401003,"优惠券更新失败"),
+    COUPON_STATUS_ERROR(401004,"无法删除,该优惠券未下架或未过期"),
+    COUPON_DELETE_ERROR(401005,"删除优惠券失败")
 
     ;
 

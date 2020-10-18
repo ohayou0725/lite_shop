@@ -51,4 +51,6 @@ public interface MallGoodsSpuService extends IService<MallGoodsSpu> {
     List<MallGoodsSpecDto> specListByGoodsSn(String goodsSn);
 
     List<MallGoodsSpu> goodsListByTopicId(Long topicId);
+
+    List<MallGoodsSpu> getGoodsListByCouponId(Long couponId, int limit, Long lastGoodsId);
 }

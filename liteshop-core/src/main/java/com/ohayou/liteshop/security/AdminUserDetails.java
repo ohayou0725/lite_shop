@@ -1,5 +1,6 @@
 package com.ohayou.liteshop.security;
 
+import com.ohayou.liteshop.constant.AdminUserStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -27,11 +28,12 @@ public class AdminUserDetails implements UserDetails {
 
     private boolean isCredentialsNonExpired;
 
-    private int isEnabled;
+    private int status;
 
     private String avatar;
 
     private LocalDateTime lastLoginTime;
+
 
     public LocalDateTime getLastLoginTime() {
         return lastLoginTime;
@@ -69,12 +71,12 @@ public class AdminUserDetails implements UserDetails {
         isCredentialsNonExpired = credentialsNonExpired;
     }
 
-    public int getIsEnabled() {
-        return isEnabled;
+    public int getStatus() {
+        return status;
     }
 
-    public void setIsEnabled(int isEnabled) {
-        this.isEnabled = isEnabled;
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
@@ -105,7 +107,7 @@ public class AdminUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return this.status != AdminUserStatus.LOCKED.getStatus();
     }
 
     @Override
@@ -115,7 +117,7 @@ public class AdminUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return this.isEnabled == 0;
+        return this.status == AdminUserStatus.NORMAL.getStatus();
     }
 
     public long getId() {

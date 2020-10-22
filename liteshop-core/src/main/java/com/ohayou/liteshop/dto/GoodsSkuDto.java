@@ -41,7 +41,6 @@ public class GoodsSkuDto {
     private Integer stockWarningCount;
 
     @NotNull(message = "价格不能为空",groups = {AddSkuValid.class,UpdateSkuValid.class})
-    @Digits(integer = Integer.MAX_VALUE,fraction = 0,message = "价格必须为数字",groups = {AddSkuValid.class,UpdateSkuValid.class})
     @DecimalMin(value = "0.01",message = "金额最低为0.01",groups = {AddSkuValid.class,UpdateSkuValid.class})
     private BigDecimal price;
 

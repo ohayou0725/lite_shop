@@ -22,7 +22,7 @@ import java.util.Map;
  * 用户操作日志
  */
 @RestController
-@RequestMapping("/user/log")
+@RequestMapping("system/user/log")
 public class AdminLogController {
 
     @Autowired

@@ -35,8 +35,8 @@ logging:
 qiniu:
   accesskey: bNiSCBezONeIP9QxeDNMeAHPJAYrWmki925F2BLp
   secretKey: CWCbnnukD05mhiAgiL54wJmN9Rz_Hi-mJj_3VomQ
-  bucketName: liteshopcool1
-  fileDomain: http://qg6txnoqg.hb-bkt.clouddn.com
+  bucketName: liteshopcool2
+  fileDomain: http://qii5ng5sw.hb-bkt.clouddn.com
 
 kdniao:
   EBusinessID: 1674459
@@ -56,4 +56,5 @@ keyPrefix:
 
 admin:
   base_url: /api/admin
+  initialPassword : 123456
 

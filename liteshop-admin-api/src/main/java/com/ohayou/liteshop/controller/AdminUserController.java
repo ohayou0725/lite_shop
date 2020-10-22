@@ -1,35 +1,42 @@
 package com.ohayou.liteshop.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ohayou.liteshop.aop.ApiDesc;
+import com.ohayou.liteshop.dto.AdminUserDto;
 import com.ohayou.liteshop.entity.AdminUser;
-import com.ohayou.liteshop.exception.UnAuthenticationException;
+import com.ohayou.liteshop.exception.GlobalException;
+import com.ohayou.liteshop.response.ErrorCodeMsg;
 import com.ohayou.liteshop.response.Result;
 import com.ohayou.liteshop.service.AdminUserService;
+import com.ohayou.liteshop.service.UploadService;
+import com.ohayou.liteshop.utils.PageQuery;
+import com.ohayou.liteshop.utils.PageUtils;
 import com.ohayou.liteshop.vo.AdminUserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.Map;
 
 /**
  * @author liyan
  * @date 2020/7/15 上午11:44
  */
 @RestController
-@RequestMapping("/user")
 public class AdminUserController {
 
 
     @Autowired
     AdminUserService adminUserService;
+
+    @Autowired
+    UploadService qiniuUploadService;
 
     /**
      * 用户登录
@@ -38,7 +45,7 @@ public class AdminUserController {
      * @return Result
      */
     @ApiDesc("后台用户登录")
-    @PostMapping("/login")
+    @PostMapping("/user/login")
     public Result login(@Valid @RequestBody AdminUserVo adminUserVo, HttpServletRequest request, HttpServletResponse response) {
         if (adminUserService.login(adminUserVo,request,response)){
             return Result.success();
@@ -47,15 +54,66 @@ public class AdminUserController {
     }
 
     @ApiDesc("后台用户注销")
-    @PostMapping("/logout")
+    @PostMapping("/user/logout")
     public Result logout(Authentication authentication, HttpServletRequest httpServletRequest) {
         adminUserService.logout(authentication,httpServletRequest);
         return Result.success();
     }
 
     @ApiDesc("获取后台用户信息")
-    @GetMapping("/info")
+    @GetMapping("/user/info")
     public Result userInfo(Authentication authentication) {
         return Result.success("userInfo",adminUserService.getUserInfo(authentication));
     }
+    @ApiDesc("查询后台管理员列表")
+    @GetMapping("/system/user/list")
+    public Result userList(AdminUserDto adminUserDto, Map<String,Object> queryParam) {
+        PageQuery<AdminUser> adminUserPageQuery = new PageQuery<>();
+        IPage<AdminUser> page = adminUserPageQuery.getPage(queryParam);
+        PageUtils pageUtils = adminUserService.queryPage(adminUserDto,page);
+        return Result.success("page",pageUtils);
+    }
+
+    @ApiDesc("添加用户")
+    @PostMapping("/system/user/add")
+    public Result addUser(@RequestBody @Valid AdminUserDto adminUserDto) {
+        boolean result = adminUserService.addUser(adminUserDto);
+        return result ? Result.success() : Result.error(ErrorCodeMsg.USER_ADD_ERROR);
+    }
+
+    @ApiDesc("重置用户密码")
+    @PostMapping("/system/user/resetPassword/{id}")
+    public Result resetPassword(@PathVariable("id") Long id) {
+        if (null == id || id < 1) {
+            throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
+        }
+        boolean result = adminUserService.resetPassword(id);
+        return result ? Result.success() : Result.error(ErrorCodeMsg.USER_CNAT_RESET);
+    }
+
+    @ApiDesc("上传用户头像")
+    @PostMapping("/system/user/upload")
+    public Result upload(@RequestParam("file")MultipartFile file) {
+        String fileName = "admin/avatar/";
+        String url = qiniuUploadService.upload(file, fileName);
+        return Result.success("url",url);
+    }
+
+    @ApiDesc("编辑用户")
+    @PostMapping("/system/user/update")
+    public Result update(@RequestBody @Validated(value = AdminUserDto.UpdateUser.class) AdminUserDto adminUserDto) {
+        boolean result = adminUserService.updateUser(adminUserDto);
+        return result ? Result.success() : Result.error(ErrorCodeMsg.USER_UPDATE_ERROR);
+    }
+
+    @ApiDesc("删除用户")
+    @PostMapping("/system/user/delete/{id}")
+    public Result delete(@PathVariable("id") Long id) {
+        if (null == id || id < 1) {
+            throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
+        }
+        boolean result = adminUserService.deleteUser(id);
+        return result ? Result.success() : Result.error(ErrorCodeMsg.USER_DELETE_ERROR);
+    }
+
 }

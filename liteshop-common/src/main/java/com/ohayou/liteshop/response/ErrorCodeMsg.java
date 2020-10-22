@@ -14,9 +14,17 @@ public enum ErrorCodeMsg {
 
     SERVER_ERROR(99999,"系统异常"),
     UNAUTHENTICATED_ERROR(400201,"认证失败，用户名或密码有误"),
-    USER_NOT_ENABLED_ERROR(400202,"认证失败，该账号不可用"),
+    USER_NOT_ENABLED_ERROR(400202,"该账号不可用,请联系管理员"),
+    USER_LOCKED(400205,"该账号已被锁定,请联系管理员"),
+
     INVALID_TOKEN(400203,"无效的token,拒绝访问"),
     TOKEN_EXPIRED(400204,"token已过期，请重新登录"),
+    USER_EXIST(400206,"用户已存在"),
+    USER_NO_ROLE(400207,"用户未分配角色"),
+    USER_ADD_ERROR(400208,"添加用户失败"),
+    USER_CNAT_RESET(400209,"不能重置该用户密码"),
+    USER_UPDATE_ERROR(400210,"更新用户失败"),
+    USER_DELETE_ERROR(400211,"更新用户失败"),
     ACCESS_DENIED_ERROR(400300,"权限不足，拒绝访问"),
     PARAMETER_VALIDATED_ERROR(400101,"参数错误"),
     UPLOAD_ERROR(400010,"上传失败"),

@@ -88,7 +88,7 @@ public class AdminUserController {
             throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
         }
         boolean result = adminUserService.resetPassword(id);
-        return result ? Result.success() : Result.error(ErrorCodeMsg.USER_CNAT_RESET);
+        return result ? Result.success() : Result.error(ErrorCodeMsg.USER_CANT_RESET);
     }
 
     @ApiDesc("上传用户头像")

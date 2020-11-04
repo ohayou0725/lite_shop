@@ -240,7 +240,7 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
         //判断是否为当前登录用户重置自己密码，如果不是则可以重置密码
         AdminUserDetails adminUser = SecurityUtil.getAdminUser(SecurityContextHolder.getContextHolderStrategy().getContext().getAuthentication());
         if (null == adminUser || user.getId().equals(adminUser.getId())) {
-            throw new GlobalException(ErrorCodeMsg.USER_CNAT_RESET);
+            throw new GlobalException(ErrorCodeMsg.USER_CANT_RESET);
         }
 
         user.setPassword(passwordEncoder.encode(initialPassword));
@@ -335,5 +335,25 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
         }
 
         return false;
+    }
+
+    @Override
+    public List<AdminUser> findUserByRoleId(Long roleId) {
+        return this.baseMapper.findUserByRoleId(roleId);
+    }
+
+    /**
+     * 删除redis中拥有指定角色的用户
+     * @param roleId
+     */
+    @Override
+    public void removeCacheByRoleId(Long roleId) {
+        List<AdminUser> adminUsers = this.findUserByRoleId(roleId);
+        if (CollectionUtil.isNotEmpty(adminUsers)) {
+            adminUsers.forEach(user->{
+                AdminUserDetailsKey adminUserDetailsKey = new AdminUserDetailsKey(user.getUsername());
+                redisService.del(adminUserDetailsKey.getPrefix());
+            });
+        }
     }
 }

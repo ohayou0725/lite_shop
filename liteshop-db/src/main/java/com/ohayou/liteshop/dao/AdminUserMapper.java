@@ -3,6 +3,8 @@ package com.ohayou.liteshop.dao;
 import com.ohayou.liteshop.entity.AdminUser;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
+import java.util.List;
+
 /**
  * <p>
  * 管理员用户表 Mapper 接口
@@ -12,5 +14,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2020-07-18
  */
 public interface AdminUserMapper extends BaseMapper<AdminUser> {
+
+    List<AdminUser> findUserByRoleId(Long roleId);
 
 }

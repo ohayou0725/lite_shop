@@ -20,5 +20,12 @@
     <sql id="Base_Column_List">
         id, username, password, last_login_ip, last_login_time, status, avatar, create_time, update_time, deleted
     </sql>
+    <select id="findUserByRoleId" resultType="com.ohayou.liteshop.entity.AdminUser">
+        select u.* from admin_user u
+        join admin_user_role_relation aurr on u.id = aurr.user_id
+        where aurr.role_id = #{roleId}
+        and aurr.deleted = 0
+        and u.deleted = 0
+    </select>
 
 </mapper>

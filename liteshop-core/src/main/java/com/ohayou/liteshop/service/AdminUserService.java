@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * <p>
@@ -36,4 +37,8 @@ public interface AdminUserService extends IService<AdminUser> {
     boolean updateUser(AdminUserDto adminUserDto);
 
     boolean deleteUser(Long id);
+
+    List<AdminUser> findUserByRoleId(Long roleId);
+
+    void removeCacheByRoleId(Long roleId);
 }

@@ -18,4 +18,10 @@ import java.util.List;
 public interface AdminMenuService extends IService<AdminMenu> {
 
     List<AdminMenuVo> ListAdminMenuTree(AdminUser adminUser);
+
+    List<AdminMenuVo> allMenuTree();
+
+    List<AdminMenu> menuListByRoleId(Long id);
+
+    boolean updateRoleMenu(Long roleId, List<Long> roleIds);
 }

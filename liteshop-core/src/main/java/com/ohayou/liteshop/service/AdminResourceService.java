@@ -20,4 +20,6 @@ public interface AdminResourceService extends IService<AdminResource> {
     List<AdminResource> findResourceListByUser(AdminUser user);
 
     List<AdminResource> findResourceListByRoleId(Long roleId);
+
+    boolean updateRoleResource(Long roleId, List<Long> resourceIds);
 }

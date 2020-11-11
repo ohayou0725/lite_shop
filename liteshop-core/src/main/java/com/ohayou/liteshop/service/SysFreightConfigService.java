@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface SysFreightConfigService extends IService<SysFreightConfig> {
 
+    boolean updateFreightConfig(SysFreightConfig sysFreightConfig);
 }

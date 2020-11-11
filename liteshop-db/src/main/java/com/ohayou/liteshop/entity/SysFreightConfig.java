@@ -32,6 +32,8 @@ public class SysFreightConfig implements Serializable {
      */
     private BigDecimal freightPrice;
 
+    private BigDecimal continuedWeightFreight;
+
     /**
      * 满足免运费的金额
      */
@@ -89,6 +91,18 @@ public class SysFreightConfig implements Serializable {
         this.deleted = deleted;
     }
 
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
+    public BigDecimal getContinuedWeightFreight() {
+        return continuedWeightFreight;
+    }
+
+    public void setContinuedWeightFreight(BigDecimal continuedWeightFreight) {
+        this.continuedWeightFreight = continuedWeightFreight;
+    }
+
     @Override
     public String toString() {
         return "SysFreightConfig{" +
@@ -100,4 +114,6 @@ public class SysFreightConfig implements Serializable {
             ", deleted=" + deleted +
         "}";
     }
+
+
 }

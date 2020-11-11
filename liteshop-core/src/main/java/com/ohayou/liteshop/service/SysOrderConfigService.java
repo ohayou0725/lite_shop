@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface SysOrderConfigService extends IService<SysOrderConfig> {
 
+    boolean updateOrderConfig(SysOrderConfig sysOrderConfig);
 }

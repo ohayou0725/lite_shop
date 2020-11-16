@@ -1,14 +1,13 @@
 package com.ohayou.liteshop.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.ohayou.liteshop.dto.AfterSaleDetailDto;
-import com.ohayou.liteshop.dto.OrderAfterSaleDto;
-import com.ohayou.liteshop.dto.OrderDetailDto;
-import com.ohayou.liteshop.dto.OrderDto;
+import com.ohayou.liteshop.dto.*;
 import com.ohayou.liteshop.entity.MallOrder;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ohayou.liteshop.utils.PageUtils;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,4 +37,6 @@ public interface MallOrderService extends IService<MallOrder> {
     boolean approvedOrder(Long orderId);
 
     boolean refuseOrder(Long orderId);
+
+    List<OrderStatisticsDto> getOrderStatistics(LocalDate startTime, LocalDate endTime);
 }

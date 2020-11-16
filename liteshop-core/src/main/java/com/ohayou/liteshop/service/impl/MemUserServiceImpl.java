@@ -3,6 +3,8 @@ package com.ohayou.liteshop.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ohayou.liteshop.dto.MemUserDto;
+import com.ohayou.liteshop.dto.MemberMonthStatisticsDto;
+import com.ohayou.liteshop.dto.MemberStatisticsDto;
 import com.ohayou.liteshop.entity.MemUser;
 import com.ohayou.liteshop.dao.MemUserMapper;
 import com.ohayou.liteshop.exception.GlobalException;
@@ -15,6 +17,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -95,6 +99,44 @@ public class MemUserServiceImpl extends ServiceImpl<MemUserMapper, MemUser> impl
     @Override
     public MemUser getUserByMobile(String mobile) {
         return this.getOne(new LambdaQueryWrapper<MemUser>().eq(MemUser::getMobile,mobile));
+    }
+
+    /**
+     * 查询统计每月用户增量
+     * @param year
+     * @return
+     */
+    @Override
+    public MemberStatisticsDto getMemberIncrementStatistics(Integer year) {
+
+        MemberStatisticsDto memberStatisticsDto = new MemberStatisticsDto();
+        memberStatisticsDto.setYear(year);
+        memberStatisticsDto.setTotal(this.count());
+        List<MemberMonthStatisticsDto> memberStatistics = new ArrayList<>(12);
+        LambdaQueryWrapper<MemUser> wrapper;
+
+        for (int i = 1; i <= 12; i++) {
+            MemberMonthStatisticsDto memberMonthStatisticsDto = new MemberMonthStatisticsDto();
+            memberMonthStatisticsDto.setMonth(String.valueOf(i));
+            LocalDate currentMonth = LocalDate.of(year, i, 1);
+            wrapper = new LambdaQueryWrapper<MemUser>()
+                    .between(MemUser::getCreateTime, currentMonth, LocalDate.of(year, i, currentMonth.lengthOfMonth()));
+            int count = this.count(wrapper);
+            memberMonthStatisticsDto.setTotal(count);
+            memberStatistics.add(memberMonthStatisticsDto);
+        }
+
+        for (int i = 0; i < 12; i++) {
+            MemberMonthStatisticsDto currentMonth = memberStatistics.get(i);
+            if (i != 0) {
+                currentMonth.setIncrement(currentMonth.getTotal()-memberStatistics.get(i-1).getTotal());
+            } else {
+                currentMonth.setIncrement(0);
+            }
+        }
+        memberStatisticsDto.setMemberMonthStatisticsDtos(memberStatistics);
+        return memberStatisticsDto;
+
     }
 
 }

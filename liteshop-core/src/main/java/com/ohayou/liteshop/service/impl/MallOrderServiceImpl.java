@@ -23,9 +23,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -344,5 +345,34 @@ public class MallOrderServiceImpl extends ServiceImpl<MallOrderMapper, MallOrder
         }
         order.setAftersaleStatus(AfterSaleStatus.UN_PASSED.getStatus());
         return this.updateById(order);
+    }
+
+    @Override
+    public List<OrderStatisticsDto> getOrderStatistics(LocalDate startTime, LocalDate endTime) {
+        LambdaQueryWrapper<MallOrder> wrapper = new LambdaQueryWrapper<>();
+        wrapper.between(MallOrder::getCreateTime,startTime,endTime);
+
+        List<MallOrder> orders = this.list(wrapper);
+
+        Map<LocalDate,List<MallOrder>> orderMap = orders.stream()
+                .collect(Collectors.groupingBy(order->{
+                    return order.getCreateTime().toLocalDate();
+                }));
+        List<OrderStatisticsDto> orderStatisticsDtos = new ArrayList<>();
+        orderMap.forEach((data,orderList)->{
+            OrderStatisticsDto orderStatisticsDto = new OrderStatisticsDto();
+            orderStatisticsDto.setCount(orderList.size());
+            orderStatisticsDto.setOrderDate(data);
+            Optional<BigDecimal> totalPrice = orderList.parallelStream()
+                    .map(MallOrder::getOrderPrice)
+                    .reduce(BigDecimal::add);
+            totalPrice.ifPresent(orderStatisticsDto::setAmount);
+            orderStatisticsDtos.add(orderStatisticsDto);
+        });
+
+        return orderStatisticsDtos.stream()
+                .sorted(Comparator.comparing(OrderStatisticsDto::getOrderDate)).collect(Collectors.toList());
+
+
     }
 }

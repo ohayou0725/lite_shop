@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ohayou.liteshop.constant.CouponType;
+import com.ohayou.liteshop.constant.GoodsStatus;
 import com.ohayou.liteshop.dto.*;
 import com.ohayou.liteshop.entity.*;
 import com.ohayou.liteshop.dao.MallGoodsSpuMapper;
@@ -645,6 +646,19 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
         return baseMapper.goodsListByTopicId(topicId);
     }
 
+    @Override
+    public List<MallGoodsSpu> goodsListByCategoryId(Long categoryId) {
+        if (null == categoryId || categoryId < 0) {
+            return null;
+        }
+        List<Long> childrenIds = this.categoryService.getChildrenIds(categoryId);
+        List<MallGoodsSpu> goodsSpuList = new ArrayList<>();
+        childrenIds.forEach(id->{
+            goodsSpuList.addAll(this.list(new LambdaQueryWrapper<MallGoodsSpu>().eq(MallGoodsSpu::getCategoryId,id)));
+        });
+        return goodsSpuList;
+    }
+
     /**
      * 查询优惠券可用商品
      * @param couponId
@@ -694,6 +708,37 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
             return this.baseMapper.getGoodsByCouponType(couponType.getId());
         }
         return null;
+    }
+
+    /**
+     * 查询商品统计
+     * @param categoryId
+     * @param brandId
+     * @return
+     */
+    @Override
+    public GoodsStatisticsDto getGoodsStatistics(Long categoryId, Long brandId) {
+        GoodsStatisticsDto goodsStatisticsDto = new GoodsStatisticsDto();
+        List<MallGoodsSpu> goodsList = new ArrayList<>();
+        //分类ID和品牌ID同时为空则统计所有商品
+        if (categoryId == null && brandId == null) {
+            goodsList = this.list();
+        }
+        if (categoryId != null) {
+            goodsList = this.goodsListByCategoryId(categoryId);
+        }
+        if (brandId != null) {
+            goodsList = this.list(new LambdaQueryWrapper<MallGoodsSpu>().eq(MallGoodsSpu::getBrandId,brandId));
+        }
+
+        int onSaleCount = (int)goodsList.stream()
+                .filter(goods->{
+                    return goods.getStatus().equals(GoodsStatus.IN_STOCK.getStatus());
+                }).count();
+        goodsStatisticsDto.setGoodsTotal(goodsList.size());
+        goodsStatisticsDto.setOnSaleCount(onSaleCount);
+        goodsStatisticsDto.setUnSaleCount(goodsList.size() - onSaleCount);
+        return goodsStatisticsDto;
     }
 
     /**

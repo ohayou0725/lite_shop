@@ -52,5 +52,9 @@ public interface MallGoodsSpuService extends IService<MallGoodsSpu> {
 
     List<MallGoodsSpu> goodsListByTopicId(Long topicId);
 
+    List<MallGoodsSpu> goodsListByCategoryId(Long categoryId);
+
     List<MallGoodsSpu> getGoodsListByCouponId(Long couponId, int limit, Long lastGoodsId);
+
+    GoodsStatisticsDto getGoodsStatistics(Long categoryId, Long brandId);
 }

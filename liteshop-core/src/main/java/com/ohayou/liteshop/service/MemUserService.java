@@ -1,15 +1,14 @@
 package com.ohayou.liteshop.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.ohayou.liteshop.dto.MemAddrDto;
-import com.ohayou.liteshop.dto.MemCollectDto;
 import com.ohayou.liteshop.dto.MemUserDto;
-import com.ohayou.liteshop.entity.MemAddress;
-import com.ohayou.liteshop.entity.MemCollect;
+import com.ohayou.liteshop.dto.MemberMonthStatisticsDto;
+import com.ohayou.liteshop.dto.MemberStatisticsDto;
 import com.ohayou.liteshop.entity.MemUser;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.ohayou.liteshop.utils.PageQuery;
 import com.ohayou.liteshop.utils.PageUtils;
+
+import java.util.List;
 
 /**
  * <p>
@@ -30,4 +29,5 @@ public interface MemUserService extends IService<MemUser> {
 
     MemUser getUserByMobile(String mobile);
 
+    MemberStatisticsDto getMemberIncrementStatistics(Integer year);
 }

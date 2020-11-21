@@ -32,6 +32,8 @@ public enum ErrorCodeMsg {
     USER_HAS_ROLE(400216,"无法删除，还有用户拥有该角色"),
     ROLE_DELETE_ERROR(400217,"该角色无法删除"),
     CONFIG_UPDATE_ERROR(400218,"更新配置失败"),
+    INVALID_OLDPASSWORD(400219,"旧密码有误"),
+    UPDATE_PASSWORD_ERROR(400220,"修改密码失败"),
     ACCESS_DENIED_ERROR(400300,"权限不足，拒绝访问"),
     PARAMETER_VALIDATED_ERROR(400101,"参数错误"),
     UPLOAD_ERROR(400010,"上传失败"),

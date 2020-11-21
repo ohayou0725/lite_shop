@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ohayou.liteshop.cache.RedisService;
+import com.ohayou.liteshop.cache.cachekey.AdminLoginTimeAndIpKey;
 import com.ohayou.liteshop.cache.cachekey.AdminUserDetailsKey;
 import com.ohayou.liteshop.cache.cachekey.InvalidTokenKey;
 import com.ohayou.liteshop.constant.AdminUserStatus;
@@ -45,9 +46,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -91,8 +90,8 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
     private String initialPassword;
 
     @Override
-    public boolean login(AdminUserVo adminUserVo, HttpServletRequest request , HttpServletResponse response) {
-        if (adminUserVo.getUsername() == null || adminUserVo.getPassword() == null) {
+    public boolean  login(AdminUserVo adminUserVo, HttpServletRequest request , HttpServletResponse response) {
+        if (StringUtils.isBlank(adminUserVo.getUsername()) || StringUtils.isBlank(adminUserVo.getPassword())) {
             throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
         }
         AdminUserDetails user = (AdminUserDetails)adminUserDetailsService.loadUserByUsername(adminUserVo.getUsername());
@@ -113,9 +112,17 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
         String token = jwtTokenUtil.generateToken(user);
         response.setHeader("Access-Token",token);
         AdminUser adminUser = new AdminUser();
-        adminUser.setLastLoginTime(LocalDateTime.now());
-        adminUser.setLastLoginIp(request.getRemoteHost());
+        AdminLoginTimeAndIpKey adminLoginTimeAndIpKey = new AdminLoginTimeAndIpKey(user.getUsername());
+
+        LocalDateTime loginTime = (LocalDateTime)redisService.hget(adminLoginTimeAndIpKey.getPrefix(),"loginTime");
+        String ip = String.valueOf(redisService.hget(adminLoginTimeAndIpKey.getPrefix(),"ip"));
+        adminUser.setLastLoginTime(loginTime);
+        adminUser.setLastLoginIp(ip);
         this.update(adminUser,new UpdateWrapper<AdminUser>().lambda().eq(AdminUser::getUsername,user.getUsername()));
+        Map<String,Object> loginTimeAndIp = new HashMap<>();
+        loginTimeAndIp.put("loginTime",LocalDateTime.now());
+        loginTimeAndIp.put("ip",request.getRemoteHost());
+        redisService.hmset(adminLoginTimeAndIpKey.getPrefix(),loginTimeAndIp);
         return true;
 
     }
@@ -137,11 +144,14 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
 
     @Override
     public AdminUserVo getUserInfo(Authentication authentication) {
-        AdminUserDetails adminUser = SecurityUtil.getAdminUser(authentication);
-        if (adminUser == null) {
+        AdminUserDetails userDetails = SecurityUtil.getAdminUser(authentication);
+        if (userDetails == null) {
             throw new GlobalException(ErrorCodeMsg.USER_INFO_ERROR);
         }
+        AdminUser adminUser = this.getById(userDetails.getId());
+
         AdminUser currentAdminUser = new AdminUser();
+
         currentAdminUser.setId(adminUser.getId());
         List<AdminRole> adminRoles = adminRoleService.roleListByUser(currentAdminUser);
 
@@ -149,7 +159,10 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
                 .map(AdminRole::getRoleName)
                 .collect(Collectors.toList());
         AdminUserVo adminUserVo = new AdminUserVo();
+        adminUserVo.setId(adminUser.getId());
         adminUserVo.setUsername(adminUser.getUsername());
+        adminUserVo.setName(adminUser.getName());
+        adminUserVo.setEmail(adminUser.getEmail());
         adminUserVo.setRole(collect);
         adminUserVo.setPassword(null);
         adminUserVo.setAvatar(adminUser.getAvatar());
@@ -355,5 +368,32 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
                 redisService.del(adminUserDetailsKey.getPrefix());
             });
         }
+    }
+
+    /**
+     * 修改用户密码
+     * @param id
+     * @param oldPassword
+     * @param newPassword
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean updatePassword(Long id, String oldPassword, String newPassword) {
+        AdminUser user = this.getById(id);
+        if (!passwordEncoder.matches(oldPassword,user.getPassword())) {
+            throw new GlobalException(ErrorCodeMsg.INVALID_OLDPASSWORD);
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+
+        return this.updateById(user);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean updateUserInfo(AdminUserVo adminUserVo) {
+        AdminUser user = new AdminUser();
+        BeanUtils.copyProperties(adminUserVo,user);
+        return this.updateById(user);
     }
 }

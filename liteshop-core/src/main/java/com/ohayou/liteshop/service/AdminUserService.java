@@ -41,4 +41,8 @@ public interface AdminUserService extends IService<AdminUser> {
     List<AdminUser> findUserByRoleId(Long roleId);
 
     void removeCacheByRoleId(Long roleId);
+
+    boolean updatePassword(Long id, String oldPassword, String newPassword);
+
+    boolean updateUserInfo(AdminUserVo adminUserVo);
 }

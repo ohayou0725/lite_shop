@@ -37,6 +37,16 @@ public class AdminUser implements Serializable {
     private String password;
 
     /**
+     * 真实姓名
+     */
+    private String name;
+
+    /**
+     * 电子邮箱
+     */
+    private String email;
+
+    /**
      * 最近登录ip
      */
     private String lastLoginIp;
@@ -45,6 +55,8 @@ public class AdminUser implements Serializable {
      * 最近登录时间
      */
     private LocalDateTime lastLoginTime;
+
+
 
     /**
      * 状态 0-可用 1-禁用
@@ -135,6 +147,26 @@ public class AdminUser implements Serializable {
     public void setDeleted(Integer deleted) {
         this.deleted = deleted;
     }
+
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+
 
     @Override
     public String toString() {

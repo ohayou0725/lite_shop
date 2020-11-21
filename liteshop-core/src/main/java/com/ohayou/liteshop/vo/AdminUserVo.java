@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -13,16 +14,28 @@ import java.util.List;
  */
 public class AdminUserVo {
 
-    @NotBlank(message = "用户名不能为空")
-    @Length(min = 5, max = 16, message = "用户名必须为5到16位之间")
+
+    public interface LoginFormGroup{}
+
+    public interface UpdateFormGroup{}
+
+    @NotNull(groups = UpdateFormGroup.class,message = "id不能为空")
+    private Long id;
+
+    @NotBlank(message = "用户名不能为空",groups = {LoginFormGroup.class})
+    @Length(min = 5, max = 16, message = "用户名必须为5到16位之间",groups = {LoginFormGroup.class})
     private String username;
 
 
-    @Length(min = 5, max = 16, message = "密码必须为5到16位之间")
+    @Length(min = 5, max = 16, message = "密码必须为5到16位之间",groups = {LoginFormGroup.class})
     private String password;
 
 
     private String avatar;
+
+    private String name;
+
+    private String email;
 
     private List<String> role;
 
@@ -47,7 +60,21 @@ public class AdminUserVo {
         this.password = password;
     }
 
+    public String getName() {
+        return name;
+    }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public String getAvatar() {
         return avatar;
@@ -78,6 +105,15 @@ public class AdminUserVo {
     }
 
     public void setLastLoginTime(LocalDateTime lastLoginTime) {
+
         this.lastLoginTime = lastLoginTime;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

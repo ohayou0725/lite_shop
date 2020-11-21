@@ -55,6 +55,8 @@ public class AdminUserDetailsServiceImpl implements UserDetailsService {
         adminUserDetails.setUsername(user.getUsername());
         adminUserDetails.setPassword(user.getPassword());
         adminUserDetails.setStatus(user.getStatus());
+        adminUserDetails.setName(user.getName());
+        adminUserDetails.setEmail(user.getEmail());
         adminUserDetails.setAvatar(user.getAvatar());
         adminUserDetails.setLastLoginTime(user.getLastLoginTime());
 //        List<SimpleGrantedAuthority> collect = adminResourceService.findResourceListByUser(user).stream()

@@ -45,7 +45,7 @@ public class AdminResourceServiceImpl extends ServiceImpl<AdminResourceMapper, A
 
     @Override
     public List<AdminResource> findResourceListByUser(AdminUser user) {
-        if (user == null || null != user.getId()) {
+        if (user == null || null == user.getId()) {
             throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
         }
         List<AdminRole> adminRoles = adminRoleService.roleListByUser(user);

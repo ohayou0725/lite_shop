@@ -7,14 +7,17 @@ import com.ohayou.liteshop.entity.AdminUser;
 import com.ohayou.liteshop.exception.GlobalException;
 import com.ohayou.liteshop.response.ErrorCodeMsg;
 import com.ohayou.liteshop.response.Result;
+import com.ohayou.liteshop.security.AdminUserDetails;
 import com.ohayou.liteshop.service.AdminUserService;
 import com.ohayou.liteshop.service.UploadService;
 import com.ohayou.liteshop.utils.PageQuery;
 import com.ohayou.liteshop.utils.PageUtils;
 import com.ohayou.liteshop.vo.AdminUserVo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,7 +49,7 @@ public class AdminUserController {
      */
     @ApiDesc("后台用户登录")
     @PostMapping("/user/login")
-    public Result login(@Valid @RequestBody AdminUserVo adminUserVo, HttpServletRequest request, HttpServletResponse response) {
+    public Result login(@Validated(AdminUserVo.LoginFormGroup.class) @RequestBody AdminUserVo adminUserVo, HttpServletRequest request, HttpServletResponse response) {
         if (adminUserService.login(adminUserVo,request,response)){
             return Result.success();
         }
@@ -88,6 +91,9 @@ public class AdminUserController {
             throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
         }
         boolean result = adminUserService.resetPassword(id);
+        if (result) {
+            adminUserService.removeCacheByRoleId(id);
+        }
         return result ? Result.success() : Result.error(ErrorCodeMsg.USER_CANT_RESET);
     }
 
@@ -103,6 +109,9 @@ public class AdminUserController {
     @PostMapping("/system/user/update")
     public Result update(@RequestBody @Validated(value = AdminUserDto.UpdateUser.class) AdminUserDto adminUserDto) {
         boolean result = adminUserService.updateUser(adminUserDto);
+        if (result) {
+            adminUserService.removeCacheByRoleId(adminUserDto.getId());
+        }
         return result ? Result.success() : Result.error(ErrorCodeMsg.USER_UPDATE_ERROR);
     }
 
@@ -116,4 +125,43 @@ public class AdminUserController {
         return result ? Result.success() : Result.error(ErrorCodeMsg.USER_DELETE_ERROR);
     }
 
+    @ApiDesc("修改用户密码")
+    @PostMapping("/user/updatePassword/{id}")
+    public Result updatePassword(@PathVariable("id") Long id, @RequestBody Map<String,String> params ) {
+        String oldPassword = params.get("oldPassword");
+        String newPassword = params.get("newPassword");
+
+        if (StringUtils.isBlank(oldPassword) || StringUtils.isBlank(newPassword)) {
+            throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
+        }
+
+        //验证当前账号，防止横向越权
+        AdminUserDetails currentUser = (AdminUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        long currentUserId = currentUser.getId();
+        if (id != currentUserId) {
+            throw new GlobalException(ErrorCodeMsg.ACCESS_DENIED_ERROR);
+        }
+
+        boolean result = adminUserService.updatePassword(id,oldPassword,newPassword);
+        if (result) {
+            adminUserService.removeCacheByRoleId(id);
+        }
+        return result ? Result.success() : Result.error(ErrorCodeMsg.UPDATE_PASSWORD_ERROR);
+    }
+
+    @ApiDesc("修改用户基本信息")
+    @PostMapping("/user/updateUserInfo")
+    public Result updateUserInfo(@RequestBody @Validated(value = AdminUserVo.UpdateFormGroup.class) AdminUserVo adminUserVo) {
+        AdminUserDetails currentUser = (AdminUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        long currentUserId = currentUser.getId();
+        if (adminUserVo.getId() != currentUserId) {
+            throw new GlobalException(ErrorCodeMsg.ACCESS_DENIED_ERROR);
+        }
+
+        boolean result = adminUserService.updateUserInfo(adminUserVo);
+        if (result) {
+            adminUserService.removeCacheByRoleId(adminUserVo.getId());
+        }
+        return result ? Result.success() : Result.error(ErrorCodeMsg.USER_UPDATE_ERROR);
+    }
 }

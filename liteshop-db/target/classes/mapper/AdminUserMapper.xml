@@ -18,7 +18,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, username, password, last_login_ip, last_login_time, status, avatar, create_time, update_time, deleted
+        id, username, password, name,email, last_login_ip, last_login_time, status, avatar, create_time, update_time, deleted
     </sql>
     <select id="findUserByRoleId" resultType="com.ohayou.liteshop.entity.AdminUser">
         select u.* from admin_user u

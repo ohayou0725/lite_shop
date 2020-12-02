@@ -48,6 +48,8 @@ public class TopicDto {
     @Max(value = 1,message = "非法参数")
     private Integer isShow;
 
+    private Integer position;
+
     private List<MallGoodsSpu> goodsList;
 
     public Long getId() {
@@ -135,6 +137,15 @@ public class TopicDto {
     }
 
     public void setGoodsList(List<MallGoodsSpu> goodsList) {
+
         this.goodsList = goodsList;
+    }
+
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
     }
 }

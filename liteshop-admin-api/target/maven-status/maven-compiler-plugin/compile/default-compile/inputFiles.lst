@@ -1,0 +1,17 @@
+/Users/duo/Desktop/lite_shop_all/lite_shop/liteshop-admin-api/src/main/java/com/ohayou/liteshop/controller/OrderController.java
+/Users/duo/Desktop/lite_shop_all/lite_shop/liteshop-admin-api/src/main/java/com/ohayou/liteshop/controller/MallBrandController.java
+/Users/duo/Desktop/lite_shop_all/lite_shop/liteshop-admin-api/src/main/java/com/ohayou/liteshop/controller/AdminUserController.java
+/Users/duo/Desktop/lite_shop_all/lite_shop/liteshop-admin-api/src/main/java/com/ohayou/liteshop/controller/StatisticsController.java
+/Users/duo/Desktop/lite_shop_all/lite_shop/liteshop-admin-api/src/main/java/com/ohayou/liteshop/controller/MallGoodsController.java
+/Users/duo/Desktop/lite_shop_all/lite_shop/liteshop-admin-api/src/main/java/com/ohayou/liteshop/AdminApplication.java
+/Users/duo/Desktop/lite_shop_all/lite_shop/liteshop-admin-api/src/main/java/com/ohayou/liteshop/security/RBACService.java
+/Users/duo/Desktop/lite_shop_all/lite_shop/liteshop-admin-api/src/main/java/com/ohayou/liteshop/controller/MallTopicController.java
+/Users/duo/Desktop/lite_shop_all/lite_shop/liteshop-admin-api/src/main/java/com/ohayou/liteshop/controller/CouponController.java
+/Users/duo/Desktop/lite_shop_all/lite_shop/liteshop-admin-api/src/main/java/com/ohayou/liteshop/security/AdminSecurityConfig.java
+/Users/duo/Desktop/lite_shop_all/lite_shop/liteshop-admin-api/src/main/java/com/ohayou/liteshop/controller/SysConfigController.java
+/Users/duo/Desktop/lite_shop_all/lite_shop/liteshop-admin-api/src/main/java/com/ohayou/liteshop/controller/AdminRoleController.java
+/Users/duo/Desktop/lite_shop_all/lite_shop/liteshop-admin-api/src/main/java/com/ohayou/liteshop/controller/MemberController.java
+/Users/duo/Desktop/lite_shop_all/lite_shop/liteshop-admin-api/src/main/java/com/ohayou/liteshop/controller/MallGoodsCommentController.java
+/Users/duo/Desktop/lite_shop_all/lite_shop/liteshop-admin-api/src/main/java/com/ohayou/liteshop/controller/AdminLogController.java
+/Users/duo/Desktop/lite_shop_all/lite_shop/liteshop-admin-api/src/main/java/com/ohayou/liteshop/security/JwtAuthenticationTokenFilter.java
+/Users/duo/Desktop/lite_shop_all/lite_shop/liteshop-admin-api/src/main/java/com/ohayou/liteshop/controller/MallProductCategoryController.java

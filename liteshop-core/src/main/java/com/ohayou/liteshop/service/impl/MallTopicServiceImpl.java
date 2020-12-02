@@ -2,6 +2,7 @@ package com.ohayou.liteshop.service.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ohayou.liteshop.dto.TopicDto;
 import com.ohayou.liteshop.entity.MallGoodsSpu;
@@ -15,6 +16,8 @@ import com.ohayou.liteshop.service.MallTopicGoodsService;
 import com.ohayou.liteshop.service.MallTopicService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ohayou.liteshop.utils.PageUtils;
+import com.ohayou.liteshop.vo.BannerVo;
+import com.ohayou.liteshop.vo.FeaturedTopicDto;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,9 +106,19 @@ public class MallTopicServiceImpl extends ServiceImpl<MallTopicMapper, MallTopic
 
         MallTopic newTopic = new MallTopic();
         BeanUtils.copyProperties(topicDto,newTopic);
+        boolean update = true;
+        boolean save = false;
+        if (topicDto.getPosition().equals(1)) {
 
-        boolean save = this.save(newTopic);
+            update = this.update(new LambdaUpdateWrapper<MallTopic>()
+                    .eq(MallTopic::getPosition, 1)
+                    .set(MallTopic::getPosition, 0));
+        }
+        if (update) {
+            save = this.save(newTopic);
+        }
         if (save && CollectionUtil.isNotEmpty(topicDto.getGoodsList())) {
+
             List<MallGoodsSpu> goodsList = topicDto.getGoodsList();
             List<Long> goodsIdList = goodsList.stream()
                     .map(MallGoodsSpu::getId)
@@ -282,10 +295,60 @@ public class MallTopicServiceImpl extends ServiceImpl<MallTopicMapper, MallTopic
         if (null == topic) {
             throw new GlobalException(ErrorCodeMsg.TOPIC_NOT_EXIST);
         }
+        if (topicDto.getPosition().equals(1)) {
+            this.update(new LambdaUpdateWrapper<MallTopic>()
+                    .eq(MallTopic::getPosition, 1)
+                    .set(MallTopic::getPosition, 0));
+        }
+
+        topic.setPosition(topicDto.getPosition());
         topic.setTitle(topicDto.getTitle());
         topic.setSubtitle(topicDto.getSubtitle());
         topic.setImgs(topicDto.getImgs());
         topic.setSort(topicDto.getSort());
         return this.updateById(topic);
+    }
+
+    /**
+     * 获取主页轮播图
+     * @return
+     */
+    @Override
+    public List<BannerVo> getBanner() {
+        List<MallTopic> list = this.list(new LambdaQueryWrapper<MallTopic>()
+                .eq(MallTopic::getIsShow, 1)
+                .eq(MallTopic::getPosition,0));
+        List<BannerVo> collect = list.stream()
+                .map(mallTopic -> {
+                    BannerVo bannerVo = new BannerVo();
+                    bannerVo.setTopicId(mallTopic.getId());
+                    bannerVo.setImg(mallTopic.getImgs());
+                    bannerVo.setShow(mallTopic.getIsShow().equals(1));
+                    bannerVo.setSort(mallTopic.getSort());
+                    return bannerVo;
+                }).sorted(Comparator.comparing(BannerVo::getSort))
+                .collect(Collectors.toList());
+
+        return collect;
+    }
+
+    @Override
+    public List<FeaturedTopicDto> getFeaturedTopic() {
+        List<MallTopic> list = this.list(new LambdaQueryWrapper<MallTopic>().eq(MallTopic::getPosition, 1));
+        if (CollectionUtil.isEmpty(list)) {
+            return null;
+        }
+
+        return list.stream()
+                .map(mallTopic -> {
+                    FeaturedTopicDto featuredTopicDto = new FeaturedTopicDto();
+                    featuredTopicDto.setTopicId(mallTopic.getId());
+                    featuredTopicDto.setImg(mallTopic.getImgs());
+                    featuredTopicDto.setPrice(mallTopic.getPrice());
+                    featuredTopicDto.setTitle(mallTopic.getTitle());
+                    featuredTopicDto.setGoodsCount(this.getGoodsList(mallTopic.getId()).size());
+                    return featuredTopicDto;
+                }).collect(Collectors.toList());
+
     }
 }

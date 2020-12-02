@@ -12,6 +12,7 @@ import com.ohayou.liteshop.response.ErrorCodeMsg;
 import com.ohayou.liteshop.service.MallCategoryService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ohayou.liteshop.service.MallGoodsAttrService;
+import com.ohayou.liteshop.vo.CategoryVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -163,6 +164,9 @@ public class MallCategoryServiceImpl extends ServiceImpl<MallCategoryMapper, Mal
         if (null == id || 0 == id) {
             throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
         }
+        if (this.hasSameCategory(categoryDto)) {
+            throw new GlobalException(ErrorCodeMsg.CATEGORY_EXIST);
+        }
         //dto转entity
         MallCategory category = new MallCategory();
         BeanUtils.copyProperties(categoryDto,category);
@@ -180,8 +184,7 @@ public class MallCategoryServiceImpl extends ServiceImpl<MallCategoryMapper, Mal
         if (categoryDto == null || StringUtils.isBlank(categoryDto.getName())) {
             throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
         }
-        int result = this.count(new LambdaQueryWrapper<MallCategory>().eq(MallCategory::getName, categoryDto.getName()));
-        if (result > 0) {
+        if (this.hasSameCategory(categoryDto)) {
             throw new GlobalException(ErrorCodeMsg.CATEGORY_EXIST);
         }
         MallCategory category = new MallCategory();
@@ -193,6 +196,17 @@ public class MallCategoryServiceImpl extends ServiceImpl<MallCategoryMapper, Mal
             return categoryDto;
         }
         return null;
+    }
+
+    /**
+     * 检查数据库同级分类下是否已有相同分类名
+     * @param categoryDto
+     * @return
+     */
+    private boolean hasSameCategory(ProductCategoryDto categoryDto) {
+        String name = categoryDto.getName();
+        MallCategory one = this.getOne(new LambdaQueryWrapper<MallCategory>().eq(MallCategory::getName, name));
+        return null != one && one.getParentId().equals(categoryDto.getParentId());
     }
 
     /**
@@ -298,6 +312,24 @@ public class MallCategoryServiceImpl extends ServiceImpl<MallCategoryMapper, Mal
         List<MallCategory> childrenList = this.childrenList();
         List<Long> childrenIds = this.getChildrenIds(categoryId, new ArrayList<Long>(), childrenList);
         return childrenIds.stream().filter(this::isLevel3).collect(Collectors.toList());
+    }
+
+    /**
+     * 查询所有一级分类
+     * @return
+     */
+    @Override
+    public List<CategoryVo> getRootCategoryList() {
+        List<MallCategory> rootNodes = this.getRootNodes();
+        return rootNodes.stream()
+                .map(mallCategory -> {
+                    CategoryVo categoryVo = new CategoryVo();
+                    categoryVo.setCategoryId(mallCategory.getId());
+                    categoryVo.setIcon(mallCategory.getIcon());
+                    categoryVo.setName(mallCategory.getName());
+                    return categoryVo;
+                })
+                .collect(Collectors.toList());
     }
 
     private List<Long> getChildrenIds(Long categoryId, List<Long> childrenIds, List<MallCategory> all) {

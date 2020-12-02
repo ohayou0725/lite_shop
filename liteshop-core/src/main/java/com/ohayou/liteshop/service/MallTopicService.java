@@ -6,6 +6,8 @@ import com.ohayou.liteshop.entity.MallGoodsSpu;
 import com.ohayou.liteshop.entity.MallTopic;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ohayou.liteshop.utils.PageUtils;
+import com.ohayou.liteshop.vo.BannerVo;
+import com.ohayou.liteshop.vo.FeaturedTopicDto;
 
 import java.util.List;
 
@@ -36,4 +38,8 @@ public interface MallTopicService extends IService<MallTopic> {
     boolean saveOrUpdateContent(TopicDto topicDto);
 
     boolean updateTopic(TopicDto topicDto);
+
+    List<BannerVo> getBanner();
+
+    List<FeaturedTopicDto> getFeaturedTopic();
 }

@@ -3,6 +3,7 @@ package com.ohayou.liteshop.security;
 import com.ohayou.liteshop.constant.AdminUserStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.Collection;

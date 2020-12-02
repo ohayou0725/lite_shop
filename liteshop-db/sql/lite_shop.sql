@@ -2371,7 +2371,7 @@ CREATE TABLE `mall_topic` (
   `content` text COMMENT '正文',
   `price` decimal(10,2) DEFAULT '0.00' COMMENT '专题商品最低价',
   `read_count` int(11) DEFAULT '0' COMMENT '阅读量',
-  `imgs` varchar(255) DEFAULT '' COMMENT '专题图片',
+  `img` varchar(255) DEFAULT '' COMMENT '专题图片',
   `sort` int(1) DEFAULT '0' COMMENT '排序',
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,

@@ -1,8 +1,11 @@
 package com.ohayou.liteshop.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.PageUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ohayou.liteshop.constant.CouponType;
 import com.ohayou.liteshop.constant.GoodsStatus;
 import com.ohayou.liteshop.dto.*;
@@ -15,6 +18,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ohayou.liteshop.utils.GoodsSpecUtil;
 import com.ohayou.liteshop.utils.ListUtil;
 import com.ohayou.liteshop.utils.PageUtils;
+import com.ohayou.liteshop.vo.HotGoodsVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -739,6 +743,37 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
         goodsStatisticsDto.setOnSaleCount(onSaleCount);
         goodsStatisticsDto.setUnSaleCount(goodsList.size() - onSaleCount);
         return goodsStatisticsDto;
+    }
+
+    /**
+     * 分页查询热卖商品
+     * @param page
+     * @param size
+     * @return
+     */
+    @Override
+    public PageUtils getHotGoodsList(int page, int size) {
+        Page<MallGoodsSpu> goodsSpuPage = new Page<>(page, size);
+        IPage<MallGoodsSpu> pages = this.page(goodsSpuPage, new LambdaQueryWrapper<MallGoodsSpu>()
+                .eq(MallGoodsSpu::getHot, 1)
+                .eq(MallGoodsSpu::getStatus,GoodsStatus.IN_STOCK.getStatus()));
+        PageUtils pageUtils = new PageUtils(pages);
+
+        if (CollectionUtil.isNotEmpty(pages.getRecords())) {
+            List<HotGoodsVo> collect = pages.getRecords().stream()
+                    .map(mallGoodsSpu -> {
+                        HotGoodsVo hotGoodsVo = new HotGoodsVo();
+                        hotGoodsVo.setGoodsId(mallGoodsSpu.getId());
+                        hotGoodsVo.setTitle(mallGoodsSpu.getTitle());
+                        hotGoodsVo.setDesc(mallGoodsSpu.getBrief());
+                        hotGoodsVo.setImg(mallGoodsSpu.getTitleImg());
+                        hotGoodsVo.setPrice(mallGoodsSpu.getPrice());
+                        hotGoodsVo.setDiscountPrice(mallGoodsSpu.getDiscountPrice());
+                        return hotGoodsVo;
+                    }).collect(Collectors.toList());
+            pageUtils.setList(collect);
+        }
+        return pageUtils;
     }
 
     /**

@@ -10,7 +10,7 @@
         <result column="content" property="content" />
         <result column="price" property="price" />
         <result column="read_count" property="readCount" />
-        <result column="imgs" property="imgs" />
+        <result column="img" property="img" />
         <result column="brand_id" property="brandId"/>
         <result column="sort" property="sort" />
         <result column="isShow" property="isShow"/>
@@ -21,7 +21,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, title, subtitle, content, price, read_count, imgs, sort,isShow, create_time, update_time, deleted
+        id, title, subtitle, content, price, read_count, img, sort,isShow, position,create_time, update_time, deleted
     </sql>
 
 </mapper>

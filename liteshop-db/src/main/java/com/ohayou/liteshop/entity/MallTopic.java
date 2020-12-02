@@ -72,6 +72,11 @@ public class MallTopic implements Serializable {
      */
     private Integer isShow;
 
+    /**
+     * 前台显示位置
+     */
+    private Integer position;
+
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
@@ -174,6 +179,14 @@ public class MallTopic implements Serializable {
 
     public void setIsShow(Integer isShow) {
         this.isShow = isShow;
+    }
+
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
     }
 
     @Override

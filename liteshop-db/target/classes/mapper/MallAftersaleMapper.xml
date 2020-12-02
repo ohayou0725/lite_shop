@@ -11,7 +11,7 @@
         <result column="type" property="type" />
         <result column="reason" property="reason" />
         <result column="amount" property="amount" />
-        <result column="imgs" property="img" />
+        <result column="img" property="img" />
         <result column="comment" property="comment" />
         <result column="status" property="status" />
         <result column="handle_time" property="handleTime" />
@@ -22,7 +22,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, aftersale_sn, order_id, user_id, type, reason, amount, imgs, comment, status, handle_time, create_time, update_time, deleted
+        id, aftersale_sn, order_id, user_id, type, reason, amount, img, comment, status, handle_time, create_time, update_time, deleted
     </sql>
 
 </mapper>

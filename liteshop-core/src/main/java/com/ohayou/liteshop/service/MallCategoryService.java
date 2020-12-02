@@ -3,6 +3,7 @@ package com.ohayou.liteshop.service;
 import com.ohayou.liteshop.dto.ProductCategoryDto;
 import com.ohayou.liteshop.entity.MallCategory;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ohayou.liteshop.vo.CategoryVo;
 
 import java.util.List;
 
@@ -41,4 +42,6 @@ public interface MallCategoryService extends IService<MallCategory> {
     boolean isLevel3(Long categoryId);
 
     List<Long> getChildrenIds(Long categoryId);
+
+    List<CategoryVo> getRootCategoryList();
 }

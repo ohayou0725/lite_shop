@@ -17,8 +17,10 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -53,6 +55,7 @@ public class WebLogAspect {
     @Autowired
     private AdminLogService adminLogService;
 
+
     @Pointcut("execution(public * com.ohayou.liteshop.controller.*.*(..))")
     public void webLog(){}
 
@@ -69,29 +72,33 @@ public class WebLogAspect {
         WebLog webLog = new WebLog();
         Object result = pjp.proceed();
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        AdminLog adminLog = null;
-        if (principal == null) {
-            webLog.setUsername("匿名用户");
+        AdminLog adminLog = new AdminLog();
+
+        LOGGER.info(request.getContextPath());
+        if ("/api/admin".equals(request.getRequestURI())) {
+            if (principal == null) {
+                webLog.setUsername("匿名用户");
+            }
+            if (principal instanceof AdminUserDetails) {
+                webLog.setUsername(((AdminUserDetails)principal).getUsername());
+                adminLog = new AdminLog();
+                adminLog.setAdmin(((AdminUserDetails)principal).getUsername());
+                adminLog.setIp(request.getRemoteHost());
+                adminLog.setAdmin(webLog.getUsername());
+                Result apiResult = (Result)result;
+                if (apiResult.getCode() != 200) {
+                    adminLog.setStatus(0);
+                    adminLog.setResult("操作失败");
+                    adminLog.setComment(apiResult.getMsg());
+                } else {
+                    adminLog.setStatus(1);
+                    adminLog.setResult("操作成功");
+                }
+            } else {
+                webLog.setUsername(((MemUser)principal).getMobile());
+            }
         }
 
-        if (principal instanceof AdminUserDetails) {
-            webLog.setUsername(((AdminUserDetails)principal).getUsername());
-            adminLog = new AdminLog();
-            adminLog.setAdmin(((AdminUserDetails)principal).getUsername());
-            adminLog.setIp(request.getRemoteHost());
-            adminLog.setAdmin(webLog.getUsername());
-            Result apiResult = (Result)result;
-            if (apiResult.getCode() != 200) {
-                adminLog.setStatus(0);
-                adminLog.setResult("操作失败");
-                adminLog.setComment(apiResult.getMsg());
-            } else {
-                adminLog.setStatus(1);
-                adminLog.setResult("操作成功");
-            }
-        } else {
-            webLog.setUsername(((MemUser)principal).getMobile());
-        }
         LocalDateTime endTime = LocalDateTime.now();
         Duration between = Duration.between(startTime, endTime);
         Signature signature = pjp.getSignature();
@@ -111,8 +118,9 @@ public class WebLogAspect {
         webLog.setUrl(request.getRequestURL().toString());
         webLog.setParameter(getParameter(method,pjp.getArgs()));
         LOGGER.info("{}",objectMapper.writeValueAsString(webLog));
-
-//        adminLogService.save(adminLog);
+//        if (method.isAnnotationPresent(PostMapping.class)) {
+//            adminLogService.save(adminLog);
+//        }
 
         return result;
     }

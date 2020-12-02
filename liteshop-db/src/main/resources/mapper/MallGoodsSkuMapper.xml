@@ -10,7 +10,7 @@
         <result column="sales" property="sales"/>
         <result column="stock" property="stock" />
         <result column="stock_warning_count" property="stockWarningCount" />
-        <result column="imgs" property="img" />
+        <result column="img" property="img" />
         <result column="spec_sn" property="specSn" />
         <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
@@ -19,7 +19,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, goods_id, reservePrice, sales, stock,stock_warning_count, imgs, spec_sn, create_time, update_time, deleted
+        id, goods_id, reservePrice, sales, stock,stock_warning_count, img, spec_sn, create_time, update_time, deleted
     </sql>
 
 </mapper>

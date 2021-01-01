@@ -2,10 +2,10 @@ package com.ohayou.liteshop.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.util.PageUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ohayou.liteshop.cache.RedisService;
+import com.ohayou.liteshop.cache.cachekey.HotGoodsVoListKey;
 import com.ohayou.liteshop.constant.CouponType;
 import com.ohayou.liteshop.constant.GoodsStatus;
 import com.ohayou.liteshop.dto.*;
@@ -77,6 +77,9 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
 
     @Autowired
     MallCouponTypeService couponTypeService;
+
+    @Autowired
+    RedisService redisService;
 
 
     /**
@@ -387,6 +390,10 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
                     }
                 }
             }
+            if (goodsSpu.getHot().equals(1)) {
+                HotGoodsVoListKey hotGoodsVoListKey = new HotGoodsVoListKey();
+                redisService.del(hotGoodsVoListKey.getPrefix());
+            }
             return true;
         }
         return false;
@@ -513,7 +520,8 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
     @Transactional(rollbackFor = Exception.class)
     public boolean changeStatus(GoodsFormDto goodsFormDto) {
         Long id = goodsFormDto.getId();
-        if (null == id || id < 1) {
+        MallGoodsSpu one = this.getById(id);
+        if (null == one) {
             throw new GlobalException(ErrorCodeMsg.GOODS_NOT_FOUND);
         }
         Integer status = goodsFormDto.getStatus();
@@ -523,6 +531,10 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
         MallGoodsSpu goodsSpu = new MallGoodsSpu();
         goodsSpu.setId(id);
         goodsSpu.setStatus(status);
+        if (one.getHot().equals(1)) {
+            HotGoodsVoListKey hotGoodsVoListKey = new HotGoodsVoListKey();
+            redisService.del(hotGoodsVoListKey.getPrefix());
+        }
         return this.updateById(goodsSpu);
     }
 
@@ -615,7 +627,10 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
                 throw new GlobalException(ErrorCodeMsg.DELETE_GOODS_ERROR);
             }
         }
-
+        if (goodsSpu.getHot().equals(1)) {
+            HotGoodsVoListKey hotGoodsVoListKey = new HotGoodsVoListKey();
+            redisService.del(hotGoodsVoListKey.getPrefix());
+        }
         return true;
     }
 
@@ -752,28 +767,100 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
      * @return
      */
     @Override
-    public PageUtils getHotGoodsList(int page, int size) {
-        Page<MallGoodsSpu> goodsSpuPage = new Page<>(page, size);
-        IPage<MallGoodsSpu> pages = this.page(goodsSpuPage, new LambdaQueryWrapper<MallGoodsSpu>()
-                .eq(MallGoodsSpu::getHot, 1)
-                .eq(MallGoodsSpu::getStatus,GoodsStatus.IN_STOCK.getStatus()));
-        PageUtils pageUtils = new PageUtils(pages);
+    public List<HotGoodsVo> getHotGoodsList(int page, int size) {
+        long start = (page - 1L) * size ;
+        long end = size * page - 1L;
+        HotGoodsVoListKey hotGoodsVoListKey = new HotGoodsVoListKey();
+        if (redisService.lGetListSize(hotGoodsVoListKey.getPrefix()) < 1) {
+            //如果没有查询到缓存则进行数据库查询,并存入redis
+            List<HotGoodsVo> allHotGoodsList = this.getAllHotGoodsList();
+            redisService.lSet(hotGoodsVoListKey.getPrefix(),allHotGoodsList.toArray());
 
-        if (CollectionUtil.isNotEmpty(pages.getRecords())) {
-            List<HotGoodsVo> collect = pages.getRecords().stream()
-                    .map(mallGoodsSpu -> {
-                        HotGoodsVo hotGoodsVo = new HotGoodsVo();
-                        hotGoodsVo.setGoodsId(mallGoodsSpu.getId());
-                        hotGoodsVo.setTitle(mallGoodsSpu.getTitle());
-                        hotGoodsVo.setDesc(mallGoodsSpu.getBrief());
-                        hotGoodsVo.setImg(mallGoodsSpu.getTitleImg());
-                        hotGoodsVo.setPrice(mallGoodsSpu.getPrice());
-                        hotGoodsVo.setDiscountPrice(mallGoodsSpu.getDiscountPrice());
-                        return hotGoodsVo;
-                    }).collect(Collectors.toList());
-            pageUtils.setList(collect);
         }
-        return pageUtils;
+        List<Object> objects = redisService.lGet(hotGoodsVoListKey.getPrefix(), start, end);
+        List<HotGoodsVo> collect = objects.stream()
+                .map(o -> {
+                    return (HotGoodsVo) o;
+                }).collect(Collectors.toList());
+        return collect;
+//        Page<MallGoodsSpu> goodsSpuPage = new Page<>(page, size);
+//        IPage<MallGoodsSpu> pages = this.page(goodsSpuPage, new LambdaQueryWrapper<MallGoodsSpu>()
+//                .eq(MallGoodsSpu::getHot, 1)
+//                .eq(MallGoodsSpu::getStatus,GoodsStatus.IN_STOCK.getStatus()));
+//        PageUtils pageUtils = new PageUtils(pages);
+//
+//        if (CollectionUtil.isNotEmpty(pages.getRecords())) {
+//            List<HotGoodsVo> collect = pages.getRecords().stream()
+//                    .map(mallGoodsSpu -> {
+//                        HotGoodsVo hotGoodsVo = new HotGoodsVo();
+//                        hotGoodsVo.setGoodsId(mallGoodsSpu.getId());
+//                        hotGoodsVo.setTitle(mallGoodsSpu.getTitle());
+//                        hotGoodsVo.setDesc(mallGoodsSpu.getBrief());
+//                        hotGoodsVo.setImg(mallGoodsSpu.getTitleImg());
+//                        hotGoodsVo.setPrice(mallGoodsSpu.getPrice());
+//                        hotGoodsVo.setDiscountPrice(mallGoodsSpu.getDiscountPrice());
+//                        return hotGoodsVo;
+//                    }).collect(Collectors.toList());
+//            pageUtils.setList(collect);
+//        }
+//        return pageUtils;
+    }
+
+    @Override
+    public List<HotGoodsVo> getAllHotGoodsList() {
+        List<MallGoodsSpu> list = this.list(new LambdaQueryWrapper<MallGoodsSpu>()
+                .eq(MallGoodsSpu::getHot, 1)
+                .eq(MallGoodsSpu::getStatus, GoodsStatus.IN_STOCK.getStatus()));
+        return list.stream()
+                .map(mallGoodsSpu -> {
+                    HotGoodsVo hotGoodsVo = new HotGoodsVo();
+                    hotGoodsVo.setGoodsId(mallGoodsSpu.getId());
+                    hotGoodsVo.setTitle(mallGoodsSpu.getTitle());
+                    hotGoodsVo.setDesc(mallGoodsSpu.getBrief());
+                    hotGoodsVo.setImg(mallGoodsSpu.getTitleImg());
+                    hotGoodsVo.setPrice(mallGoodsSpu.getPrice());
+                    hotGoodsVo.setDiscountPrice(mallGoodsSpu.getDiscountPrice());
+                    return hotGoodsVo;
+                }).collect(Collectors.toList());
+    }
+
+    /**
+     * 根据主题ID分页获取主题下商品
+     * @param topicId
+     * @param page
+     * @param size
+     * @return
+     */
+    @Override
+    public List<MallGoodsSpu> getGoodsPageByTopicId(Long topicId, int page, int size) {
+        int start = (page - 1) * size;
+        return this.baseMapper.goodsPageByTopicId(topicId,start,size);
+    }
+
+    /**
+     * 根据分类ID分页查询商品列表
+     * @param categoryId
+     * @return
+     */
+    @Override
+    public List<HotGoodsVo> getGoodsPageByCategoryId(Long categoryId,int page, int size) {
+        int start = (page - 1) * size;
+        List<Long> childrenIds = categoryService.findLevel3Childrens(categoryId);
+        if (CollectionUtil.isEmpty(childrenIds)) {
+            return new ArrayList<>();
+        }
+        List<MallGoodsSpu> goodsSpus = this.baseMapper.findGoodsPageByCategoryIds(childrenIds,start,size);
+        return goodsSpus.stream()
+                .map(goodsSpu->{
+                    HotGoodsVo hotGoodsVo = new HotGoodsVo();
+                    hotGoodsVo.setGoodsId(goodsSpu.getId());
+                    hotGoodsVo.setDesc(goodsSpu.getBrief());
+                    hotGoodsVo.setDiscountPrice(goodsSpu.getDiscountPrice());
+                    hotGoodsVo.setImg(goodsSpu.getTitleImg());
+                    hotGoodsVo.setPrice(goodsSpu.getPrice());
+                    hotGoodsVo.setTitle(goodsSpu.getTitle());
+                    return hotGoodsVo;
+                }).collect(Collectors.toList());
     }
 
     /**

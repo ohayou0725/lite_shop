@@ -19,6 +19,7 @@ public class TopicDto {
 
     public interface UpdateTopicDto {}
 
+
     @NotNull(message = "主题id不能为空",groups = {UpdateTopicDto.class})
     @Min(value = 1,message = "id必须为数字", groups = {UpdateTopicDto.class})
     private Long id;

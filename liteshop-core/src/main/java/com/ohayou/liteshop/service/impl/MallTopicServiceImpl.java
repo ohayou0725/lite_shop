@@ -17,7 +17,9 @@ import com.ohayou.liteshop.service.MallTopicService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ohayou.liteshop.utils.PageUtils;
 import com.ohayou.liteshop.vo.BannerVo;
-import com.ohayou.liteshop.vo.FeaturedTopicDto;
+import com.ohayou.liteshop.vo.FeaturedTopicVo;
+import com.ohayou.liteshop.vo.HotGoodsVo;
+import com.ohayou.liteshop.vo.TopicGoodsListVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +47,7 @@ public class MallTopicServiceImpl extends ServiceImpl<MallTopicMapper, MallTopic
 
     @Autowired
     MallGoodsSpuService goodsSpuService;
+
 
     /**
      * 条件查询主题列表
@@ -333,7 +336,7 @@ public class MallTopicServiceImpl extends ServiceImpl<MallTopicMapper, MallTopic
     }
 
     @Override
-    public List<FeaturedTopicDto> getFeaturedTopic() {
+    public List<FeaturedTopicVo> getFeaturedTopic() {
         List<MallTopic> list = this.list(new LambdaQueryWrapper<MallTopic>().eq(MallTopic::getPosition, 1));
         if (CollectionUtil.isEmpty(list)) {
             return null;
@@ -341,14 +344,48 @@ public class MallTopicServiceImpl extends ServiceImpl<MallTopicMapper, MallTopic
 
         return list.stream()
                 .map(mallTopic -> {
-                    FeaturedTopicDto featuredTopicDto = new FeaturedTopicDto();
-                    featuredTopicDto.setTopicId(mallTopic.getId());
-                    featuredTopicDto.setImg(mallTopic.getImgs());
-                    featuredTopicDto.setPrice(mallTopic.getPrice());
-                    featuredTopicDto.setTitle(mallTopic.getTitle());
-                    featuredTopicDto.setGoodsCount(this.getGoodsList(mallTopic.getId()).size());
-                    return featuredTopicDto;
+                    FeaturedTopicVo featuredTopicVo = new FeaturedTopicVo();
+                    featuredTopicVo.setTopicId(mallTopic.getId());
+                    featuredTopicVo.setImg(mallTopic.getImgs());
+                    featuredTopicVo.setPrice(mallTopic.getPrice());
+                    featuredTopicVo.setTitle(mallTopic.getTitle());
+                    featuredTopicVo.setGoodsCount(this.getGoodsList(mallTopic.getId()).size());
+                    return featuredTopicVo;
                 }).collect(Collectors.toList());
 
+    }
+
+    /**
+     * 获取分类下商品列表
+     * @param topicId  专题Id
+     * @param page     当前页数
+     * @param size     每页数量
+     * @return 分类商品vo
+     */
+    @Override
+    public TopicGoodsListVo getTopicGoodsListVo(Long topicId, int page, int size) {
+        MallTopic topic = this.getById(topicId);
+        if (null == topic) {
+            throw new GlobalException(ErrorCodeMsg.TOPIC_NOT_EXIST);
+        }
+
+        TopicGoodsListVo topicGoodsListVo = new TopicGoodsListVo();
+        topicGoodsListVo.setContent(topic.getContent());
+
+        List<MallGoodsSpu> goodsSpuList = goodsSpuService.getGoodsPageByTopicId(topicId, page, size);
+        List<HotGoodsVo> collect = goodsSpuList.stream()
+                .map(mallGoodsSpu -> {
+                    HotGoodsVo hotGoodsVo = new HotGoodsVo();
+                    hotGoodsVo.setGoodsId(mallGoodsSpu.getId());
+                    hotGoodsVo.setDesc(mallGoodsSpu.getBrief());
+                    hotGoodsVo.setDiscountPrice(mallGoodsSpu.getDiscountPrice());
+                    hotGoodsVo.setImg(mallGoodsSpu.getTitleImg());
+                    hotGoodsVo.setPrice(mallGoodsSpu.getPrice());
+                    hotGoodsVo.setTitle(mallGoodsSpu.getTitle());
+                    return hotGoodsVo;
+                }).collect(Collectors.toList());
+
+        topicGoodsListVo.setHotGoodsVo(collect);
+        return topicGoodsListVo;
     }
 }

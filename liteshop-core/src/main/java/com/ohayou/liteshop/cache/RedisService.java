@@ -2,13 +2,16 @@ package com.ohayou.liteshop.cache;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author liyan
@@ -507,7 +510,7 @@ public class RedisService {
      * @param time  时间(秒)
      * @return
      */
-    public boolean lSet(String key, List<Object> value) {
+    public boolean lSet(String key, Object ...value) {
         try {
             redisTemplate.opsForList().rightPushAll(key, value);
             return true;
@@ -572,5 +575,62 @@ public class RedisService {
             return 0;
         }
     }
+
+    /**
+     * 分数从高到低获取有序集合
+     * @param key
+     * @return
+     */
+    public List<ZSetOperations.TypedTuple<Object>> zReverseRange(String key) {
+        try {
+
+            Set<ZSetOperations.TypedTuple<Object>> typedTuples = redisTemplate.opsForZSet().reverseRangeByScoreWithScores(key, 0, Double.MAX_VALUE);
+            List<ZSetOperations.TypedTuple<Object>> collect = typedTuples.stream()
+                    .sorted((a, b) -> {
+                        double result = b.getScore() - a.getScore();
+                        return new Double(result).intValue();
+                    }).collect(Collectors.toList());
+            return collect;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * 插入zset值
+     * @param key
+     * @param score
+     * @param value
+     * @return
+     */
+    public boolean zAdd(String key, double score, Object value) {
+        try {
+            Boolean add = redisTemplate.opsForZSet().add(key, value, score);
+            return add;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
+    /**
+     * zset里成员自增
+     * @param key
+     * @param score
+     * @param value
+     * @return
+     */
+    public Double zIncrBy(String key,double score, Object value) {
+        try {
+            Double aDouble = redisTemplate.opsForZSet().incrementScore(key, value, score);
+            return aDouble;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0D;
+        }
+    }
+
 }
 

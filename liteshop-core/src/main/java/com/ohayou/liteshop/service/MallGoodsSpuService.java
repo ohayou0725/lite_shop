@@ -7,6 +7,7 @@ import com.ohayou.liteshop.entity.MallGoodsSpecValue;
 import com.ohayou.liteshop.entity.MallGoodsSpu;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ohayou.liteshop.utils.PageUtils;
+import com.ohayou.liteshop.vo.HotGoodsVo;
 
 import java.util.List;
 
@@ -57,5 +58,11 @@ public interface MallGoodsSpuService extends IService<MallGoodsSpu> {
 
     GoodsStatisticsDto getGoodsStatistics(Long categoryId, Long brandId);
 
-    PageUtils getHotGoodsList(int page, int size);
+    List<HotGoodsVo> getHotGoodsList(int page, int size);
+
+    List<HotGoodsVo> getAllHotGoodsList();
+
+    List<MallGoodsSpu> getGoodsPageByTopicId(Long topicId, int page, int size);
+
+    List<HotGoodsVo> getGoodsPageByCategoryId(Long categoryId,int page,int size);
 }

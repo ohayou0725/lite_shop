@@ -1,12 +1,13 @@
 package com.ohayou.liteshop.vo;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
  * @author liyan
  * @date 2020/12/1 下午9:30
  */
-public class HotGoodsVo {
+public class HotGoodsVo implements Serializable {
 
     private Long goodsId;
 

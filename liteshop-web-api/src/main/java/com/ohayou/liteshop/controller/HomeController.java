@@ -1,16 +1,17 @@
 package com.ohayou.liteshop.controller;
 
 import com.ohayou.liteshop.aop.ApiDesc;
-import com.ohayou.liteshop.dto.MallGoodsSpuDto;
+import com.ohayou.liteshop.cache.RedisService;
+import com.ohayou.liteshop.cache.cachekey.HotGoodsVoListKey;
 import com.ohayou.liteshop.response.Result;
 import com.ohayou.liteshop.service.MallCategoryService;
 import com.ohayou.liteshop.service.MallGoodsSpuService;
 import com.ohayou.liteshop.service.MallTopicService;
-import com.ohayou.liteshop.utils.PageUtils;
 import com.ohayou.liteshop.vo.BannerVo;
 import com.ohayou.liteshop.vo.CategoryVo;
-import com.ohayou.liteshop.vo.FeaturedTopicDto;
+import com.ohayou.liteshop.vo.FeaturedTopicVo;
 import com.ohayou.liteshop.vo.HotGoodsVo;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author liyan
@@ -26,7 +26,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/home")
-public class HomeController {
+public class HomeController implements InitializingBean {
 
     @Autowired
     MallTopicService mallTopicService;
@@ -39,6 +39,9 @@ public class HomeController {
 
     @Autowired
     MallGoodsSpuService goodsSpuService;
+
+    @Autowired
+    RedisService redisService;
 
     @ApiDesc("获取首页轮播图")
     @GetMapping("/banner")
@@ -57,14 +60,26 @@ public class HomeController {
     @ApiDesc("获取精选专场专题")
     @GetMapping("/topic")
     public Result getTopic() {
-        List<FeaturedTopicDto> featuredTopicDto = topicService.getFeaturedTopic();
-        return Result.success("featuredTopic",featuredTopicDto);
+        List<FeaturedTopicVo> featuredTopicVo = topicService.getFeaturedTopic();
+        return Result.success("featuredTopic", featuredTopicVo);
     }
 
     @ApiDesc("获取热门推荐")
     @GetMapping("/list")
     public Result getGoodsList(@RequestParam("pageNo") int page, @RequestParam("pageSize") int size) {
-        PageUtils pageUtils = goodsSpuService.getHotGoodsList(page,size);
-        return Result.success("list",pageUtils);
+        List<HotGoodsVo> list = goodsSpuService.getHotGoodsList(page, size);
+        return Result.success("list",list);
+    }
+
+    /**
+     * 初始化controller时将热门推荐商品存入到redis
+     * @throws Exception
+     */
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        List<HotGoodsVo> hotGoodsVoList = goodsSpuService.getAllHotGoodsList();
+        HotGoodsVoListKey hotGoodsVoListKey = new HotGoodsVoListKey();
+        redisService.del(hotGoodsVoListKey.getPrefix());
+        redisService.lSet(hotGoodsVoListKey.getPrefix(),hotGoodsVoList.toArray());
     }
 }

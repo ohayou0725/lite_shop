@@ -52,6 +52,11 @@ public class MallCategory implements Serializable {
     private String icon;
 
     /**
+     * 是否为热门分类
+     */
+    private Integer hot;
+
+    /**
      * 类目参数id
      */
     private Long attrGroupId;
@@ -168,6 +173,14 @@ public class MallCategory implements Serializable {
 
     public void setDeleted(Integer deleted) {
         this.deleted = deleted;
+    }
+
+    public Integer getHot() {
+        return hot;
+    }
+
+    public void setHot(Integer hot) {
+        this.hot = hot;
     }
 
     @Override

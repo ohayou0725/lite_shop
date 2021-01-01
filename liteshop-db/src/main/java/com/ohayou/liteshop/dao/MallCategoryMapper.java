@@ -2,6 +2,7 @@ package com.ohayou.liteshop.dao;
 
 import com.ohayou.liteshop.entity.MallCategory;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -16,4 +17,7 @@ import java.util.List;
 public interface MallCategoryMapper extends BaseMapper<MallCategory> {
 
     List<MallCategory> findCategoryListByBrandId(Long brandId);
+
+    List<MallCategory> findCategoryListByIds(@Param("childrenIds") List<Long> childrenIds);
+
 }

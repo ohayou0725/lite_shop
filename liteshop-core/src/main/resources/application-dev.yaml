@@ -15,6 +15,7 @@ spring:
     password: 2633
     port: 6379
     host: 127.0.0.1
+
 localDate:
   date-format: "yyyy-MM-dd"
 

@@ -26,6 +26,8 @@ public class ProductCategoryDto {
 
     private String img;
 
+    private Integer hot;
+
     private LocalDateTime createTime;
 
     private List<MallGoodsAttrDto> attrs;
@@ -110,5 +112,13 @@ public class ProductCategoryDto {
 
     public void setImg(String img) {
         this.img = img;
+    }
+
+    public Integer getHot() {
+        return hot;
+    }
+
+    public void setHot(Integer hot) {
+        this.hot = hot;
     }
 }

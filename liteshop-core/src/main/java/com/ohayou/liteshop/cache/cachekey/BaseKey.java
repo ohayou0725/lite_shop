@@ -1,5 +1,7 @@
 package com.ohayou.liteshop.cache.cachekey;
 
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * @author liyan
  * @date 2020/7/16 下午10:26
@@ -28,7 +30,10 @@ public class BaseKey implements KeyPrefix{
 
     @Override
     public String getPrefix() {
-        return getClass().getSimpleName() + ":" + prefix.trim();
+        if (StringUtils.isNotBlank(prefix)) {
+            return getClass().getSimpleName() + ":" + prefix.trim();
+        }
+        return getClass().getSimpleName();
     }
 
 

@@ -2253,7 +2253,7 @@ CREATE TABLE `mall_goods_spu` (
   `brand_id` bigint(20) NOT NULL DEFAULT '0' COMMENT '品牌id',
   `weight` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '商品重量(单位kg)',
   `brief` text NOT NULL COMMENT '商品简要',
-  `title_img` varchar(255) NOT NULL DEFAULT '' COMMENT '标题图片',
+  `titleImg` varchar(255) NOT NULL DEFAULT '' COMMENT '标题图片',
   `gallery` varchar(1024) NOT NULL DEFAULT '' COMMENT '商品轮播图片列表',
   `status` int(1) NOT NULL DEFAULT '0' COMMENT '商品状态0-未上架 1-已上架',
   `sales` int(20) NOT NULL DEFAULT '0' COMMENT '商品销量',

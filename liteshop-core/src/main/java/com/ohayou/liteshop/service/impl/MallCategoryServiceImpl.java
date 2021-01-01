@@ -1,6 +1,6 @@
 package com.ohayou.liteshop.service.impl;
 
-import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.collection.ListUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ohayou.liteshop.dto.MallGoodsAttrDto;
@@ -12,7 +12,8 @@ import com.ohayou.liteshop.response.ErrorCodeMsg;
 import com.ohayou.liteshop.service.MallCategoryService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ohayou.liteshop.service.MallGoodsAttrService;
-import com.ohayou.liteshop.vo.CategoryVo;
+import com.ohayou.liteshop.service.MallTopicService;
+import com.ohayou.liteshop.vo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,9 @@ public class MallCategoryServiceImpl extends ServiceImpl<MallCategoryMapper, Mal
 
     @Autowired
     MallGoodsAttrService attrService;
+
+    @Autowired
+    MallTopicService topicService;
     /**
      * 获取商品分类树
      * @return
@@ -138,7 +142,7 @@ public class MallCategoryServiceImpl extends ServiceImpl<MallCategoryMapper, Mal
             throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
         }
         List<MallCategory> list = this.list(new LambdaQueryWrapper<MallCategory>().eq(MallCategory::getLevel, level));
-        if (null == list || list.size() > 0) {
+        if (CollectionUtil.isNotEmpty(list)) {
             List<ProductCategoryDto> collect = list.stream()
                     .map(mallCategory -> {
                         ProductCategoryDto categoryDto = new ProductCategoryDto();
@@ -171,6 +175,7 @@ public class MallCategoryServiceImpl extends ServiceImpl<MallCategoryMapper, Mal
         MallCategory category = new MallCategory();
         BeanUtils.copyProperties(categoryDto,category);
         return this.updateById(category);
+
     }
 
     /**
@@ -205,7 +210,11 @@ public class MallCategoryServiceImpl extends ServiceImpl<MallCategoryMapper, Mal
      */
     private boolean hasSameCategory(ProductCategoryDto categoryDto) {
         String name = categoryDto.getName();
-        MallCategory one = this.getOne(new LambdaQueryWrapper<MallCategory>().eq(MallCategory::getName, name));
+        MallCategory one = this.getOne(
+                new LambdaQueryWrapper<MallCategory>()
+                        .ne(categoryDto.getId()!=null,MallCategory::getId,categoryDto.getId())
+                        .eq(MallCategory::getName, name)
+                        );
         return null != one && one.getParentId().equals(categoryDto.getParentId());
     }
 
@@ -330,6 +339,125 @@ public class MallCategoryServiceImpl extends ServiceImpl<MallCategoryMapper, Mal
                     return categoryVo;
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<CategoryItemVo> getCategoryTreeVoTree() {
+        List<ProductCategoryDto> tree = this.getTree();
+        return this.categoryDtoConvertCategoryTreeVo(tree);
+    }
+
+    /**
+     * 获取所有一级分类
+     * @return
+     */
+    @Override
+    public List<CategoryItemVo> getRootCategoryItems() {
+        CategoryItemVo hotCategory = new CategoryItemVo();
+        hotCategory.setText("热门推荐");
+        List<MallCategory> rootNodes = this.getRootNodes();
+        List<CategoryItemVo> collect = rootNodes.stream()
+                .map(rootNode -> {
+                    CategoryItemVo categoryItemVo = new CategoryItemVo();
+                    categoryItemVo.setId(rootNode.getId());
+                    categoryItemVo.setText(rootNode.getName());
+                    categoryItemVo.setImg(rootNode.getImg());
+                    categoryItemVo.setHot(rootNode.getHot());
+                    categoryItemVo.setLevel(rootNode.getLevel());
+                    return categoryItemVo;
+                }).collect(Collectors.toList());
+        collect.add(0,hotCategory);
+        return collect;
+    }
+
+    /**
+     * 获取二级分类详情
+     * @param id
+     * @return
+     */
+    @Override
+    public CategoryContentVo getCategoryContent(Long id) {
+        CategoryContentVo categoryContentVo = new CategoryContentVo();
+        FeaturedTopicVo featuredTopicVo = topicService.getFeaturedTopic().get(0);
+        BannerVo bannerVo = new BannerVo();
+        bannerVo.setTopicId(featuredTopicVo.getTopicId());
+        bannerVo.setImg(featuredTopicVo.getImg());
+        categoryContentVo.setBannerVo(bannerVo);
+
+        if (id.equals(0L)) {
+            List<MallCategory> list = this.list(new LambdaQueryWrapper<MallCategory>()
+                    .eq(MallCategory::getHot, 1));
+            List<CategoryItemVo> collect = list.stream()
+                    .map(mallCategory -> {
+                        CategoryItemVo categoryItemVo = new CategoryItemVo();
+                        categoryItemVo.setId(mallCategory.getId());
+                        categoryItemVo.setText(mallCategory.getName());
+                        categoryItemVo.setHot(mallCategory.getHot());
+                        categoryItemVo.setImg(mallCategory.getIcon());
+                        categoryItemVo.setLevel(mallCategory.getLevel());
+                        return categoryItemVo;
+                    }).collect(Collectors.toList());
+            categoryContentVo.setCategoryItemVo(collect);
+            return categoryContentVo;
+        }
+        List<ProductCategoryDto> tree = this.getTree();
+        List<ProductCategoryDto> collect = tree.stream()
+                .filter(categoryDto -> {
+                    return categoryDto.getId().equals(id);
+                }).limit(1L).collect(Collectors.toList());
+        List<CategoryItemVo> categoryItemVos = this.categoryDtoConvertCategoryTreeVo(collect.get(0).getChildren());
+        categoryContentVo.setCategoryItemVo(categoryItemVos);
+        return categoryContentVo;
+    }
+
+    @Override
+    public List<Long> findLevel3Childrens(Long categoryId) {
+        List<ProductCategoryDto> categoryDtoList = this.getCateByLevel(1);
+        List<ProductCategoryDto> collect = categoryDtoList.stream()
+                .filter(productCategoryDto -> {
+                    return productCategoryDto.getParentId().equals(categoryId) ;
+                }).collect(Collectors.toList());
+        return collect.stream()
+                .flatMap(productCategoryDto -> {
+                    return this.getChildrenIds(productCategoryDto.getId()).stream();
+                })
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 获取分类下所有三级分类
+     * @param categoryId 分类ID
+     * @return
+     */
+    @Override
+    public List<CategoryVo> getChildren(Long categoryId) {
+        List<Long> childrenIds = this.getChildrenIds(categoryId);
+        if (CollectionUtil.isEmpty(childrenIds)) {
+            return new ArrayList<>();
+        }
+        List<MallCategory> mallCategories = this.baseMapper.findCategoryListByIds(childrenIds);
+        return mallCategories.stream()
+                .map(mallCategory -> {
+                    CategoryVo categoryVo = new CategoryVo();
+                    categoryVo.setCategoryId(mallCategory.getId());
+                    categoryVo.setIcon(mallCategory.getIcon());
+                    categoryVo.setName(mallCategory.getName());
+                    return categoryVo;
+                }).collect(Collectors.toList());
+    }
+
+    private List<CategoryItemVo> categoryDtoConvertCategoryTreeVo(List<ProductCategoryDto> categoryDtos) {
+        return categoryDtos.stream()
+                .map(categoryDto -> {
+                    CategoryItemVo categoryItemVo = new CategoryItemVo();
+                    categoryItemVo.setId(categoryDto.getId());
+                    categoryItemVo.setHot(categoryDto.getHot());
+                    categoryItemVo.setImg(categoryDto.getIcon());
+                    categoryItemVo.setLevel(categoryDto.getLevel());
+                    categoryItemVo.setText(categoryDto.getName());
+                    categoryItemVo.setChildren(categoryDtoConvertCategoryTreeVo(categoryDto.getChildren()));
+                    return categoryItemVo;
+                }).collect(Collectors.toList());
     }
 
     private List<Long> getChildrenIds(Long categoryId, List<Long> childrenIds, List<MallCategory> all) {

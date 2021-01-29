@@ -30,9 +30,7 @@ import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -89,7 +87,7 @@ public class EsGoodsServiceImpl implements EsGoodsService {
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         if (StringUtils.isNotBlank(key)) {
             boolQueryBuilder = QueryBuilders.boolQuery();
-            boolQueryBuilder.must(QueryBuilders.multiMatchQuery(key, "name", "title"));
+            boolQueryBuilder.must(QueryBuilders.multiMatchQuery(key, "name", "title","brandName","categoryName"));
         }
         boolQueryBuilder.must(QueryBuilders.termQuery("status", 1))
                 .must(QueryBuilders.termQuery("deleted",0));

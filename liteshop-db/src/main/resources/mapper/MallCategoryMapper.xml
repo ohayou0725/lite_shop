@@ -43,5 +43,16 @@
         </foreach>
         and deleted = 0
     </select>
+    <select id="getCategoryByCouponId" resultType="com.ohayou.liteshop.entity.MallCategory">
+        select
+        <include refid="Base_Column_List"></include>
+        from mall_category c
+        join mall_coupon_type ct on ct.category_id = c.id
+        join mall_coupon co on co.id = ct.coupon_id
+        where co.id = #{couponId}
+        and c. deleted = 0
+        and ct.deleted = 0
+        and co.deleted = 0
+    </select>
 
 </mapper>

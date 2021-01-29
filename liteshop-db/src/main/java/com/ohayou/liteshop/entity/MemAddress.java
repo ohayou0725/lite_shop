@@ -47,9 +47,24 @@ public class MemAddress implements Serializable {
     private String address;
 
     /**
+     * 是否是默认地址
+     */
+    private Integer isDefault;
+
+    /**
+     * 地区代码
+     */
+    private String areaCode;
+
+    /**
      * 用户id
      */
     private Long userId;
+
+    /**
+     * 邮政编码
+     */
+    private String postalCode;
 
     /**
      * 创建时间
@@ -131,6 +146,30 @@ public class MemAddress implements Serializable {
 
     public void setDeleted(Integer deleted) {
         this.deleted = deleted;
+    }
+
+    public Integer getIsDefault() {
+        return isDefault;
+    }
+
+    public void setIsDefault(Integer isDefault) {
+        this.isDefault = isDefault;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public String getAreaCode() {
+        return areaCode;
+    }
+
+    public void setAreaCode(String areaCode) {
+        this.areaCode = areaCode;
     }
 
     @Override

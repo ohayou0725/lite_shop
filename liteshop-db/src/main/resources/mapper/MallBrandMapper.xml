@@ -17,5 +17,14 @@
     <sql id="Base_Column_List">
         id, name, logo, introduction, create_time, update_time, deleted
     </sql>
+    <select id="getBrandByCouponId" resultType="com.ohayou.liteshop.entity.MallBrand">
+        select b.* from mall_brand b
+        join mall_coupon_type ct on ct.brand_id = b.id
+        join mall_coupon c on c.id = ct.coupon_id
+        where c.id = #{couponId}
+        and c.deleted = 0
+        and ct.deleted = 0
+        and b.deleted = 0
+    </select>
 
 </mapper>

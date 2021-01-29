@@ -20,4 +20,5 @@ public interface MallCategoryMapper extends BaseMapper<MallCategory> {
 
     List<MallCategory> findCategoryListByIds(@Param("childrenIds") List<Long> childrenIds);
 
+    MallCategory getCategoryByCouponId(Long couponId);
 }

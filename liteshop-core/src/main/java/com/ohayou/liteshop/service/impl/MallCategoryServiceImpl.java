@@ -446,6 +446,11 @@ public class MallCategoryServiceImpl extends ServiceImpl<MallCategoryMapper, Mal
                 }).collect(Collectors.toList());
     }
 
+    @Override
+    public MallCategory getCategoryByCouponId(Long couponId) {
+        return this.baseMapper.getCategoryByCouponId(couponId);
+    }
+
     private List<CategoryItemVo> categoryDtoConvertCategoryTreeVo(List<ProductCategoryDto> categoryDtos) {
         return categoryDtos.stream()
                 .map(categoryDto -> {

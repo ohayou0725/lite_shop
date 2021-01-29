@@ -7,9 +7,14 @@ import com.ohayou.liteshop.entity.MallGoodsSpecValue;
 import com.ohayou.liteshop.entity.MallGoodsSpu;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ohayou.liteshop.utils.PageUtils;
+import com.ohayou.liteshop.vo.GoodsAttrVo;
+import com.ohayou.liteshop.vo.GoodsDetailVo;
+import com.ohayou.liteshop.vo.GoodsInfoVo;
 import com.ohayou.liteshop.vo.HotGoodsVo;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 /**
  * <p>
@@ -65,4 +70,12 @@ public interface MallGoodsSpuService extends IService<MallGoodsSpu> {
     List<MallGoodsSpu> getGoodsPageByTopicId(Long topicId, int page, int size);
 
     List<HotGoodsVo> getGoodsPageByCategoryId(Long categoryId,int page,int size);
+
+    GoodsDetailVo getGoodsDetail(Long goodsId) throws ExecutionException, InterruptedException, TimeoutException, Exception;
+
+    List<GoodsAttrVo> getGoodsAttrVo(Long goodsId);
+
+    GoodsInfoVo getGoodsInfoVo(Long goodsId);
+
+    MallGoodsSpu getGoodsByCouponId(Long id);
 }

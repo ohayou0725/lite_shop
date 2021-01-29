@@ -2,7 +2,6 @@ package com.ohayou.liteshop.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ohayou.liteshop.dto.MallBrandDto;
-import com.ohayou.liteshop.dto.ProductCategoryDto;
 import com.ohayou.liteshop.entity.MallBrand;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ohayou.liteshop.utils.PageUtils;
@@ -19,7 +18,7 @@ import java.util.List;
  */
 public interface MallBrandService extends IService<MallBrand> {
 
-    PageUtils queryPage(MallBrandDto brandDto,IPage<MallBrand> page);
+    PageUtils queryPage(MallBrandDto brandDto, IPage<MallBrand> page);
 
     boolean addBrand(MallBrandDto mallBrandDto);
 
@@ -32,4 +31,6 @@ public interface MallBrandService extends IService<MallBrand> {
     void deleteCategory(Long brandId, Long categoryId);
 
     boolean brandExist(Long brandId);
+
+    MallBrand getBrandByCouponId(Long couponId);
 }

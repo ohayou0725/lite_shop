@@ -27,13 +27,12 @@ public class EsGoods implements Serializable {
 
     private Long brandId;
 
-    @Field(type = FieldType.Keyword)
+    @Field(analyzer = "ik_max_word",type = FieldType.Text)
     private String brandName;
 
     private Long categoryId;
 
-    @Field(type = FieldType.Keyword)
-
+    @Field(analyzer = "ik_max_word",type = FieldType.Text)
     private String categoryName;
 
     private String titleImg;

@@ -10,7 +10,7 @@
         <result column="total" property="total" />
         <result column="discount" property="discount" />
         <result column="min" property="min" />
-        <result column="limit" property="limit" />
+        <result column="stint" property="stint" />
         <result column="status" property="status" />
         <result column="type" property="type" />
         <result column="time_type" property="timeType" />
@@ -23,7 +23,29 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, name, detail, total, discount, min, limit, status, type, time_type, days, start_time, end_time, create_time, update_time
+        c.id, c.name, c.detail, c.total, c.discount,c.min, c.stint, c.status, c.type, c.time_type, c.days, c.start_time, c.end_time, c.create_time, c.update_time
     </sql>
+    <select id="getCouponByGoods" resultType="com.ohayou.liteshop.entity.MallCoupon" parameterType="com.ohayou.liteshop.entity.MallGoodsSpu">
+        select
+        <include refid="Base_Column_List"></include>
+         from mall_coupon c
+        join mall_coupon_type ct on ct.coupon_id = c.id
+        where ct.goods_id = #{id}
+        and ct.deleted = 0 and c.deleted = 0
+        union
+        select
+        <include refid="Base_Column_List"></include>
+        from mall_coupon c
+        join mall_coupon_type ct on ct.coupon_id = c.id
+        where ct.brand_id = #{brandId}
+        and ct.deleted = 0 and c.deleted = 0
+        union
+        select
+        <include refid="Base_Column_List"></include>
+        from mall_coupon c
+        join mall_coupon_type ct on ct.coupon_id = c.id
+        where ct.category_id = #{categoryId}
+        and ct.deleted = 0 and c.deleted = 0
+    </select>
 
 </mapper>

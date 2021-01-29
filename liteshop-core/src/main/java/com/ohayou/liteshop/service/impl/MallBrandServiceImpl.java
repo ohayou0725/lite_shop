@@ -195,4 +195,9 @@ public class MallBrandServiceImpl extends ServiceImpl<MallBrandMapper, MallBrand
         return 1 == this.count(new LambdaQueryWrapper<MallBrand>().eq(MallBrand::getId, brandId));
     }
 
+    @Override
+    public MallBrand getBrandByCouponId(Long couponId) {
+        return this.baseMapper.getBrandByCouponId(couponId);
+    }
+
 }

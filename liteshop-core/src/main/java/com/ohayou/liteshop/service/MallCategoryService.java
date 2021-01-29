@@ -56,4 +56,6 @@ public interface MallCategoryService extends IService<MallCategory> {
     List<Long> findLevel3Childrens(Long categoryId);
 
     List<CategoryVo> getChildren(Long categoryId);
+
+    MallCategory getCategoryByCouponId(Long couponId);
 }

@@ -51,7 +51,8 @@ public class MallUserCoupon implements Serializable {
      */
     private Long orderId;
 
-    private LocalDateTime creteTime;
+    @TableField(fill = FieldFill.INSERT)
+    private LocalDateTime createTime;
 
     @TableField(fill = FieldFill.UPDATE)
     private LocalDateTime updateTime;
@@ -102,11 +103,11 @@ public class MallUserCoupon implements Serializable {
         this.orderId = orderId;
     }
     public LocalDateTime getCreteTime() {
-        return creteTime;
+        return createTime;
     }
 
     public void setCreteTime(LocalDateTime creteTime) {
-        this.creteTime = creteTime;
+        this.createTime = creteTime;
     }
     public LocalDateTime getUpdateTime() {
         return updateTime;
@@ -132,7 +133,7 @@ public class MallUserCoupon implements Serializable {
             ", status=" + status +
             ", number=" + number +
             ", orderId=" + orderId +
-            ", creteTime=" + creteTime +
+            ", creteTime=" + createTime +
             ", updateTime=" + updateTime +
             ", deleted=" + deleted +
         "}";

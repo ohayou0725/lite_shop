@@ -32,4 +32,5 @@ public interface MallGoodsSpuMapper extends BaseMapper<MallGoodsSpu> {
 
     List<MallGoodsSpu> findGoodsPageByCategoryIds(@Param("childrenIds") List<Long> childrenIds, @Param("page") int page, @Param("size") int size);
 
+    MallGoodsSpu getGoodsByCouponId(Long couponId);
 }

@@ -15,10 +15,11 @@ import com.ohayou.liteshop.exception.GlobalException;
 import com.ohayou.liteshop.response.ErrorCodeMsg;
 import com.ohayou.liteshop.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ohayou.liteshop.task.*;
 import com.ohayou.liteshop.utils.GoodsSpecUtil;
 import com.ohayou.liteshop.utils.ListUtil;
 import com.ohayou.liteshop.utils.PageUtils;
-import com.ohayou.liteshop.vo.HotGoodsVo;
+import com.ohayou.liteshop.vo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 /**
@@ -80,6 +82,18 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
 
     @Autowired
     RedisService redisService;
+
+    @Autowired
+    MallGoodsCommentService mallGoodsCommentService;
+
+    @Autowired
+    MemUserService memUserService;
+
+    @Autowired
+    ThreadPoolExecutor threadPoolExecutor;
+
+    @Autowired
+    MemCollectService memCollectService;
 
 
     /**
@@ -160,7 +174,7 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
     /**
      * 获取spu总库存
      */
-    private Integer getStock(Long spuId) {
+    private   Integer getStock(Long spuId) {
         //查询到商品sku信息后对sku库存进行累加
         List<MallGoodsSku> list = mallGoodsSkuService.list(new LambdaQueryWrapper<MallGoodsSku>().eq(MallGoodsSku::getGoodsId, spuId));
         if (null != list && list.size() > 0) {
@@ -863,6 +877,8 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
                 }).collect(Collectors.toList());
     }
 
+
+
     /**
      * 查询sku的规格值列表
      *
@@ -915,4 +931,76 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
                 .findAny().orElse(null);
         return mallGoodsSpecValue != null ? mallGoodsSpecValue.getSpecValue() : "";
     }
+
+    /**
+     * 根据商品ID查询商品详情
+     * @param goodsId spuId
+     * @return 商品详情
+     */
+    @Override
+    public GoodsDetailVo getGoodsDetail(Long goodsId) throws Exception{
+        FutureTask<GoodsInfoVo> mallGoodsSpuFutureTask = new FutureTask<>(new GoodsSpuTask(goodsId,this));
+
+        FutureTask<CommentVo> commentVoFutureTask = new FutureTask<>(new CommentTask(goodsId, mallGoodsCommentService));
+
+        FutureTask<List<GoodsAttrVo>> goodsAttrVoFutureTask = new FutureTask<>(new GoodsAttrTask(goodsId,this));
+
+        FutureTask<SkuVo> skuVoFutureTask = new FutureTask<>(new GoodsSkuTask(goodsId,mallGoodsSkuService));
+
+        FutureTask<List<CouponVo>> couponVoFutureTask = new FutureTask<>(new CouponTask(goodsId,couponService));
+
+        threadPoolExecutor.submit(mallGoodsSpuFutureTask);
+        threadPoolExecutor.submit(commentVoFutureTask);
+        threadPoolExecutor.submit(skuVoFutureTask);
+        threadPoolExecutor.submit(goodsAttrVoFutureTask);
+        threadPoolExecutor.submit(couponVoFutureTask);
+
+        GoodsDetailVo goodsDetailVo = new GoodsDetailVo();
+        goodsDetailVo.setGoodsInfo(mallGoodsSpuFutureTask.get(1,TimeUnit.SECONDS));
+        goodsDetailVo.setComment(commentVoFutureTask.get(1,TimeUnit.SECONDS));
+        goodsDetailVo.setSkuVo(skuVoFutureTask.get(1,TimeUnit.SECONDS));
+        goodsDetailVo.setAttrList(goodsAttrVoFutureTask.get(1,TimeUnit.SECONDS));
+        goodsDetailVo.setCoupons(couponVoFutureTask.get(1,TimeUnit.SECONDS));
+        return goodsDetailVo;
+    }
+
+    @Override
+    public List<GoodsAttrVo> getGoodsAttrVo(Long goodsId) {
+        List<AttrValueDto> allAttrAndValue = this.getAllAttrAndValue(goodsId);
+        return allAttrAndValue.stream()
+                .map(attrValueDto -> {
+                    GoodsAttrVo goodsAttrVo = new GoodsAttrVo();
+                    goodsAttrVo.setAttr(attrValueDto.getAttr());
+                    goodsAttrVo.setValue(attrValueDto.getValue());
+                    return goodsAttrVo;
+                }).collect(Collectors.toList());
+    }
+
+    @Override
+    public GoodsInfoVo getGoodsInfoVo(Long goodsId) {
+        MallGoodsSpu mallGoodsSpu = this.getById(goodsId);
+
+        GoodsInfoVo goodsInfoVo = new GoodsInfoVo();
+        goodsInfoVo.setGoodsId(mallGoodsSpu.getId());
+        goodsInfoVo.setName(mallGoodsSpu.getName());
+        goodsInfoVo.setDesc(mallGoodsSpu.getBrief());
+        goodsInfoVo.setTitle(mallGoodsSpu.getTitle());
+        goodsInfoVo.setTitleImg(mallGoodsSpu.getTitleImg());
+        goodsInfoVo.setPrice(mallGoodsSpu.getPrice());
+        goodsInfoVo.setDiscountPrice(mallGoodsSpu.getDiscountPrice());
+        goodsInfoVo.setStatus(mallGoodsSpu.getStatus());
+        goodsInfoVo.setDetails(mallGoodsSpu.getDetail());
+        if (StringUtils.isNotEmpty(mallGoodsSpu.getGallery())) {
+            goodsInfoVo.setBanner(mallGoodsSpu.getGallery().split(","));
+        }
+        return goodsInfoVo;
+    }
+
+
+    @Override
+    public MallGoodsSpu getGoodsByCouponId(Long couponId) {
+        return this.baseMapper.getGoodsByCouponId(couponId);
+    }
+
+
 }

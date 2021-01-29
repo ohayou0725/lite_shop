@@ -1,4 +1,4 @@
-package com.ohayou.liteshop.vo;
+package com.ohayou.liteshop.dto;
 
 import com.ohayou.liteshop.validate.MobileValidate;
 import org.hibernate.validator.constraints.Length;
@@ -9,7 +9,7 @@ import javax.validation.constraints.Min;
  * @author liyan
  * @date 2021/1/10 下午2:23
  */
-public class RegisterFormVo {
+public class RegisterFormDto {
 
     @MobileValidate
     private String mobile;

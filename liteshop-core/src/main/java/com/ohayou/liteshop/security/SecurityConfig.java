@@ -44,7 +44,7 @@ public class SecurityConfig {
         corsConfiguration.addAllowedOrigin("*");
         corsConfiguration.addExposedHeader("Access-Token");
         corsConfiguration.addExposedHeader("Refresh-Token");
-        corsConfiguration.addExposedHeader("Token");
+        corsConfiguration.addExposedHeader("Authorization");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**",corsConfiguration); //配置允许跨域访问的url
         return source;

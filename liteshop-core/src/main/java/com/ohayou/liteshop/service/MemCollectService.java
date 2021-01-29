@@ -17,4 +17,10 @@ import com.ohayou.liteshop.utils.PageUtils;
 public interface MemCollectService extends IService<MemCollect> {
 
     PageUtils collectQueryPage(MemCollectDto collectDto, IPage<MemCollect> page);
+
+    boolean hasCollectByUser(Long goodsId, Long id);
+
+    boolean addCollect(Long goodsId, Long id);
+
+    boolean deleteCollect(Long goodsId, Long id);
 }

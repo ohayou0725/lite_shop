@@ -7,11 +7,14 @@ import com.ohayou.liteshop.entity.MallGoodsSpu;
 import com.ohayou.liteshop.entity.MemCollect;
 import com.ohayou.liteshop.dao.MemCollectMapper;
 import com.ohayou.liteshop.entity.MemUser;
+import com.ohayou.liteshop.exception.GlobalException;
+import com.ohayou.liteshop.response.ErrorCodeMsg;
 import com.ohayou.liteshop.service.MallGoodsSpuService;
 import com.ohayou.liteshop.service.MemCollectService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ohayou.liteshop.service.MemUserService;
 import com.ohayou.liteshop.utils.PageUtils;
+import jdk.nashorn.internal.objects.Global;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -79,5 +82,46 @@ public class MemCollectServiceImpl extends ServiceImpl<MemCollectMapper, MemColl
         }
 
         return pageUtils;
+    }
+
+    /**
+     * 查询商品是否被用户收藏
+     * @param goodsId 商品ID
+     * @param userId 用户ID
+     * @return 是否收藏
+     */
+    @Override
+    public boolean hasCollectByUser(Long goodsId, Long userId) {
+        return this.baseMapper.getCountByGoodsIdAndUserId(goodsId,userId) > 0;
+    }
+
+    /**
+     * 用户收藏商品
+     * @param goodsId 商品ID
+     * @param userId 用户ID
+     * @return 结果
+     */
+    @Override
+    public boolean addCollect(Long goodsId, Long userId) {
+        if (this.hasCollectByUser(goodsId,userId)) {
+            throw new GlobalException(ErrorCodeMsg.GOODS_HAS_COLLECT);
+        }
+        MemCollect memCollect = new MemCollect();
+        memCollect.setSpuId(goodsId);
+        memCollect.setUserId(userId);
+        return this.save(memCollect);
+    }
+
+    /**
+     * 取消收藏
+     * @param goodsId 商品ID
+     * @param userId 用户ID
+     * @return 结果
+     */
+    @Override
+    public boolean deleteCollect(Long goodsId, Long userId) {
+        return this.remove(new LambdaQueryWrapper<MemCollect>()
+                .eq(MemCollect::getSpuId,goodsId)
+                .eq(MemCollect::getUserId,userId));
     }
 }

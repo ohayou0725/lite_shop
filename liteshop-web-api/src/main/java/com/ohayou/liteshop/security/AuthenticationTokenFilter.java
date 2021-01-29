@@ -2,8 +2,10 @@ package com.ohayou.liteshop.security;
 
 import com.ohayou.liteshop.cache.RedisService;
 import com.ohayou.liteshop.cache.cachekey.MemberUserTokenKey;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -31,15 +33,19 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
-
-        String token = httpServletRequest.getHeader("Token");
-        if (null != token) {
+        String token = null;
+        String header = httpServletRequest.getHeader("Authorization");
+        if (!StringUtils.isEmpty(header) && header.startsWith("Bearer")) {
+            token = header.substring("Bearer".length());
+        }
+        if (null != token ) {
             MemberUserTokenKey memberUserTokenKey = new MemberUserTokenKey(token);
             if (redisService.hasKey(memberUserTokenKey.getPrefix())) {
                 String mobile = String.valueOf(redisService.get(memberUserTokenKey.getPrefix()));
                 UserDetails userDetails = memberUserDetailService.loadUserByUsername(mobile);
                 if (null != userDetails && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null,null);
+                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                            new UsernamePasswordAuthenticationToken(userDetails, null, AuthorityUtils.NO_AUTHORITIES);
                     usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
                     SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
                 }

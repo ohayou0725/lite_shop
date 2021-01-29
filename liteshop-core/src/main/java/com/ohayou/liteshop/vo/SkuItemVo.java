@@ -10,21 +10,17 @@ import java.util.Map;
  * @author liyan
  * @date 2021/1/2 下午10:21
  */
-public class SkuVo {
+public class SkuItemVo {
 
     private Long skuId;
 
+
     private BigDecimal price;
+
 
     private Integer stock;
 
-    private boolean NoneSku;
-
-    private Long collectionId;
-
-    private List<Map<String,Object>> specs;
-
-    private boolean hideStock;
+    Map<String,Object> specsAndValue;
 
     public Long getSkuId() {
         return skuId;
@@ -50,35 +46,11 @@ public class SkuVo {
         this.stock = stock;
     }
 
-    public boolean isNoneSku() {
-        return NoneSku;
+    public Map<String, Object> getSpecsAndValue() {
+        return specsAndValue;
     }
 
-    public void setNoneSku(boolean noneSku) {
-        NoneSku = noneSku;
-    }
-
-    public Long getCollectionId() {
-        return collectionId;
-    }
-
-    public void setCollectionId(Long collectionId) {
-        this.collectionId = collectionId;
-    }
-
-    public List<Map<String, Object>> getSpecs() {
-        return specs;
-    }
-
-    public void setSpecs(List<Map<String, Object>> specs) {
-        this.specs = specs;
-    }
-
-    public boolean isHideStock() {
-        return hideStock;
-    }
-
-    public void setHideStock(boolean hideStock) {
-        this.hideStock = hideStock;
+    public void setSpecsAndValue(Map<String, Object> specsAndValue) {
+        this.specsAndValue = specsAndValue;
     }
 }

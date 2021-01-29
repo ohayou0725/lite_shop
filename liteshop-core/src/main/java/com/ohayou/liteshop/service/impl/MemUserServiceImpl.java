@@ -2,19 +2,27 @@ package com.ohayou.liteshop.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.ohayou.liteshop.dto.MemUserDto;
-import com.ohayou.liteshop.dto.MemberMonthStatisticsDto;
-import com.ohayou.liteshop.dto.MemberStatisticsDto;
+import com.ohayou.liteshop.cache.RedisService;
+import com.ohayou.liteshop.cache.cachekey.CaptchaKey;
+import com.ohayou.liteshop.cache.cachekey.MemberUserTokenKey;
+import com.ohayou.liteshop.constant.MemberRank;
+import com.ohayou.liteshop.dto.*;
 import com.ohayou.liteshop.entity.MemUser;
 import com.ohayou.liteshop.dao.MemUserMapper;
 import com.ohayou.liteshop.exception.GlobalException;
+import com.ohayou.liteshop.exception.UnAuthenticationException;
 import com.ohayou.liteshop.response.ErrorCodeMsg;
 import com.ohayou.liteshop.service.MemUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ohayou.liteshop.utils.DateTimeUtil;
+import com.ohayou.liteshop.utils.LoginCaptchaUtil;
 import com.ohayou.liteshop.utils.PageUtils;
+import com.ohayou.liteshop.utils.TokenUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -33,6 +41,18 @@ import java.util.stream.Collectors;
  */
 @Service
 public class MemUserServiceImpl extends ServiceImpl<MemUserMapper, MemUser> implements MemUserService {
+
+    @Autowired
+    RedisService redisService;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    @Autowired
+    MemUserService memUserService;
+
+    @Value("${portal.sessionExpireTime}")
+    private long sessionExpireTime;
 
     /**
      * 根据条件获取用户列表
@@ -137,6 +157,78 @@ public class MemUserServiceImpl extends ServiceImpl<MemUserMapper, MemUser> impl
         memberStatisticsDto.setMemberMonthStatisticsDtos(memberStatistics);
         return memberStatisticsDto;
 
+    }
+
+    /**
+     * 前台会员登录
+     * @param memberLoginFormDto 登录表单
+     * @return token
+     */
+    @Override
+    public String login(MemberLoginFormDto memberLoginFormDto) {
+        boolean result = this.verifyCaptcha(memberLoginFormDto.getCaptcha(), memberLoginFormDto.getCaptchaId());
+        if (!result) {
+            throw new GlobalException(ErrorCodeMsg.CAPTCHA_ERROR);
+        }
+        //验证码通过后进行账户认证
+        MemUser user = memUserService.getUserByMobile(memberLoginFormDto.getMobile());
+        if (null == user) {
+            throw new GlobalException(ErrorCodeMsg.MEMBER_AUTH_ERROR);
+        }
+        if (1 != user.getStatus()) {
+            throw new GlobalException(ErrorCodeMsg.MEMBER_DISABLED);
+        }
+
+        if (!passwordEncoder.matches(memberLoginFormDto.getPassword(),user.getPassword())) {
+            throw new UnAuthenticationException(ErrorCodeMsg.MEMBER_AUTH_ERROR);
+        }
+        //生成token存入redis
+        String token = TokenUtil.generateToken(user.getMobile());
+        MemberUserTokenKey memberUserTokenKey = new MemberUserTokenKey(token);
+        if(!redisService.set(memberUserTokenKey.getPrefix(),user.getMobile(),sessionExpireTime)) {
+            throw new GlobalException(ErrorCodeMsg.SERVER_ERROR);
+        }
+        return token;
+    }
+
+    @Override
+    public boolean registry(RegisterFormDto registerFormDto) {
+        boolean result = this.verifyCaptcha(registerFormDto.getCaptcha(), registerFormDto.getCaptchaId());
+        if (!result) {
+            throw new GlobalException(ErrorCodeMsg.CAPTCHA_ERROR);
+        }
+        //校验两次输入密码是否一致
+        String password = registerFormDto.getPassword();
+        String confirmPassword = registerFormDto.getConfirmPassword();
+        if (!password.equals(confirmPassword)) {
+            throw new GlobalException(ErrorCodeMsg.TWO_PASSWORD_NOT_EQUALS);
+        }
+        //检查该手机是否已经注册
+        int count = this.count(new LambdaQueryWrapper<MemUser>().eq(MemUser::getMobile, registerFormDto.getMobile()));
+        if (count > 0) {
+            throw new GlobalException(ErrorCodeMsg.MEMBER_EXIST);
+        }
+        MemUser memUser = new MemUser();
+        memUser.setMobile(registerFormDto.getMobile());
+        memUser.setPassword(passwordEncoder.encode(registerFormDto.getPassword()));
+        memUser.setStatus(1);
+        memUser.setRank(MemberRank.GENERAL_USER.getRank());
+        memUser.setNickname(registerFormDto.getMobile());
+        return this.save(memUser);
+    }
+
+    private boolean verifyCaptcha(String captcha, String captchaId) {
+        //校验验证码是否正确
+        if (StringUtils.isBlank(captcha) || StringUtils.isBlank(captchaId)) {
+            throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
+        }
+
+        CaptchaKey captchaKey = new CaptchaKey(captchaId);
+        if (!redisService.hasKey(captchaKey.getPrefix())) {
+            throw new GlobalException(ErrorCodeMsg.CAPTCHA_EXPIRED);
+        }
+        String result = (String)redisService.get(captchaKey.getPrefix());
+        return LoginCaptchaUtil.verify(result,captcha);
     }
 
 }

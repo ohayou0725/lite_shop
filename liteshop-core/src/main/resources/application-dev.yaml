@@ -59,3 +59,6 @@ admin:
   base_url: /api/admin
   initialPassword : 123456
 
+portal:
+  sessionExpireTime : 604800 #前台用户session过期时间
+

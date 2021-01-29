@@ -21,16 +21,16 @@ import com.ohayou.liteshop.service.MallGoodsSpecService;
 import com.ohayou.liteshop.service.MallGoodsSpecValueService;
 import com.ohayou.liteshop.service.MallGoodsSpuService;
 import com.ohayou.liteshop.utils.GoodsSpecUtil;
+import com.ohayou.liteshop.vo.SkuVo;
+import com.ohayou.liteshop.vo.SpecValueVo;
+import com.ohayou.liteshop.vo.SpecVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -52,6 +52,7 @@ public class MallGoodsSkuServiceImpl extends ServiceImpl<MallGoodsSkuMapper, Mal
 
     @Autowired
     MallGoodsSpecValueService specValueService;
+
 
 
 
@@ -139,6 +140,98 @@ public class MallGoodsSkuServiceImpl extends ServiceImpl<MallGoodsSkuMapper, Mal
         });
         return result;
     }
+
+    @Override
+    public SkuVo getGoodsSkuVo(Long goodsId) {
+        List<GoodsSkuDto> goodsSku = this.getGoodsSku(goodsId);
+        SkuVo skuVo = new SkuVo();
+
+        List<MallGoodsSpec> specs = specService.list(new LambdaQueryWrapper<MallGoodsSpec>().eq(MallGoodsSpec::getGoodsId, goodsId));
+        List<SpecVo> specValueVos = specs.stream()
+                .map(spec -> {
+                    SpecVo specVo = new SpecVo();
+                    specVo.setId(spec.getId().toString());
+                    specVo.setK(spec.getName());
+                    return specVo;
+                }).collect(Collectors.toList());
+
+        List<SpecVo> specVoList = specValueVos.stream()
+                .peek(specVo -> {
+                    List<MallGoodsSpecValue> list = specValueService
+                            .list(new LambdaQueryWrapper<MallGoodsSpecValue>()
+                                    .eq(MallGoodsSpecValue::getSpecId, specVo.getId()));
+                    List<SpecValueVo> collect = list.stream()
+                            .map(mallGoodsSpecValue -> {
+                                SpecValueVo specValueVo = new SpecValueVo();
+                                specValueVo.setName(mallGoodsSpecValue.getSpecValue());
+                                specValueVo.setId(mallGoodsSpecValue.getId());
+                                if(specVo.getK().contains("颜色")) {
+                                    String img = this.findSkuImgBySpecAndValue(mallGoodsSpecValue.getSpecId() + "-" + mallGoodsSpecValue.getId(),goodsSku);
+                                    specValueVo.setImgUrl(img);
+                                    specValueVo.setPreviewImgUrl(img);
+                                }
+                                return specValueVo;
+                            }).collect(Collectors.toList());
+                    specVo.setV(collect);
+                }).collect(Collectors.toList());
+
+        skuVo.setTree(specVoList);
+        skuVo.setHideStock(false);
+        MallGoodsSpu goodsSpu = mallGoodsSpuService.getById(goodsId);
+        skuVo.setPrice(goodsSpu.getDiscountPrice().toString());
+        skuVo.setTotalStock(this.getStock(goodsId));
+        //判断是否为无规格商品
+        if (skuVo.getTree().size() == 1 && skuVo.getTree().get(0).getV().size() == 1) {
+            skuVo.setNoneSku(true);
+            Long skuId = goodsSku.get(0).getSkuId();
+            skuVo.setCollectionId(skuId);
+        }
+        skuVo.setCollectionId(goodsSku.get(0).getSkuId());
+        List<Map<String, Object>> list = goodsSku.stream()
+                .map(goodsSkuDto -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("id", goodsSkuDto.getSkuId());
+                    map.put("price", goodsSkuDto.getPrice().toString());
+                    map.put("stock", goodsSkuDto.getStock());
+                    List<SpecAndValueDto> specAndValueList = goodsSkuDto.getSpecAndValueList();
+                    for (SpecAndValueDto specAndValueDto : specAndValueList) {
+                        map.put(specAndValueDto.getSpecId().toString(), specAndValueDto.getValueId().toString());
+                    }
+                    return map;
+                }).collect(Collectors.toList());
+        skuVo.setList(list);
+        return skuVo;
+    }
+
+    /**
+     * 根据Spec和value的组合编码找到对应sku的图片
+     *
+     * @param specAndValue
+     * @return
+     */
+    private String findSkuImgBySpecAndValue(String specAndValue,List<GoodsSkuDto> goodsSku) {
+        Optional<GoodsSkuDto> first = goodsSku.stream()
+                .filter(goodsSkuDto -> {
+                    return goodsSkuDto.getSpecSn().contains(specAndValue);
+                }).findFirst();
+        if (first.isPresent()) {
+            return first.get().getImg();
+        }
+        return "";
+
+    }
+
+    private Integer getStock(Long spuId) {
+        //查询到商品sku信息后对sku库存进行累加
+        List<MallGoodsSku> list = this.list(new LambdaQueryWrapper<MallGoodsSku>().eq(MallGoodsSku::getGoodsId, spuId));
+        if (null != list && list.size() > 0) {
+            return list.stream()
+                    .map(MallGoodsSku::getStock)
+                    .reduce(0, Integer::sum);
+        }
+        return 0;
+    }
+
 
     /**
      * 根据商品编号获取sku信息

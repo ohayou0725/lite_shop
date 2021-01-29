@@ -3,6 +3,7 @@ package com.ohayou.liteshop.service;
 import com.ohayou.liteshop.dto.GoodsSkuDto;
 import com.ohayou.liteshop.entity.MallGoodsSku;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ohayou.liteshop.vo.SkuVo;
 
 import java.util.List;
 import java.util.Map;
@@ -29,4 +30,6 @@ public interface MallGoodsSkuService extends IService<MallGoodsSku> {
     boolean deleteAllSku(String goodsSn);
 
     Map<String,String> getSpecAndValue(String specSn);
+
+    SkuVo getGoodsSkuVo(Long goodsId);
 }

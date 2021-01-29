@@ -80,6 +80,10 @@ public enum ErrorCodeMsg {
     GOODS_SKU_UPDATE_ERROR(400615,"单品信息更新失败"),
     GOODS_SKU_NOT_FOUND(400616,"单品不存在"),
     GOODS_SKU_DELETE_ERROR(400617,"单品不存在"),
+    GOODS_DETAIL_ERROR(400618,"获取商品信息失败"),
+    GOODS_HAS_COLLECT(400619,"该商品已收藏"),
+    GOODS_COLLECT_ERROR(400620,"商品收藏失败"),
+    REMOVE_COLLECT_ERROR(400621,"取消收藏失败"),
 
     COMMENT_NOT_FOUND(400701,"没有此评论，或该评论已删除"),
 
@@ -107,7 +111,22 @@ public enum ErrorCodeMsg {
     COUPON_ADD_ERROR(401002,"优惠券添加失败"),
     COUPON_UPDATE_ERROR(401003,"优惠券更新失败"),
     COUPON_STATUS_ERROR(401004,"无法删除,该优惠券未下架或未过期"),
-    COUPON_DELETE_ERROR(401005,"删除优惠券失败")
+    COUPON_DELETE_ERROR(401005,"删除优惠券失败"),
+    COUPON_RECEIVE_ERROR(401006,"优惠券领取失败"),
+    COUPON_EXPIRED(401007,"优惠券已过期"),
+    COUPON_RECEIVE_OVER_LIMIT(101008,"优惠券领取数量超限"),
+
+    CAPTCHA_EXPIRED(401101,"验证码已过期"),
+    CAPTCHA_ERROR(401102,"验证码有误"),
+    MEMBER_AUTH_ERROR(401103,"用户名或密码有误"),
+    MEMBER_DISABLED(401104,"该用户不可用"),
+    TWO_PASSWORD_NOT_EQUALS(401105,"两次输入密码不一致"),
+    MEMBER_EXIST(401106,"该用户已注册"),
+    REGISTER_ERROR(401107,"注册失败，请稍后再试"),
+    ADD_ADDRESS_ERROR(401108,"用户添加收货地址失败"),
+    ADDRESS_NOT_FOUND(401109,"地址不存在"),
+    UPDATE_ADDRESS_ERROR(401110,"用户更新收货地址失败"),
+    DELETE_ADDRESS_ERROR(401111,"用户删除收货地址失败"),
 
     ;
 

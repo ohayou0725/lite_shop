@@ -6,6 +6,9 @@ import com.ohayou.liteshop.dto.CouponDto;
 import com.ohayou.liteshop.entity.MallCoupon;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ohayou.liteshop.utils.PageUtils;
+import com.ohayou.liteshop.vo.CouponVo;
+
+import java.util.List;
 
 /**
  * <p>
@@ -26,4 +29,10 @@ public interface MallCouponService extends IService<MallCoupon> {
     boolean updateCoupon(CouponDto couponDto);
 
     boolean deleteCoupon(Long couponId);
+
+    List<CouponVo> getCouponVo(Long goodsId);
+
+    Boolean receive(Long couponId, Long id);
+
+    List<Long> hasReceived(List<Long> coupons, Long id);
 }

@@ -1,30 +1,33 @@
 package com.ohayou.liteshop.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ohayou.liteshop.constant.CouponStatus;
 import com.ohayou.liteshop.constant.CouponType;
+import com.ohayou.liteshop.constant.UserCouponStatus;
 import com.ohayou.liteshop.dto.CouponDetailDto;
 import com.ohayou.liteshop.dto.CouponDto;
-import com.ohayou.liteshop.entity.MallCoupon;
+import com.ohayou.liteshop.entity.*;
 import com.ohayou.liteshop.dao.MallCouponMapper;
-import com.ohayou.liteshop.entity.MallCouponType;
 import com.ohayou.liteshop.exception.GlobalException;
 import com.ohayou.liteshop.response.ErrorCodeMsg;
-import com.ohayou.liteshop.service.MallCategoryService;
-import com.ohayou.liteshop.service.MallCouponService;
+import com.ohayou.liteshop.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ohayou.liteshop.service.MallCouponTypeService;
-import com.ohayou.liteshop.service.MallGoodsSpuService;
 import com.ohayou.liteshop.utils.PageUtils;
+import com.ohayou.liteshop.vo.CouponVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,6 +50,13 @@ public class MallCouponServiceImpl extends ServiceImpl<MallCouponMapper, MallCou
 
     @Autowired
     MallCategoryService categoryService;
+
+    @Autowired
+    MallBrandService brandService;
+
+    @Autowired
+    MallUserCouponService userCouponService;
+
 
     @Override
     public PageUtils getPage(IPage<MallCoupon> page, CouponDto couponDto) {
@@ -230,5 +240,124 @@ public class MallCouponServiceImpl extends ServiceImpl<MallCouponMapper, MallCou
             .eq(MallCouponType::getCouponId,coupon.getId()));
         }
         return remove;
+    }
+
+    /**
+     * 查询商品下可用的优惠券
+     * @param goodsId 商品ID
+     * @return 可用优惠券列表
+     */
+    @Override
+    public List<CouponVo> getCouponVo(Long goodsId) {
+        MallGoodsSpu goodsSpu = this.goodsSpuService.getById(goodsId);
+        if (null == goodsSpu) {
+            throw new GlobalException(ErrorCodeMsg.GOODS_NOT_FOUND);
+        }
+        List<MallCoupon> mallCoupons = this.baseMapper.getCouponByGoods(goodsSpu);
+        return mallCoupons.stream()
+                .filter(mallCoupon -> {
+                    return mallCoupon.getStatus().equals(CouponStatus.NORMAL.getStatus());
+                })
+                .filter(mallCoupon -> {
+                    if (mallCoupon.getTimeType().equals(1)) {
+                        return LocalDateTime.now().isBefore(mallCoupon.getEndTime()) &&
+                        LocalDateTime.now().isAfter(mallCoupon.getStartTime());
+                    }
+                    return true;
+                })
+                .map(mallCoupon -> {
+                    CouponVo couponVo = new CouponVo();
+                    couponVo.setCouponId(mallCoupon.getId());
+                    couponVo.setName(mallCoupon.getName());
+                    couponVo.setDescription(mallCoupon.getDetail());
+                    couponVo.setUnitDesc("元");
+                    couponVo.setCondition(this.getCouponCondition(mallCoupon));
+                    couponVo.setValue(mallCoupon.getDiscount().stripTrailingZeros().toPlainString());
+                    couponVo.setValueDesc(mallCoupon.getDiscount().stripTrailingZeros().toPlainString());
+                    couponVo.setStartAt(this.getStartTime(mallCoupon));
+                    couponVo.setEndAt(this.getEndTime(mallCoupon));
+                    return couponVo;
+                }).collect(Collectors.toList());
+
+    }
+
+    /**
+     * 用户领取优惠券
+     * @param couponId 优惠券Id
+     * @param userId 用户ID
+     * @return 是否领取成功
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Boolean receive(Long couponId, Long userId) {
+        MallCoupon coupon = this.getById(couponId);
+        if (null == coupon) {
+            throw new GlobalException(ErrorCodeMsg.COUPON_NOT_EXIST);
+        }
+        if (!coupon.getStatus().equals(CouponStatus.NORMAL.getStatus())) {
+            throw new GlobalException(ErrorCodeMsg.COUPON_RECEIVE_ERROR);
+        }
+        if (coupon.getTimeType().equals(1)) {
+            if (!LocalDateTime.now().isAfter(coupon.getStartTime()) && LocalDateTime.now().isBefore(coupon.getEndTime())) {
+                throw new GlobalException(ErrorCodeMsg.COUPON_EXPIRED);
+            }
+        }
+        //该用户已拥有该优惠券数量是否大于等于该优惠券限领数量
+        LambdaQueryWrapper<MallUserCoupon> wrapper = new LambdaQueryWrapper<MallUserCoupon>().eq(MallUserCoupon::getCouponId, couponId).eq(MallUserCoupon::getUserId, userId);
+        int count = userCouponService.count(wrapper);
+        if (count >= coupon.getStint()) {
+            throw new GlobalException(ErrorCodeMsg.COUPON_RECEIVE_OVER_LIMIT);
+        }
+
+        LambdaUpdateWrapper<MallCoupon> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.eq(MallCoupon::getId,coupon.getId());
+        //乐观锁控制优惠券库存
+        updateWrapper.gt(MallCoupon::getTotal,0);
+        updateWrapper.set(MallCoupon::getTotal,coupon.getTotal()-1);
+        boolean update = this.update(updateWrapper);
+        if (update) {
+            MallUserCoupon mallUserCoupon = new MallUserCoupon();
+            mallUserCoupon.setCouponId(coupon.getId());
+            mallUserCoupon.setUserId(userId);
+            mallUserCoupon.setNumber(1);
+            return userCouponService.save(mallUserCoupon);
+        }
+
+        return update;
+    }
+
+    /**
+     * 根据优惠券列表查询已领取优惠券
+     * @param coupons 优惠券列表Id
+     * @param userId 用户Id
+     * @return
+     */
+    @Override
+    public List<Long> hasReceived(List<Long> coupons, Long userId) {
+        List<MallUserCoupon> list = userCouponService.list(new LambdaQueryWrapper<MallUserCoupon>()
+                .eq(MallUserCoupon::getUserId, userId)
+                .eq(MallUserCoupon::getStatus,UserCouponStatus.AVAILABLE.getStatus()));
+        List<Long> currentCouponIds = list.stream().map(MallUserCoupon::getCouponId).collect(Collectors.toList());
+        Collection<Long> intersection = CollUtil.intersection(coupons, currentCouponIds);
+        return new ArrayList<>(intersection);
+    }
+
+    private String getCouponCondition(MallCoupon coupon) {
+        return "满" + coupon.getMin().stripTrailingZeros().toPlainString() + "减" + coupon.getDiscount().stripTrailingZeros().toPlainString() ;
+    }
+
+    private Long getStartTime(MallCoupon coupon) {
+        if (coupon.getTimeType().equals(0)) {
+            return LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8"));
+        }
+        return coupon.getStartTime().toEpochSecond(ZoneOffset.of("+8"));
+    }
+
+    private Long getEndTime(MallCoupon coupon) {
+        if (coupon.getTimeType().equals(0)) {
+            Integer days = coupon.getDays();
+            return LocalDateTime.now().plusDays(days).toEpochSecond(ZoneOffset.of("+8"));
+        }
+        return coupon.getEndTime().toEpochSecond(ZoneOffset.of("+8"));
     }
 }

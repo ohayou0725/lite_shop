@@ -17,7 +17,7 @@ public class MemberUserDetails implements UserDetails {
 
     private String password;
 
-    private String nickName;
+    private String nickname;
 
     private String gender;
 
@@ -41,8 +41,8 @@ public class MemberUserDetails implements UserDetails {
         this.password = password;
     }
 
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public void setGender(String gender) {
@@ -99,4 +99,38 @@ public class MemberUserDetails implements UserDetails {
     public boolean isEnabled() {
         return this.status == 1;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public String getRank() {
+        return rank;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+
 }

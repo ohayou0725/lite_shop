@@ -15,15 +15,15 @@ import com.ohayou.liteshop.response.ErrorCodeMsg;
 import com.ohayou.liteshop.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ohayou.liteshop.utils.PageUtils;
+import com.ohayou.liteshop.utils.RateUtil;
+import com.ohayou.liteshop.vo.CommentItemVo;
+import com.ohayou.liteshop.vo.CommentVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -47,6 +47,8 @@ public class MallGoodsCommentServiceImpl extends ServiceImpl<MallGoodsCommentMap
 
     @Autowired
     MallGoodsCommentReplyService replyService;
+
+
 
 
 
@@ -135,5 +137,62 @@ public class MallGoodsCommentServiceImpl extends ServiceImpl<MallGoodsCommentMap
         commentDetailDto.setNickName(user.getNickname());
         commentDetailDto.setReplies(replyService.getReplyTree(comment.getId()));
         return commentDetailDto;
+    }
+
+    @Override
+    public List<MallGoodsComment> getCommentByGoodsId(Long goodsId) {
+        LambdaQueryWrapper<MallGoodsComment> wrapper = new LambdaQueryWrapper<MallGoodsComment>()
+                .eq(MallGoodsComment::getGoodsId, goodsId);
+        return this.list(wrapper);
+    }
+
+    @Override
+    public CommentVo getCommentVo(Long goodsId) {
+        List<MallGoodsComment> comments = this.getCommentByGoodsId(goodsId);
+        CommentVo commentVo = new CommentVo();
+        commentVo.setGoodsId(goodsId);
+        commentVo.setNum(comments.size());
+        commentVo.setList(null);
+        if (CollectionUtil.isNotEmpty(comments)) {
+            List<CommentItemVo> commentItemVoList = comments.stream()
+                    .sorted(Comparator.comparing(MallGoodsComment::getUserId))
+                    .map(comment -> {
+                        CommentItemVo commentItemVo = new CommentItemVo();
+                        commentItemVo.setCommentId(comment.getId());
+                        commentItemVo.setContent(comment.getContent());
+                        if (StringUtils.isNotEmpty(comment.getImg())) {
+                            commentItemVo.setImgs(comment.getImg().split(","));
+                        }
+                        commentItemVo.setScore(comment.getScore());
+                        commentItemVo.setTime(comment.getCreateTime());
+                        return commentItemVo;
+                    }).collect(Collectors.toList());
+
+            //计算好评率
+            long count = comments.stream()
+                    .filter(mallGoodsComment -> {
+                        Integer score = mallGoodsComment.getScore();
+                        return score > 4;
+                    }).count();
+            String rate = RateUtil.getRate((int) count,comments.size());
+            commentVo.setRate(rate);
+            List<Long> userIds =
+                    comments.stream()
+                            .map(MallGoodsComment::getUserId)
+                            .collect(Collectors.toList());
+            List<MemUser> memUsers = userService.getBaseMapper().selectBatchIds(userIds);
+            memUsers.sort(Comparator.comparing(MemUser::getId));
+
+            for (int i = 0; i < memUsers.size(); i++) {
+                MemUser memUser = memUsers.get(i);
+                CommentItemVo commentItemVo = commentItemVoList.get(i);
+                commentItemVo.setAvatar(memUser.getAvatar());
+                commentItemVo.setUsername(memUser.getNickname());
+            }
+            commentItemVoList.sort(Comparator.comparing(CommentItemVo::getTime).reversed());
+            commentVo.setList(commentItemVoList);
+        }
+
+        return commentVo;
     }
 }

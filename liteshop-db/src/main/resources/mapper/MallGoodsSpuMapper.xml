@@ -30,7 +30,7 @@
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
 
-                g.id, g.goods_sn, g.name,g.title ,g.category_id, g.brand_id, g.brief,g.weight, g.title_img, g.gallery,sales, g.status, g.hot, g.sort, g.is_new, g.unit, g.price, g.discount_price, g.attr_group_id, g.detail, g.create_time, g.update_time, g.deleted
+        g.id, g.goods_sn, g.name,g.title ,g.category_id, g.brand_id, g.brief,g.weight, g.title_img, g.gallery,sales, g.status, g.hot, g.sort, g.is_new, g.unit, g.price, g.discount_price, g.attr_group_id, g.detail, g.create_time, g.update_time, g.deleted
 
     </sql>
     <select id="findGoodsByGoodsSnOrName" resultType="com.ohayou.liteshop.entity.MallGoodsSpu">
@@ -116,5 +116,15 @@
         and g.status = 1
         and g.deleted = 0
         limit #{page},#{size}
+    </select>
+    <select id="getGoodsByCouponId" resultType="com.ohayou.liteshop.entity.MallGoodsSpu">
+            select g.*
+            from mall_goods_spu g
+            join mall_coupon_type ct on ct.goods_id = g.id
+            join mall_coupon c on c.id = ct.coupon_id
+            where c.id = #{couponId}
+            and c.deleted = 0
+            and ct.deleted = 0
+            and g.deleted = 0
     </select>
 </mapper>

@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface MallBrandMapper extends BaseMapper<MallBrand> {
 
+    MallBrand getBrandByCouponId(Long couponId);
 }

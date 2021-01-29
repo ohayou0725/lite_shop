@@ -26,6 +26,10 @@ public class BaseKey implements KeyPrefix{
         this.expiration = 0;
     }
 
+    public BaseKey(long expiration) {
+        this.expiration = expiration;
+    }
+
 
 
     @Override

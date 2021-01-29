@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 /**
@@ -20,10 +21,11 @@ import org.springframework.web.cors.CorsConfigurationSource;
  */
 @EnableWebSecurity
 @Configuration
-@PropertySource("classpath:loginRequiredUrls.properties")
+@PropertySource({"classpath:loginRequiredUrls.properties"})
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${required.urls}")
-    private String urls;
+    private String[] requireLoginUrls;
+
 
     @Autowired
     CorsConfigurationSource configurationSource;
@@ -35,6 +37,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    @Autowired
+    AuthenticationTokenFilter authenticationTokenFilter;
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -45,13 +50,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
+                .antMatchers(requireLoginUrls)
+                .access("authenticated")
                 .antMatchers("/**")
                 .permitAll()
                 .and()
-                .authorizeRequests()
-                .antMatchers(urls)
-                .authenticated()
-                .and()
+                .addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPoint);
 

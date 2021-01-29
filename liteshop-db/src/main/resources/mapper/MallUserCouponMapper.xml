@@ -10,14 +10,14 @@
         <result column="status" property="status" />
         <result column="number" property="number" />
         <result column="order_id" property="orderId" />
-        <result column="crete_time" property="creteTime" />
+        <result column="create_time" property="createTime" />
         <result column="update_time" property="updateTime" />
         <result column="deleted" property="deleted" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, user_id, coupon_id, status, number, order_id, crete_time, update_time, deleted
+        id, user_id, coupon_id, status, number, order_id, create_time, update_time, deleted
     </sql>
 
 </mapper>

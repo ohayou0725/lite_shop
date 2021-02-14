@@ -5,6 +5,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.ohayou.liteshop.async.event.UserRegisterEvent;
 import com.ohayou.liteshop.constant.CouponStatus;
 import com.ohayou.liteshop.constant.CouponType;
 import com.ohayou.liteshop.constant.UserCouponStatus;
@@ -21,6 +22,9 @@ import com.ohayou.liteshop.vo.CouponVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +44,7 @@ import java.util.stream.Collectors;
  * @since 2020-07-15
  */
 @Service
-public class MallCouponServiceImpl extends ServiceImpl<MallCouponMapper, MallCoupon> implements MallCouponService {
+public class MallCouponServiceImpl extends ServiceImpl<MallCouponMapper, MallCoupon> implements MallCouponService, ApplicationListener<UserRegisterEvent> {
 
     @Autowired
     MallGoodsSpuService goodsSpuService;
@@ -359,5 +363,21 @@ public class MallCouponServiceImpl extends ServiceImpl<MallCouponMapper, MallCou
             return LocalDateTime.now().plusDays(days).toEpochSecond(ZoneOffset.of("+8"));
         }
         return coupon.getEndTime().toEpochSecond(ZoneOffset.of("+8"));
+    }
+
+    //监听用户注册成功时间，注册成功后发放新人优惠券
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    @Async
+    public void onApplicationEvent(UserRegisterEvent userRegisterEvent) {
+        Long userId = userRegisterEvent.getUserId();
+        List<MallCoupon> coupons = this.list(new LambdaQueryWrapper<MallCoupon>().like(MallCoupon::getName, "新用户"));
+        coupons.forEach(coupon -> {
+            MallUserCoupon mallUserCoupon = new MallUserCoupon();
+            mallUserCoupon.setUserId(userId);
+            mallUserCoupon.setCouponId(coupon.getId());
+            mallUserCoupon.setNumber(1);
+            userCouponService.save(mallUserCoupon);
+        });
     }
 }

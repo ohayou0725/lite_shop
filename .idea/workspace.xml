@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="BRANCH:dev" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </select>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="1425b217-c159-47b6-ae26-4671dd22623b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/async/event/GetGoodsDetailEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/async/event/PriceChangeEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/async/event/UserRegisterEvent.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/dto/AddCartDto.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/vo/CartItemVo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/vo/CartVo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/vo/CheckResultVo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/liteshop-web-api/src/main/java/com/ohayou/liteshop/controller/CartController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/GrepConsole.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/lite_shop.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/liteshop-common/src/main/java/com/ohayou/liteshop/response/ErrorCodeMsg.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-common/src/main/java/com/ohayou/liteshop/response/ErrorCodeMsg.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/MallCartItemService.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/MallCartItemService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/MallCartService.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/MallCartService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/MallCouponService.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/MallCouponService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/MemHistoryService.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/MemHistoryService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/impl/MallCartItemServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/impl/MallCartItemServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/impl/MallCouponServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/impl/MallCouponServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/impl/MallGoodsSkuServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/impl/MallGoodsSkuServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/impl/MallGoodsSpuServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/impl/MallGoodsSpuServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/impl/MemHistoryServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/impl/MemHistoryServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/impl/MemUserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/impl/MemUserServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/resources/application-prod.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/resources/application-prod.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/liteshop-db/src/main/java/com/ohayou/liteshop/dao/MallCartItemMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-db/src/main/java/com/ohayou/liteshop/dao/MallCartItemMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/liteshop-db/src/main/java/com/ohayou/liteshop/entity/MallCartItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-db/src/main/java/com/ohayou/liteshop/entity/MallCartItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/liteshop-db/src/main/resources/mapper/AdminResourceMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-db/src/main/resources/mapper/AdminResourceMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/liteshop-db/src/main/resources/mapper/MallCartItemMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-db/src/main/resources/mapper/MallCartItemMapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/liteshop-web-api/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-web-api/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/liteshop-web-api/src/main/java/com/ohayou/liteshop/WebApiApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-web-api/src/main/java/com/ohayou/liteshop/WebApiApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/liteshop-web-api/src/main/java/com/ohayou/liteshop/controller/SearchController.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-web-api/src/main/java/com/ohayou/liteshop/controller/SearchController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/liteshop-web-api/src/main/resources/loginRequiredUrls.properties" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-web-api/src/main/resources/loginRequiredUrls.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="AnnotationType" />
+        <option value="Interface" />
+        <option value="Enum" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="$USER_HOME$/apache-maven-3.6.1" />
+      </MavenGeneralSettings>
+    </option>
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="jdkForImporter" value="1.8 (2)" />
+        <option name="vmOptionsForImporter" value="-Xmx768m" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="1eaQ7IM5wOA7TcmezwPMcAqjarO" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="abbreviatePackageNames" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DatabaseDriversLRU" value="mysql" />
+    <property name="RequestMappingsPanelOrder0" value="0" />
+    <property name="RequestMappingsPanelOrder1" value="1" />
+    <property name="RequestMappingsPanelWidth0" value="75" />
+    <property name="RequestMappingsPanelWidth1" value="75" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/pom.xml" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="reference.settings.project.maven.importing" />
+  </component>
+  <component name="ReactorSettings">
+    <option name="notificationShown" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/liteshop-db/sql" />
+      <recent name="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/impl" />
+      <recent name="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.ohayou.liteshop.dto" />
+      <recent name="com.ohayou.liteshop.service.impl" />
+      <recent name="com.ohayou.liteshop.upload" />
+      <recent name="com.ohayou.liteshop.validate" />
+      <recent name="com.ohayou.liteshop.security" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/liteshop-admin-api/src/main/resources" />
+      <recent name="$PROJECT_DIR$/liteshop-db/src/main/resources" />
+    </key>
+  </component>
+  <component name="RestClientSettings">
+    <option name="REQUEST_HISTORY">
+      <list>
+        <RestClientRequest>
+          <option name="httpMethod" value="GET" />
+          <option name="urlBase" value="http://localhost:8080/user" />
+          <option name="urlPath" value="" />
+          <option name="textToSend" value="" />
+          <option name="filesToSend" value="" />
+        </RestClientRequest>
+      </list>
+    </option>
+  </component>
+  <component name="RunDashboard">
+    <option name="configurationTypes">
+      <set>
+        <option value="SpringBootApplicationConfigurationType" />
+      </set>
+    </option>
+  </component>
+  <component name="RunManager" selected="Spring Boot.WebApiApplication">
+    <configuration name="DocumentGeneration" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="DocumentGeneration" />
+      <module name="liteshop-db" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GenerateCode" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="GenerateCode" />
+      <module name="liteshop-db" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="MemberController" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.ohayou.liteshop.controller.MemberController" />
+      <module name="liteshop-web-api" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.ohayou.liteshop.controller.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AdminApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <module name="liteshop-admin-api" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.ohayou.liteshop.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.ohayou.liteshop.AdminApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="WebApiApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <module name="liteshop-web-api" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.ohayou.liteshop.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.ohayou.liteshop.WebApiApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.GenerateCode" />
+      <item itemvalue="Application.DocumentGeneration" />
+      <item itemvalue="Application.MemberController" />
+      <item itemvalue="Spring Boot.AdminApplication" />
+      <item itemvalue="Spring Boot.WebApiApplication" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Spring Boot.WebApiApplication" />
+        <item itemvalue="Spring Boot.AdminApplication" />
+        <item itemvalue="Application.MemberController" />
+        <item itemvalue="Application.DocumentGeneration" />
+        <item itemvalue="Application.GenerateCode" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="1425b217-c159-47b6-ae26-4671dd22623b" name="Default Changelist" comment="" />
+      <created>1594557054677</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1594557054677</updated>
+      <workItem from="1594557058317" duration="110626000" />
+      <workItem from="1595082714732" duration="33274000" />
+      <workItem from="1595601602024" duration="44496000" />
+      <workItem from="1596033534305" duration="337026000" />
+      <workItem from="1599789692556" duration="513931000" />
+      <workItem from="1606372900736" duration="3487000" />
+      <workItem from="1606396559336" duration="74453000" />
+      <workItem from="1607432971440" duration="14586000" />
+      <workItem from="1607695117819" duration="157000" />
+      <workItem from="1607695316352" duration="11534000" />
+      <workItem from="1608037779242" duration="180551000" />
+      <workItem from="1610717644734" duration="116097000" />
+      <workItem from="1612533609460" duration="315000" />
+      <workItem from="1612534322865" duration="766000" />
+      <workItem from="1612535380764" duration="142000" />
+      <workItem from="1612535573788" duration="146000" />
+      <workItem from="1612535748813" duration="43771000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="2" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="dev" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="274" y="60" key="#Inspections" timestamp="1607178058961">
+      <screen x="0" y="23" width="1280" height="707" />
+    </state>
+    <state x="274" y="60" key="#Inspections/0.23.1280.707@0.23.1280.707" timestamp="1607178058961" />
+    <state x="128" y="23" key="#Project_Structure" timestamp="1605881444324">
+      <screen x="0" y="23" width="1280" height="707" />
+    </state>
+    <state x="128" y="23" key="#Project_Structure/0.23.1280.707@0.23.1280.707" timestamp="1605881444324" />
+    <state x="32" y="206" key="#SQL_Dialects" timestamp="1611323331338">
+      <screen x="0" y="23" width="1280" height="707" />
+    </state>
+    <state x="32" y="206" key="#SQL_Dialects/0.23.1280.707@0.23.1280.707" timestamp="1611323331338" />
+    <state x="154" y="23" key="#WebApiApplication" timestamp="1612535502161">
+      <screen x="0" y="23" width="1280" height="707" />
+    </state>
+    <state x="154" y="23" key="#WebApiApplication/0.23.1280.707@0.23.1280.707" timestamp="1612535502161" />
+    <state x="102" y="37" width="1178" height="676" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1606396501996">
+      <screen x="0" y="23" width="1280" height="709" />
+    </state>
+    <state x="102" y="37" width="1178" height="676" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1280.709@0.23.1280.709" timestamp="1606396501996" />
+    <state x="368" y="176" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1605881463566">
+      <screen x="0" y="23" width="1280" height="707" />
+    </state>
+    <state x="368" y="176" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1280.707@0.23.1280.707" timestamp="1605881463566" />
+    <state x="453" y="93" key="#com.intellij.ide.util.MemberChooser" timestamp="1613222769704">
+      <screen x="0" y="23" width="1280" height="707" />
+    </state>
+    <state x="453" y="93" key="#com.intellij.ide.util.MemberChooser/0.23.1280.707@0.23.1280.707" timestamp="1613222769704" />
+    <state x="453" y="93" key="#com.intellij.ide.util.MemberChooser/0.23.1280.709@0.23.1280.709" timestamp="1612881225860" />
+    <state x="453" y="93" key="#com.intellij.ide.util.MemberChooser/0.23.1280.712@0.23.1280.712" timestamp="1608209746346" />
+    <state x="242" y="23" key="#com.intellij.openapi.keymap.impl.ui.EditKeymapsDialog" timestamp="1608785507892">
+      <screen x="0" y="23" width="1280" height="707" />
+    </state>
+    <state x="242" y="23" key="#com.intellij.openapi.keymap.impl.ui.EditKeymapsDialog/0.23.1280.707@0.23.1280.707" timestamp="1608785507892" />
+    <state x="218" y="303" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog" timestamp="1612185704663">
+      <screen x="0" y="23" width="1280" height="709" />
+    </state>
+    <state x="218" y="302" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog/0.23.1280.707@0.23.1280.707" timestamp="1609565958023" />
+    <state x="218" y="303" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog/0.23.1280.709@0.23.1280.709" timestamp="1612185704663" />
+    <state x="218" y="304" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog/0.23.1280.712@0.23.1280.712" timestamp="1608209805550" />
+    <state x="0" y="23" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1610802989422">
+      <screen x="0" y="23" width="1280" height="709" />
+    </state>
+    <state x="101" y="23" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.23.1280.707@0.23.1280.707" timestamp="1610260452167" />
+    <state x="0" y="23" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.23.1280.709@0.23.1280.709" timestamp="1610802989422" />
+    <state x="101" y="23" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.23.1280.712@0.23.1280.712" timestamp="1608211227241" />
+    <state width="993" height="345" key="GridCell.Tab.0.bottom" timestamp="1613282441804">
+      <screen x="0" y="23" width="1280" height="707" />
+    </state>
+    <state width="993" height="345" key="GridCell.Tab.0.bottom/0.23.1280.707@0.23.1280.707" timestamp="1613282441804" />
+    <state width="993" height="345" key="GridCell.Tab.0.bottom/0.23.1280.709@0.23.1280.709" timestamp="1613025447116" />
+    <state width="1238" height="351" key="GridCell.Tab.0.bottom/0.23.1280.712@0.23.1280.712" timestamp="1611990183600" />
+    <state width="993" height="345" key="GridCell.Tab.0.center" timestamp="1613282441797">
+      <screen x="0" y="23" width="1280" height="707" />
+    </state>
+    <state width="993" height="345" key="GridCell.Tab.0.center/0.23.1280.707@0.23.1280.707" timestamp="1613282441797" />
+    <state width="993" height="345" key="GridCell.Tab.0.center/0.23.1280.709@0.23.1280.709" timestamp="1613025447115" />
+    <state width="1238" height="351" key="GridCell.Tab.0.center/0.23.1280.712@0.23.1280.712" timestamp="1611990183598" />
+    <state width="993" height="345" key="GridCell.Tab.0.left" timestamp="1613282441797">
+      <screen x="0" y="23" width="1280" height="707" />
+    </state>
+    <state width="993" height="345" key="GridCell.Tab.0.left/0.23.1280.707@0.23.1280.707" timestamp="1613282441797" />
+    <state width="993" height="345" key="GridCell.Tab.0.left/0.23.1280.709@0.23.1280.709" timestamp="1613025447114" />
+    <state width="1238" height="351" key="GridCell.Tab.0.left/0.23.1280.712@0.23.1280.712" timestamp="1611990183597" />
+    <state width="993" height="345" key="GridCell.Tab.0.right" timestamp="1613282441803">
+      <screen x="0" y="23" width="1280" height="707" />
+    </state>
+    <state width="993" height="345" key="GridCell.Tab.0.right/0.23.1280.707@0.23.1280.707" timestamp="1613282441803" />
+    <state width="993" height="345" key="GridCell.Tab.0.right/0.23.1280.709@0.23.1280.709" timestamp="1613025447116" />
+    <state width="1238" height="351" key="GridCell.Tab.0.right/0.23.1280.712@0.23.1280.712" timestamp="1611990183600" />
+    <state width="993" height="345" key="GridCell.Tab.1.bottom" timestamp="1613282441806">
+      <screen x="0" y="23" width="1280" height="707" />
+    </state>
+    <state width="993" height="345" key="GridCell.Tab.1.bottom/0.23.1280.707@0.23.1280.707" timestamp="1613282441806" />
+    <state width="993" height="345" key="GridCell.Tab.1.bottom/0.23.1280.709@0.23.1280.709" timestamp="1613025447119" />
+    <state width="993" height="345" key="GridCell.Tab.1.bottom/0.23.1280.712@0.23.1280.712" timestamp="1611989410443" />
+    <state width="993" height="345" key="GridCell.Tab.1.center" timestamp="1613282441805">
+      <screen x="0" y="23" width="1280" height="707" />
+    </state>
+    <state width="993" height="345" key="GridCell.Tab.1.center/0.23.1280.707@0.23.1280.707" timestamp="1613282441805" />
+    <state width="993" height="345" key="GridCell.Tab.1.center/0.23.1280.709@0.23.1280.709" timestamp="1613025447118" />
+    <state width="993" height="345" key="GridCell.Tab.1.center/0.23.1280.712@0.23.1280.712" timestamp="1611989410442" />
+    <state width="993" height="345" key="GridCell.Tab.1.left" timestamp="1613282441805">
+      <screen x="0" y="23" width="1280" height="707" />
+    </state>
+    <state width="993" height="345" key="GridCell.Tab.1.left/0.23.1280.707@0.23.1280.707" timestamp="1613282441805" />
+    <state width="993" height="345" key="GridCell.Tab.1.left/0.23.1280.709@0.23.1280.709" timestamp="1613025447118" />
+    <state width="993" height="345" key="GridCell.Tab.1.left/0.23.1280.712@0.23.1280.712" timestamp="1611989410442" />
+    <state width="993" height="345" key="GridCell.Tab.1.right" timestamp="1613282441806">
+      <screen x="0" y="23" width="1280" height="707" />
+    </state>
+    <state width="993" height="345" key="GridCell.Tab.1.right/0.23.1280.707@0.23.1280.707" timestamp="1613282441806" />
+    <state width="993" height="345" key="GridCell.Tab.1.right/0.23.1280.709@0.23.1280.709" timestamp="1613025447119" />
+    <state width="993" height="345" key="GridCell.Tab.1.right/0.23.1280.712@0.23.1280.712" timestamp="1611989410443" />
+    <state width="993" height="345" key="GridCell.Tab.2.bottom" timestamp="1613282441808">
+      <screen x="0" y="23" width="1280" height="707" />
+    </state>
+    <state width="993" height="345" key="GridCell.Tab.2.bottom/0.23.1280.707@0.23.1280.707" timestamp="1613282441808" />
+    <state width="993" height="345" key="GridCell.Tab.2.bottom/0.23.1280.709@0.23.1280.709" timestamp="1613025447121" />
+    <state width="993" height="345" key="GridCell.Tab.2.bottom/0.23.1280.712@0.23.1280.712" timestamp="1611989410445" />
+    <state width="993" height="345" key="GridCell.Tab.2.center" timestamp="1613282441807">
+      <screen x="0" y="23" width="1280" height="707" />
+    </state>
+    <state width="993" height="345" key="GridCell.Tab.2.center/0.23.1280.707@0.23.1280.707" timestamp="1613282441807" />
+    <state width="993" height="345" key="GridCell.Tab.2.center/0.23.1280.709@0.23.1280.709" timestamp="1613025447120" />
+    <state width="993" height="345" key="GridCell.Tab.2.center/0.23.1280.712@0.23.1280.712" timestamp="1611989410444" />
+    <state width="993" height="345" key="GridCell.Tab.2.left" timestamp="1613282441807">
+      <screen x="0" y="23" width="1280" height="707" />
+    </state>
+    <state width="993" height="345" key="GridCell.Tab.2.left/0.23.1280.707@0.23.1280.707" timestamp="1613282441807" />
+    <state width="993" height="345" key="GridCell.Tab.2.left/0.23.1280.709@0.23.1280.709" timestamp="1613025447119" />
+    <state width="993" height="345" key="GridCell.Tab.2.left/0.23.1280.712@0.23.1280.712" timestamp="1611989410444" />
+    <state width="993" height="345" key="GridCell.Tab.2.right" timestamp="1613282441808">
+      <screen x="0" y="23" width="1280" height="707" />
+    </state>
+    <state width="993" height="345" key="GridCell.Tab.2.right/0.23.1280.707@0.23.1280.707" timestamp="1613282441808" />
+    <state width="993" height="345" key="GridCell.Tab.2.right/0.23.1280.709@0.23.1280.709" timestamp="1613025447120" />
+    <state width="993" height="345" key="GridCell.Tab.2.right/0.23.1280.712@0.23.1280.712" timestamp="1611989410445" />
+    <state x="228" y="117" key="IDE.errors.dialog" timestamp="1606963039443">
+      <screen x="0" y="23" width="1280" height="707" />
+    </state>
+    <state x="228" y="117" key="IDE.errors.dialog/0.23.1280.707@0.23.1280.707" timestamp="1606963039443" />
+    <state x="149" y="23" width="982" height="707" key="SettingsEditor" timestamp="1612535882457">
+      <screen x="0" y="23" width="1280" height="707" />
+    </state>
+    <state x="149" y="23" width="982" height="707" key="SettingsEditor/0.23.1280.707@0.23.1280.707" timestamp="1612535882457" />
+    <state x="149" y="23" width="982" height="709" key="SettingsEditor/0.23.1280.709@0.23.1280.709" timestamp="1608037656335" />
+    <state x="370" y="115" width="540" height="540" key="StructurePopup" timestamp="1605063585554">
+      <screen x="0" y="23" width="1280" height="707" />
+    </state>
+    <state x="370" y="115" width="540" height="540" key="StructurePopup/0.23.1280.707@0.23.1280.707" timestamp="1605063585554" />
+    <state width="526" height="556" key="SwitcherDM" timestamp="1613279936033">
+      <screen x="0" y="23" width="1280" height="707" />
+    </state>
+    <state width="526" height="556" key="SwitcherDM/0.23.1280.707@0.23.1280.707" timestamp="1613279936033" />
+    <state width="526" height="556" key="SwitcherDM/0.23.1280.709@0.23.1280.709" timestamp="1612795515083" />
+    <state width="526" height="560" key="SwitcherDM/0.23.1280.712@0.23.1280.712" timestamp="1608212470740" />
+    <state x="52" y="29" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1606983948775">
+      <screen x="0" y="23" width="1280" height="707" />
+    </state>
+    <state x="52" y="29" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.23.1280.707@0.23.1280.707" timestamp="1606983948775" />
+    <state x="100" y="123" width="1080" height="494" key="dock-window-1" timestamp="1609851678789">
+      <screen x="0" y="23" width="1280" height="707" />
+    </state>
+    <state x="100" y="123" width="1080" height="494" key="dock-window-1/0.23.1280.707@0.23.1280.707" timestamp="1609851678787" />
+    <state x="34" y="23" key="new project wizard" timestamp="1608902247715">
+      <screen x="0" y="23" width="1280" height="707" />
+    </state>
+    <state x="34" y="23" key="new project wizard/0.23.1280.707@0.23.1280.707" timestamp="1608902247715" />
+    <state x="305" y="51" width="670" height="681" key="search.everywhere.popup" timestamp="1612878364431">
+      <screen x="0" y="23" width="1280" height="709" />
+    </state>
+    <state x="305" y="51" width="670" height="679" key="search.everywhere.popup/0.23.1280.707@0.23.1280.707" timestamp="1612535908701" />
+    <state x="305" y="51" width="670" height="681" key="search.everywhere.popup/0.23.1280.709@0.23.1280.709" timestamp="1612878364431" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/lite_shop$AdminApplication.ic" NAME="AdminApplication Coverage Results" MODIFIED="1595768022782" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+      <FILTER>com.ohayou.liteshop.*</FILTER>
+    </SUITE>
+  </component>
+</project>

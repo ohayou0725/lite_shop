@@ -3,6 +3,7 @@ package com.ohayou.liteshop.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.ohayou.liteshop.async.event.PriceChangeEvent;
 import com.ohayou.liteshop.constant.GoodsStatus;
 import com.ohayou.liteshop.dto.GoodsFormDto;
 import com.ohayou.liteshop.dto.GoodsSkuDto;
@@ -15,11 +16,8 @@ import com.ohayou.liteshop.entity.MallGoodsSpecValue;
 import com.ohayou.liteshop.entity.MallGoodsSpu;
 import com.ohayou.liteshop.exception.GlobalException;
 import com.ohayou.liteshop.response.ErrorCodeMsg;
-import com.ohayou.liteshop.service.MallGoodsSkuService;
+import com.ohayou.liteshop.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ohayou.liteshop.service.MallGoodsSpecService;
-import com.ohayou.liteshop.service.MallGoodsSpecValueService;
-import com.ohayou.liteshop.service.MallGoodsSpuService;
 import com.ohayou.liteshop.utils.GoodsSpecUtil;
 import com.ohayou.liteshop.vo.SkuVo;
 import com.ohayou.liteshop.vo.SpecValueVo;
@@ -27,6 +25,8 @@ import com.ohayou.liteshop.vo.SpecVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,8 +53,8 @@ public class MallGoodsSkuServiceImpl extends ServiceImpl<MallGoodsSkuMapper, Mal
     @Autowired
     MallGoodsSpecValueService specValueService;
 
-
-
+    @Autowired
+    MallCartItemService cartItemService;
 
     /**
      * 根据商品ID查询所有sku规格
@@ -335,7 +335,14 @@ public class MallGoodsSkuServiceImpl extends ServiceImpl<MallGoodsSkuMapper, Mal
         MallGoodsSku newSku = new MallGoodsSku();
         newSku.setId(goodsSkuDto.getSkuId());
         BeanUtils.copyProperties(goodsSkuDto,newSku);
-        return this.updateById(newSku);
+        boolean update = this.updateById(newSku);
+        if (update) {
+            //如果修改了价格， 购物车商品同步更新价格
+            if (!newSku.getPrice().equals(sku.getPrice())) {
+                return cartItemService.updateItemPrice(skuId,newSku.getPrice());
+            }
+        }
+        return update;
     }
 
     /**

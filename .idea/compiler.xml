@@ -8,11 +8,19 @@
         <outputRelativeToContentRoot value="true" />
         <module name="liteshop-common" />
         <module name="liteshop-core" />
-        <module name="liteshop-db" />
-        <module name="liteshop-admin-api" />
         <module name="liteshop-web-api" />
+        <module name="liteshop-admin-api" />
+        <module name="liteshop-db" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="lite_shop" target="1.8" />
+      <module name="liteshop-admin-api" target="1.8" />
+      <module name="liteshop-common" target="1.8" />
+      <module name="liteshop-core" target="1.8" />
+      <module name="liteshop-db" target="1.8" />
+      <module name="liteshop-web-api" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">

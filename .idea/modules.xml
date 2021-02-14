@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/lite_shop.iml" filepath="$PROJECT_DIR$/.idea/lite_shop.iml" />
+      <module fileurl="file://$PROJECT_DIR$/liteshop-admin-api/liteshop-admin-api.iml" filepath="$PROJECT_DIR$/liteshop-admin-api/liteshop-admin-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/liteshop-common/liteshop-common.iml" filepath="$PROJECT_DIR$/liteshop-common/liteshop-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/liteshop-core/liteshop-core.iml" filepath="$PROJECT_DIR$/liteshop-core/liteshop-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/liteshop-db/liteshop-db.iml" filepath="$PROJECT_DIR$/liteshop-db/liteshop-db.iml" />
+      <module fileurl="file://$PROJECT_DIR$/liteshop-web-api/liteshop-web-api.iml" filepath="$PROJECT_DIR$/liteshop-web-api/liteshop-web-api.iml" />
+    </modules>
+  </component>
+</project>

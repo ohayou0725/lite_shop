@@ -2,6 +2,7 @@ package com.ohayou.liteshop.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.ohayou.liteshop.async.event.UserRegisterEvent;
 import com.ohayou.liteshop.cache.RedisService;
 import com.ohayou.liteshop.cache.cachekey.CaptchaKey;
 import com.ohayou.liteshop.cache.cachekey.MemberUserTokenKey;
@@ -22,6 +23,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +43,7 @@ import java.util.stream.Collectors;
  * @since 2020-07-15
  */
 @Service
-public class MemUserServiceImpl extends ServiceImpl<MemUserMapper, MemUser> implements MemUserService {
+public class MemUserServiceImpl extends ServiceImpl<MemUserMapper, MemUser> implements MemUserService, ApplicationEventPublisherAware {
 
     @Autowired
     RedisService redisService;
@@ -51,8 +54,11 @@ public class MemUserServiceImpl extends ServiceImpl<MemUserMapper, MemUser> impl
     @Autowired
     MemUserService memUserService;
 
+
     @Value("${portal.sessionExpireTime}")
     private long sessionExpireTime;
+
+    private ApplicationEventPublisher applicationEventPublisher;
 
     /**
      * 根据条件获取用户列表
@@ -214,7 +220,11 @@ public class MemUserServiceImpl extends ServiceImpl<MemUserMapper, MemUser> impl
         memUser.setStatus(1);
         memUser.setRank(MemberRank.GENERAL_USER.getRank());
         memUser.setNickname(registerFormDto.getMobile());
-        return this.save(memUser);
+        boolean save = this.save(memUser);
+        if (save) {
+            applicationEventPublisher.publishEvent(new UserRegisterEvent(this,memUser.getId()));
+        }
+        return save;
     }
 
     private boolean verifyCaptcha(String captcha, String captchaId) {
@@ -230,6 +240,12 @@ public class MemUserServiceImpl extends ServiceImpl<MemUserMapper, MemUser> impl
         String result = (String)redisService.get(captchaKey.getPrefix());
         return LoginCaptchaUtil.verify(result,captcha);
     }
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.applicationEventPublisher = applicationEventPublisher;
+    }
+
 
 }
 

@@ -7,9 +7,10 @@
         <id column="id" property="id" />
         <result column="cart_id" property="cartId" />
         <result column="goods_id" property="goodsId" />
+        <result column="sku_id" property="skuId" />
         <result column="goods_name" property="goodsName" />
         <result column="spec_sn" property="specSn" />
-        <result column="reservePrice" property="price" />
+        <result column="price" property="price" />
         <result column="number" property="number" />
         <result column="checked" property="checked" />
         <result column="goods_img" property="goodsImg" />
@@ -18,9 +19,19 @@
         <result column="deleted" property="deleted" />
     </resultMap>
 
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, cart_id, goods_id, goods_name, spec_sn, reservePrice, number, checked, goods_img, create_time, update_time, deleted
+        ci.id, ci.cart_id,ci.goods_id, ci.sku_id,ci.goods_name, ci.spec_sn, ci.price, ci.number, ci.checked, ci.goods_img, ci.create_time, ci.update_time, ci.deleted
     </sql>
+    <select id="listByUser" resultType="com.ohayou.liteshop.entity.MallCartItem">
+        select
+        <include refid="Base_Column_List"></include>
+         from mall_cart_item ci
+            join mall_cart c  on c.id = ci.cart_id
+            where c.user_id = #{userId}
+            and ci.deleted = 0
+
+    </select>
 
 </mapper>

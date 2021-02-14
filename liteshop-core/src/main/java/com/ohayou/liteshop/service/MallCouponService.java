@@ -1,6 +1,7 @@
 package com.ohayou.liteshop.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.ohayou.liteshop.async.event.UserRegisterEvent;
 import com.ohayou.liteshop.dto.CouponDetailDto;
 import com.ohayou.liteshop.dto.CouponDto;
 import com.ohayou.liteshop.entity.MallCoupon;
@@ -35,4 +36,5 @@ public interface MallCouponService extends IService<MallCoupon> {
     Boolean receive(Long couponId, Long id);
 
     List<Long> hasReceived(List<Long> coupons, Long id);
+
 }

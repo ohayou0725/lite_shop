@@ -84,6 +84,9 @@ public enum ErrorCodeMsg {
     GOODS_HAS_COLLECT(400619,"该商品已收藏"),
     GOODS_COLLECT_ERROR(400620,"商品收藏失败"),
     REMOVE_COLLECT_ERROR(400621,"取消收藏失败"),
+    GOODS_SPEC_NOT_EXIST(400622,"没有此规格商品"),
+    GOODS_INVENTORY_SHORTAGE(400623,"商品库存不足"),
+
 
     COMMENT_NOT_FOUND(400701,"没有此评论，或该评论已删除"),
 
@@ -127,6 +130,13 @@ public enum ErrorCodeMsg {
     ADDRESS_NOT_FOUND(401109,"地址不存在"),
     UPDATE_ADDRESS_ERROR(401110,"用户更新收货地址失败"),
     DELETE_ADDRESS_ERROR(401111,"用户删除收货地址失败"),
+
+    CART_ADD_ERROR(401210,"购物车添加商品失败"),
+    CART_NO_GOODS(401211,"该商品还未添加购物车"),
+    CART_REMOVE_ITEM_ERROR(401212,"购物车删除商品失败"),
+    CHECKED_FAIL(401213,"选择商品失败"),
+    CART_CHANGE_NUM_ERROR(401214,"更改购物车商品数量失败"),
+    GOODS_HAS_IN_CART(401215,"购物车里已有该商品")
 
     ;
 

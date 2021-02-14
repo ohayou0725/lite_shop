@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.ohayou.liteshop.async.event.GetGoodsDetailEvent;
 import com.ohayou.liteshop.cache.RedisService;
 import com.ohayou.liteshop.cache.cachekey.HotGoodsVoListKey;
 import com.ohayou.liteshop.constant.CouponType;
@@ -13,6 +14,7 @@ import com.ohayou.liteshop.entity.*;
 import com.ohayou.liteshop.dao.MallGoodsSpuMapper;
 import com.ohayou.liteshop.exception.GlobalException;
 import com.ohayou.liteshop.response.ErrorCodeMsg;
+import com.ohayou.liteshop.security.MemberUserDetails;
 import com.ohayou.liteshop.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ohayou.liteshop.task.*;
@@ -23,6 +25,9 @@ import com.ohayou.liteshop.vo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,7 +44,7 @@ import java.util.stream.Collectors;
  * @since 2020-07-15
  */
 @Service
-public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, MallGoodsSpu> implements MallGoodsSpuService {
+public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, MallGoodsSpu> implements MallGoodsSpuService , ApplicationEventPublisherAware {
 
     @Autowired
     MallBrandService mallBrandService;
@@ -94,6 +99,8 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
 
     @Autowired
     MemCollectService memCollectService;
+
+    private ApplicationEventPublisher applicationEventPublisher;
 
 
     /**
@@ -961,6 +968,13 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
         goodsDetailVo.setSkuVo(skuVoFutureTask.get(1,TimeUnit.SECONDS));
         goodsDetailVo.setAttrList(goodsAttrVoFutureTask.get(1,TimeUnit.SECONDS));
         goodsDetailVo.setCoupons(couponVoFutureTask.get(1,TimeUnit.SECONDS));
+
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof MemberUserDetails) {
+            MemberUserDetails userDetails = (MemberUserDetails)principal;
+            this.applicationEventPublisher
+                    .publishEvent(new GetGoodsDetailEvent(this,goodsDetailVo.getGoodsInfo().getGoodsId(),userDetails.getId()));
+        }
         return goodsDetailVo;
     }
 
@@ -1003,4 +1017,8 @@ public class MallGoodsSpuServiceImpl extends ServiceImpl<MallGoodsSpuMapper, Mal
     }
 
 
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.applicationEventPublisher = applicationEventPublisher;
+    }
 }

@@ -38,6 +38,10 @@ public class MallCartItem implements Serializable {
     private Long goodsId;
 
     /**
+     * skuId
+     */
+    private Long skuId;
+    /**
      * 商品名称
      */
     private String goodsName;
@@ -159,6 +163,14 @@ public class MallCartItem implements Serializable {
 
     public void setDeleted(Integer deleted) {
         this.deleted = deleted;
+    }
+
+    public Long getSkuId() {
+        return skuId;
+    }
+
+    public void setSkuId(Long skuId) {
+        this.skuId = skuId;
     }
 
     @Override

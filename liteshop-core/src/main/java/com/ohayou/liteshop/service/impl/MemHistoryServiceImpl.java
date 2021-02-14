@@ -2,6 +2,7 @@ package com.ohayou.liteshop.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.ohayou.liteshop.async.event.GetGoodsDetailEvent;
 import com.ohayou.liteshop.dto.MemHistoryDto;
 import com.ohayou.liteshop.entity.MallGoodsSpu;
 import com.ohayou.liteshop.entity.MemHistory;
@@ -13,9 +14,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ohayou.liteshop.service.MemUserService;
 import com.ohayou.liteshop.utils.PageUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,7 +33,7 @@ import java.util.stream.Collectors;
  * @since 2020-07-15
  */
 @Service
-public class MemHistoryServiceImpl extends ServiceImpl<MemHistoryMapper, MemHistory> implements MemHistoryService {
+public class MemHistoryServiceImpl extends ServiceImpl<MemHistoryMapper, MemHistory> implements MemHistoryService , ApplicationListener<GetGoodsDetailEvent> {
 
     @Autowired
     MemUserService memUserService;
@@ -80,5 +84,32 @@ public class MemHistoryServiceImpl extends ServiceImpl<MemHistoryMapper, MemHist
         return pageUtils;
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean addHistory(Long goodsId, Long userId) {
+        if (null == this.mallGoodsSpuService.getById(goodsId) || null == this.memUserService.getById(userId)) {
+            return false;
+        }
+        MemHistory one = this.getOne(new LambdaQueryWrapper<MemHistory>().eq(MemHistory::getSpuId, goodsId).eq(MemHistory::getUserId, userId));
+        boolean remove = true;
+        if (null != one) {
+            remove = this.removeById(one.getId());
+        }
+        if (remove) {
+            MemHistory memHistory = new MemHistory();
+            memHistory.setUserId(userId);
+            memHistory.setSpuId(goodsId);
+            return this.save(memHistory);
+        }
+        return false;
+    }
 
+
+    @Override
+    @Async
+    public void onApplicationEvent(GetGoodsDetailEvent getGoodsDetailEvent) {
+        Long goodsId = getGoodsDetailEvent.getGoodsId();
+        Long userId = getGoodsDetailEvent.getUserId();
+        this.addHistory(goodsId,userId);
+    }
 }

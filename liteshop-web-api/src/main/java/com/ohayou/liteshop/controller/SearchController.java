@@ -11,6 +11,7 @@ import com.ohayou.liteshop.utils.PageQuery;
 import com.ohayou.liteshop.utils.PageUtils;
 import com.ohayou.liteshop.vo.HotGoodsVo;
 import com.ohayou.liteshop.vo.HotSearchKeyWordsVo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,13 +47,13 @@ public class SearchController {
 
     @ApiDesc("关键字搜索商品")
     @RequestMapping("/result")
-    public Result searchGoodsList(@RequestParam int size, @RequestParam int page
+    public Result searchGoodsList(@RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "1") int page
             ,@RequestParam("key") String key) {
 //        PageQuery<MallGoodsSpu> pageQuery = new PageQuery<>();
 //        IPage<MallGoodsSpu> page = pageQuery.getPage(pageParam);
 //        PageUtils pageUtils = searchService.searchGoodsListByKeyWords(page,key);
         List<HotGoodsVo> hotGoodsVos = searchService.searchGoodsByKeyWords(key, page, size);
-        if (CollectionUtil.isNotEmpty(hotGoodsVos)){
+        if (CollectionUtil.isNotEmpty(hotGoodsVos) && StringUtils.isNotBlank(key)){
             //将搜索关键词存入到redis，统计热搜词频
             searchService.saveHotSearchKeyCount(key);
         }

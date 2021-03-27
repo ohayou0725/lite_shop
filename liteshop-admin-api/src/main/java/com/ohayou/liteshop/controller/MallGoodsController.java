@@ -48,7 +48,7 @@ public class MallGoodsController {
      */
     @ApiDesc("查询商品列表")
     @GetMapping("/list")
-    public Result goodsSpuList(MallGoodsSpuDto mallGoodsSpuDto,Map<String,Object> pageParam) {
+    public Result goodsSpuList(MallGoodsSpuDto mallGoodsSpuDto, @RequestParam Map<String,Object> pageParam) {
         PageQuery<MallGoodsSpu> goodsSpuPageQuery = new PageQuery<>();
         IPage<MallGoodsSpu> page = goodsSpuPageQuery.getPage(pageParam, "create_time", false);
         PageUtils result = goodsSpuService.getPage(mallGoodsSpuDto,page);

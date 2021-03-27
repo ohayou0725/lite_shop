@@ -18,4 +18,7 @@ import java.util.List;
 public interface MallCouponMapper extends BaseMapper<MallCoupon> {
 
     List<MallCoupon> getCouponByGoods(MallGoodsSpu goodsSpu);
+
+    List<MallCoupon> listByUserId(Long userId);
+
 }

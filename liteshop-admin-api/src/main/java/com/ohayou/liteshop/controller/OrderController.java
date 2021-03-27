@@ -1,5 +1,6 @@
 package com.ohayou.liteshop.controller;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ohayou.liteshop.aop.ApiDesc;
 import com.ohayou.liteshop.dto.AfterSaleDetailDto;
@@ -15,9 +16,11 @@ import com.ohayou.liteshop.service.MallOrderService;
 import com.ohayou.liteshop.utils.PageQuery;
 import com.ohayou.liteshop.utils.PageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,6 +36,7 @@ public class OrderController {
     MallOrderService orderService;
 
     @Autowired
+    @Qualifier("expressTrackServiceImpl")
     ExpressTrackService expressTrackService;
 
 
@@ -44,7 +48,7 @@ public class OrderController {
      */
     @ApiDesc("查询订单列表")
     @GetMapping("/list")
-    public Result orderList(OrderDto orderDto, Map<String, Object> queryParam) {
+    public Result orderList(OrderDto orderDto,@RequestParam Map<String, Object> queryParam) {
         PageQuery<MallOrder> pageQuery = new PageQuery<>();
         IPage<MallOrder> page = pageQuery.getPage(queryParam);
 
@@ -105,12 +109,11 @@ public class OrderController {
         if (null == orderId || orderId < 1) {
             throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
         }
-        Map<String,Object> result = orderService.queryExpressTrack(orderId);
-        boolean isSuccess = (Boolean)result.get("Success");
-        if (isSuccess) {
-            return Result.success("data",result);
+        List<Map<String, String>> maps = orderService.queryExpressTrack(orderId);
+        if (CollectionUtil.isNotEmpty(maps)) {
+            return Result.success("data",maps);
         }
-        return Result.error(Result.SUCCESS_CODE,String.valueOf(result.get("Reason")));
+        return Result.error(ErrorCodeMsg.TRACK_NOT_EXIST);
     }
 
     @ApiDesc("查询申请售后列表")
@@ -153,4 +156,5 @@ public class OrderController {
         boolean result = orderService.refuseOrder(orderId);
         return result ? Result.success() : Result.error(ErrorCodeMsg.AUDIT_ERROR);
     }
+
 }

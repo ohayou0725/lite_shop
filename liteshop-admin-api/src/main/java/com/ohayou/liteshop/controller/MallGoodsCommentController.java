@@ -12,10 +12,7 @@ import com.ohayou.liteshop.service.MallGoodsCommentService;
 import com.ohayou.liteshop.utils.PageQuery;
 import com.ohayou.liteshop.utils.PageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -32,7 +29,7 @@ public class MallGoodsCommentController {
 
     @ApiDesc("查询商品评论")
     @GetMapping("/list")
-    public Result commentList(GoodsCommentDto commentDto, Map<String,Object> pageParam) {
+    public Result commentList(GoodsCommentDto commentDto, @RequestParam Map<String,Object> pageParam) {
         PageQuery<MallGoodsComment> commentPageQuery = new PageQuery<>();
         IPage<MallGoodsComment> page = commentPageQuery.getPage(pageParam);
         PageUtils pageUtils = mallGoodsCommentService.getPage(commentDto,page);

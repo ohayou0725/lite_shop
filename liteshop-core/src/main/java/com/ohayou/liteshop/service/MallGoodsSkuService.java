@@ -3,6 +3,7 @@ package com.ohayou.liteshop.service;
 import com.ohayou.liteshop.dto.GoodsSkuDto;
 import com.ohayou.liteshop.entity.MallGoodsSku;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ohayou.liteshop.vo.OrderConfirmVo;
 import com.ohayou.liteshop.vo.SkuVo;
 
 import java.util.List;
@@ -32,4 +33,8 @@ public interface MallGoodsSkuService extends IService<MallGoodsSku> {
     Map<String,String> getSpecAndValue(String specSn);
 
     SkuVo getGoodsSkuVo(Long goodsId);
+
+    void synchronizeStock(OrderConfirmVo orderConfirmVo) throws Exception;
+
+    boolean decreaseStock(Long skuId, int stock);
 }

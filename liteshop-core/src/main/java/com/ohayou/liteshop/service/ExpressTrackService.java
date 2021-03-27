@@ -1,6 +1,6 @@
 package com.ohayou.liteshop.service;
 
-import java.util.Map;
+import com.ohayou.liteshop.dto.ExpressResultDTO;
 
 /**
  * @author liyan
@@ -9,5 +9,5 @@ import java.util.Map;
 //快读查询接口
 public interface ExpressTrackService {
 
-    Map<String,Object> getTrack(String expCode, String expNo) throws Exception;
+    ExpressResultDTO getTrack(String expCode, String expNo,String mobile) throws Exception;
 }

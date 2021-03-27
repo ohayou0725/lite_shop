@@ -102,12 +102,12 @@ public class MallUserCoupon implements Serializable {
     public void setOrderId(Long orderId) {
         this.orderId = orderId;
     }
-    public LocalDateTime getCreteTime() {
+    public LocalDateTime getCreateTime() {
         return createTime;
     }
 
-    public void setCreteTime(LocalDateTime creteTime) {
-        this.createTime = creteTime;
+    public void setCreateTime(LocalDateTime createTime) {
+        this.createTime = createTime;
     }
     public LocalDateTime getUpdateTime() {
         return updateTime;

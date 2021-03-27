@@ -7,11 +7,11 @@ package com.ohayou.liteshop.constant;
  */
 
 public enum ShipChannelCode {
-    SF("顺丰速运","SF"),
+    SF("顺丰速运","SFEXPRESS"),
     YTO("圆通快递","YTO"),
     TTK("天天快读","TTK"),
     ZTO("中通快递","ZTO"),
-    YD("韵达快递","YD");
+    YD("韵达快递","YUNDA");
 
 
     private String courier;

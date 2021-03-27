@@ -9,7 +9,7 @@ public enum  OrderStatus {
     PAID("已付款",1),
     SHIPPED("已发货",2),
     COMPLETED("已完成",3),
-    CLOSED("已关闭",4)
+    CLOSED("已关闭",4),
     ;
 
     OrderStatus(String description, Integer status) {

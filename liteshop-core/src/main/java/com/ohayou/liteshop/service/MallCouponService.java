@@ -1,13 +1,14 @@
 package com.ohayou.liteshop.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.ohayou.liteshop.async.event.UserRegisterEvent;
 import com.ohayou.liteshop.dto.CouponDetailDto;
 import com.ohayou.liteshop.dto.CouponDto;
 import com.ohayou.liteshop.entity.MallCoupon;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ohayou.liteshop.entity.MallGoodsSpu;
 import com.ohayou.liteshop.utils.PageUtils;
 import com.ohayou.liteshop.vo.CouponVo;
+import com.ohayou.liteshop.vo.UserCouponVo;
 
 import java.util.List;
 
@@ -36,5 +37,12 @@ public interface MallCouponService extends IService<MallCoupon> {
     Boolean receive(Long couponId, Long id);
 
     List<Long> hasReceived(List<Long> coupons, Long id);
+
+    List<UserCouponVo> getCouponByUserId(Long userId);
+
+    List<MallCoupon> listByUserId(Long userId);
+
+    List<UserCouponVo> getApplicableCoupon(List<UserCouponVo> coupons, MallGoodsSpu spu);
+
 
 }

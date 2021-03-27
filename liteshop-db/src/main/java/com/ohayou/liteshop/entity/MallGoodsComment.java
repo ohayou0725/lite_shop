@@ -32,6 +32,11 @@ public class MallGoodsComment implements Serializable {
     private Long userId;
 
     /**
+     * 订单Id
+     */
+    private Long orderId;
+
+    /**
      * 商品ID
      */
     private Long goodsId;
@@ -153,6 +158,14 @@ public class MallGoodsComment implements Serializable {
 
     public void setDeleted(Integer deleted) {
         this.deleted = deleted;
+    }
+
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
     }
 
     @Override

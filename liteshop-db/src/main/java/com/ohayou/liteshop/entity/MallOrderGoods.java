@@ -33,6 +33,11 @@ public class MallOrderGoods implements Serializable {
     private Long orderId;
 
     /**
+     * skuId
+     */
+    private Long SkuId;
+
+    /**
      * 商品编号
      */
     private String goodsSn;
@@ -199,6 +204,14 @@ public class MallOrderGoods implements Serializable {
 
     public void setSubtotal(BigDecimal subtotal) {
         this.subtotal = subtotal;
+    }
+
+    public Long getSkuId() {
+        return SkuId;
+    }
+
+    public void setSkuId(Long skuId) {
+        SkuId = skuId;
     }
 
     @Override

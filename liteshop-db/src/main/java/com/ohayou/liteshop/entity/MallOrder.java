@@ -100,7 +100,7 @@ public class MallOrder implements Serializable {
     /**
      * 支付id
      */
-    private Long payId;
+    private String payId;
 
     /**
      * 支付时间
@@ -271,11 +271,11 @@ public class MallOrder implements Serializable {
     public void setOrderPrice(BigDecimal orderPrice) {
         this.orderPrice = orderPrice;
     }
-    public Long getPayId() {
+    public String getPayId() {
         return payId;
     }
 
-    public void setPayId(Long payId) {
+    public void setPayId(String payId) {
         this.payId = payId;
     }
     public LocalDateTime getPayTime() {

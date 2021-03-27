@@ -1,11 +1,15 @@
 package com.ohayou.liteshop.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ohayou.liteshop.dto.*;
 import com.ohayou.liteshop.entity.MallOrder;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ohayou.liteshop.payment.wechat.NotifyDTO;
 import com.ohayou.liteshop.utils.PageUtils;
+import com.ohayou.liteshop.vo.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +32,7 @@ public interface MallOrderService extends IService<MallOrder> {
 
     boolean deleteOrder(Long orderId);
 
-    Map<String, Object> queryExpressTrack(Long orderId);
+    List<Map<String, String>> queryExpressTrack(Long orderId);
 
     PageUtils afterSalePage(OrderAfterSaleDto afterSaleDto, IPage<MallOrder> page);
 
@@ -39,4 +43,32 @@ public interface MallOrderService extends IService<MallOrder> {
     boolean refuseOrder(Long orderId);
 
     List<OrderStatisticsDto> getOrderStatistics(LocalDate startTime, LocalDate endTime);
+
+    OrderConfirmVo getOrderConfirm(List<OrderConfirmItemVo> orderConfirmItems,Long userId);
+
+    BigDecimal useCoupon(String orderSn, Long couponId, Long id);
+
+    String settleOrder(String orderSn, Long addressId, Long userId);
+
+    boolean cancelOrder(String orderSn);
+
+    OrderDetailVo getOrderDetailByOrderSn(String orderSn, Long userId);
+
+    Long getRemainingTime(String orderSn, Long userId);
+
+    String doPay(String orderSn, Integer payType, Long id);
+
+    boolean doPayed(NotifyDTO notifyDTO);
+
+    boolean cancelOrder(String orderSn, Long id);
+
+    List<OrderListItemVo> queryOrderList(int page, int size, int status,Long userId);
+
+    boolean deleteByMember(Long orderId, Long id);
+
+    OrderCountVo getOrderCount(Long id);
+
+    ShipTraceVo getOrderTrace(Long orderId, Long userId);
 }
+
+

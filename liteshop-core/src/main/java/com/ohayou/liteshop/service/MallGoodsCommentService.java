@@ -27,4 +27,5 @@ public interface MallGoodsCommentService extends IService<MallGoodsComment> {
     List<MallGoodsComment> getCommentByGoodsId(Long goodsId);
 
     CommentVo getCommentVo(Long goodsId);
+
 }

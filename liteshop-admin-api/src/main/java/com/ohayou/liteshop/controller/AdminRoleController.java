@@ -60,7 +60,7 @@ public class AdminRoleController {
 
     @ApiDesc("条件查询角色")
     @GetMapping("/list")
-    public Result list(AdminRoleDto adminRoleDto, Map<String,Object> queryParam) {
+    public Result list(AdminRoleDto adminRoleDto, @RequestParam Map<String,Object> queryParam) {
         PageQuery<AdminRole> pageQuery = new PageQuery<>();
         IPage<AdminRole> page = pageQuery.getPage(queryParam);
         PageUtils pageUtils = roleService.queryPage(adminRoleDto,page);

@@ -1,5 +1,8 @@
 package com.ohayou.liteshop.security;
 
+import com.ohayou.liteshop.exception.GlobalException;
+import com.ohayou.liteshop.exception.UnAuthenticationException;
+import com.ohayou.liteshop.response.ErrorCodeMsg;
 import org.springframework.security.core.Authentication;
 
 /**
@@ -10,9 +13,20 @@ public class SecurityUtil {
 
     public static AdminUserDetails getAdminUser(Authentication authentication) {
         Object principal = authentication.getPrincipal();
-        if (principal instanceof AdminUserDetails) {
+        try {
             return (AdminUserDetails) principal;
+        }catch (Exception e) {
+            throw new UnAuthenticationException(ErrorCodeMsg.TOKEN_EXPIRED);
         }
-        return null;
+    }
+
+    public static MemberUserDetails getMemberUser(Authentication authentication) {
+        Object principal = authentication.getPrincipal();
+
+        try {
+            return (MemberUserDetails) principal;
+        }catch (Exception e) {
+            throw new UnAuthenticationException(ErrorCodeMsg.TOKEN_EXPIRED);
+        }
     }
 }

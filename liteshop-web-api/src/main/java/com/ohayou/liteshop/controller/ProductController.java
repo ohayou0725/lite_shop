@@ -1,20 +1,19 @@
 package com.ohayou.liteshop.controller;
 
+import cn.hutool.log.Log;
 import com.ohayou.liteshop.aop.ApiDesc;
+
 import com.ohayou.liteshop.entity.SysFreightConfig;
 import com.ohayou.liteshop.exception.GlobalException;
 import com.ohayou.liteshop.response.ErrorCodeMsg;
 import com.ohayou.liteshop.response.Result;
 import com.ohayou.liteshop.security.MemberUserDetails;
-import com.ohayou.liteshop.service.MallGoodsSpuService;
-import com.ohayou.liteshop.service.MallTopicService;
-import com.ohayou.liteshop.service.MemCollectService;
-import com.ohayou.liteshop.service.SysFreightConfigService;
+import com.ohayou.liteshop.service.*;
 import com.ohayou.liteshop.vo.GoodsDetailVo;
 import com.ohayou.liteshop.vo.HotGoodsVo;
 import com.ohayou.liteshop.vo.TopicGoodsListVo;
-import com.qiniu.util.Auth;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,6 +40,12 @@ public class ProductController {
 
     @Autowired
     MemCollectService memCollectService;
+
+    @Autowired
+    MallGoodsSkuService skuService;
+
+    @Autowired
+    StringRedisTemplate stringRedisTemplate;
 
     @ApiDesc("查询主题下商品")
     @GetMapping("/list")

@@ -35,6 +35,9 @@
         <qiniu.version>[7.2.0, 7.2.99]</qiniu.version>
         <screw.version>1.0.3</screw.version>
         <elasticsearch.version>7.6.2</elasticsearch.version>
+        <jsoup.version>1.12.1</jsoup.version>
+        <zxing.version>3.3.3</zxing.version>
+        <redisson.version>3.11.1</redisson.version>
     </properties>
 
     <dependencyManagement>

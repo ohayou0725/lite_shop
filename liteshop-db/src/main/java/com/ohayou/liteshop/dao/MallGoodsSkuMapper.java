@@ -2,6 +2,7 @@ package com.ohayou.liteshop.dao;
 
 import com.ohayou.liteshop.entity.MallGoodsSku;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>
@@ -13,4 +14,5 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface MallGoodsSkuMapper extends BaseMapper<MallGoodsSku> {
 
+    int updateStock(@Param("skuId") Long skuId, @Param("stock") int stock);
 }

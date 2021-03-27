@@ -13,6 +13,10 @@ import org.springframework.validation.BindException;
 public enum ErrorCodeMsg {
 
     SERVER_ERROR(99999,"系统异常"),
+    GET_TOKEN_ERROR(88888,"获取token失败"),
+    REPEAT_REQUEST(77777,"请勿重复请求"),
+    THREE_PARTY_PAYMENT_FAILED(66666,"调用第三方支付失败"),
+    PAYMENT_ERROR(55555,"支付失败，请稍后再试"),
     UNAUTHENTICATED_ERROR(400201,"认证失败，用户名或密码有误"),
     USER_NOT_ENABLED_ERROR(400202,"该账号不可用,请联系管理员"),
     USER_LOCKED(400205,"该账号已被锁定,请联系管理员"),
@@ -97,6 +101,10 @@ public enum ErrorCodeMsg {
     QUERY_TRACK_ERROR(400805,"物流查询发生未知错误"),
     ORDER_NOT_APPLY_AFTER_SALE(400806,"该订单未申请售后服务"),
     AUDIT_ERROR(400807,"审核失败"),
+    CONFIRM_ORDER_NOT_EXIST(400808,"确认订单不存在"),
+    SETTLE_ORDER_ERROR(400809,"确定订单失败，请刷新后重新提交"),
+    TRACK_NOT_EXIST(400810,"还未有订单轨迹信息"),
+
 
 
     TOPIC_NOT_EXIST(400901,"该专题不存在"),
@@ -117,7 +125,8 @@ public enum ErrorCodeMsg {
     COUPON_DELETE_ERROR(401005,"删除优惠券失败"),
     COUPON_RECEIVE_ERROR(401006,"优惠券领取失败"),
     COUPON_EXPIRED(401007,"优惠券已过期"),
-    COUPON_RECEIVE_OVER_LIMIT(101008,"优惠券领取数量超限"),
+    COUPON_RECEIVE_OVER_LIMIT(401008,"优惠券领取数量超限"),
+    COUPON_INSUFFICIENT_QUANTITY(401009,"优惠券数量不足"),
 
     CAPTCHA_EXPIRED(401101,"验证码已过期"),
     CAPTCHA_ERROR(401102,"验证码有误"),

@@ -69,9 +69,10 @@ public class MemHistoryServiceImpl extends ServiceImpl<MemHistoryMapper, MemHist
                     .map(memHistory -> {
                         MemHistoryDto memHistoryDto = new MemHistoryDto();
                         memHistoryDto.setBrowserTime(memHistory.getCreateTime());
-                        MemUser user = memUserService.getById(memHistory.getId());
+                        MemUser user = memUserService.getById(memHistory.getUserId());
                         if (null != user) {
                             memHistoryDto.setMobile(user.getMobile());
+
                         }
                         MallGoodsSpu spu = mallGoodsSpuService.getById(memHistory.getSpuId());
                         if (null != spu) {

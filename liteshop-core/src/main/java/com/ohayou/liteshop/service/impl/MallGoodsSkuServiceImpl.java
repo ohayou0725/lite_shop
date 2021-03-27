@@ -3,11 +3,11 @@ package com.ohayou.liteshop.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.ohayou.liteshop.async.event.PriceChangeEvent;
+import com.ohayou.liteshop.cache.RedisService;
+import com.ohayou.liteshop.cache.cachekey.GoodsStockKey;
 import com.ohayou.liteshop.constant.GoodsStatus;
 import com.ohayou.liteshop.dto.GoodsFormDto;
 import com.ohayou.liteshop.dto.GoodsSkuDto;
-import com.ohayou.liteshop.dto.MallGoodsSpecDto;
 import com.ohayou.liteshop.dto.SpecAndValueDto;
 import com.ohayou.liteshop.entity.MallGoodsSku;
 import com.ohayou.liteshop.dao.MallGoodsSkuMapper;
@@ -19,14 +19,10 @@ import com.ohayou.liteshop.response.ErrorCodeMsg;
 import com.ohayou.liteshop.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ohayou.liteshop.utils.GoodsSpecUtil;
-import com.ohayou.liteshop.vo.SkuVo;
-import com.ohayou.liteshop.vo.SpecValueVo;
-import com.ohayou.liteshop.vo.SpecVo;
+import com.ohayou.liteshop.vo.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,6 +51,9 @@ public class MallGoodsSkuServiceImpl extends ServiceImpl<MallGoodsSkuMapper, Mal
 
     @Autowired
     MallCartItemService cartItemService;
+
+    @Autowired
+    RedisService redisService;
 
     /**
      * 根据商品ID查询所有sku规格
@@ -201,6 +200,38 @@ public class MallGoodsSkuServiceImpl extends ServiceImpl<MallGoodsSkuMapper, Mal
                 }).collect(Collectors.toList());
         skuVo.setList(list);
         return skuVo;
+    }
+
+    /**
+     * 将redis缓存的库存同步到数据库
+     * @param orderConfirmVo
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void synchronizeStock(OrderConfirmVo orderConfirmVo) throws Exception {
+        List<OrderConfirmItemVo> orderList = orderConfirmVo.getOrderList();
+        orderList.forEach(orderConfirmItemVo -> {
+            Long skuId = orderConfirmItemVo.getSkuId();
+            GoodsStockKey goodsStockKey = new GoodsStockKey();
+            Object result = redisService.hget(goodsStockKey.getPrefix(), String.valueOf(skuId));
+            int currentStock = (Integer)result;
+            MallGoodsSku sku = this.getById(skuId);
+            sku.setStock(currentStock);
+            this.updateById(sku);
+        });
+    }
+
+    /**
+     * 通过乐观锁扣件商品库存
+     * @param skuId
+     * @param stock
+     * @return
+     */
+    @Override
+    public boolean decreaseStock(Long skuId, int stock) {
+        int result = this.baseMapper.updateStock(skuId,stock);
+        return result > 0;
     }
 
     /**

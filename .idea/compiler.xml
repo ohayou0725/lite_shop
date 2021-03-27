@@ -7,10 +7,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="liteshop-common" />
-        <module name="liteshop-core" />
         <module name="liteshop-web-api" />
-        <module name="liteshop-admin-api" />
+        <module name="liteshop-payment" />
+        <module name="liteshop-core" />
+        <module name="pay" />
         <module name="liteshop-db" />
+        <module name="liteshop-admin-api" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -19,7 +21,9 @@
       <module name="liteshop-common" target="1.8" />
       <module name="liteshop-core" target="1.8" />
       <module name="liteshop-db" target="1.8" />
+      <module name="liteshop-payment" target="1.8" />
       <module name="liteshop-web-api" target="1.8" />
+      <module name="pay" target="1.8" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
@@ -28,7 +32,9 @@
       <module name="liteshop-common" options="-parameters" />
       <module name="liteshop-core" options="-parameters" />
       <module name="liteshop-db" options="-parameters" />
+      <module name="liteshop-payment" options="-parameters" />
       <module name="liteshop-web-api" options="-parameters" />
+      <module name="pay" options="-parameters" />
     </option>
   </component>
 </project>

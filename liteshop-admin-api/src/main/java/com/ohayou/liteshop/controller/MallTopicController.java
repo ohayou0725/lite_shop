@@ -33,7 +33,7 @@ public class MallTopicController {
 
     @ApiDesc("查询主题列表")
     @GetMapping("/list")
-    public Result list(TopicDto topicDto, Map<String,Object> queryParam) {
+    public Result list(TopicDto topicDto,@RequestParam Map<String,Object> queryParam) {
         PageQuery<MallTopic> pageQuery = new PageQuery<>();
         IPage<MallTopic> page = pageQuery.getPage(queryParam);
         PageUtils pageUtils = topicService.queryPage(topicDto,page);

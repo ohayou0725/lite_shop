@@ -35,7 +35,7 @@ public class CouponController {
 
     @ApiDesc("查询优惠券列表")
     @GetMapping("/list")
-    public Result list(CouponDto couponDto,Map<String, Object> queryParam) {
+    public Result list(CouponDto couponDto,@RequestParam Map<String, Object> queryParam) {
         PageQuery<MallCoupon> pageQuery = new PageQuery<>();
         IPage<MallCoupon> page = pageQuery.getPage(queryParam);
         PageUtils pageUtils = couponService.getPage(page,couponDto);

@@ -42,7 +42,7 @@ public class MallBrandController {
 
     @ApiDesc("查询品牌列表")
     @GetMapping("/list")
-    public Result branList(MallBrandDto mallBrandDto, Map<String,Object> queryParams) {
+    public Result branList(MallBrandDto mallBrandDto, @RequestParam Map<String,Object> queryParams) {
         PageQuery<MallBrand> mallBrandPageQuery = new PageQuery<>();
         PageUtils pageUtils = brandService.queryPage(mallBrandDto,mallBrandPageQuery.getPage(queryParams,"create_time",true));
         return Result.success("page",pageUtils);

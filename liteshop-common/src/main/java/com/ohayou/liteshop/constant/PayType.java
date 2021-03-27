@@ -5,17 +5,23 @@ package com.ohayou.liteshop.constant;
  * @date 2020/9/21 下午10:35
  */
 public enum PayType {
-    WECHAT("微信支付",1),
-    ALIPAY("支付宝支付",2);
+    WECHAT("微信支付",1,"wxpay"),
+    ALIPAY("支付宝支付",2,"alipay"),
+    UNPAID("",0,"");
 
 
     private String description;
 
     private Integer type;
 
-    PayType(String description, Integer type) {
+    private String payMethod;
+
+
+
+    PayType(String description, Integer type, String payMethod) {
         this.description = description;
         this.type = type;
+        this.payMethod = payMethod;
     }
 
     public static PayType getPayType(int type) {
@@ -25,7 +31,7 @@ public enum PayType {
                 return value;
             }
         }
-        return null;
+        return PayType.UNPAID;
     }
 
     public String getDescription() {
@@ -42,5 +48,13 @@ public enum PayType {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public String getPayMethod() {
+        return payMethod;
+    }
+
+    public void setPayMethod(String payMethod) {
+        this.payMethod = payMethod;
     }
 }

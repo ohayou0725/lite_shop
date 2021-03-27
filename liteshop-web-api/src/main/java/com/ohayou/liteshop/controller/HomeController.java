@@ -2,9 +2,12 @@ package com.ohayou.liteshop.controller;
 
 import com.ohayou.liteshop.aop.ApiDesc;
 import com.ohayou.liteshop.cache.RedisService;
+import com.ohayou.liteshop.cache.cachekey.GoodsStockKey;
 import com.ohayou.liteshop.cache.cachekey.HotGoodsVoListKey;
+import com.ohayou.liteshop.entity.MallGoodsSku;
 import com.ohayou.liteshop.response.Result;
 import com.ohayou.liteshop.service.MallCategoryService;
+import com.ohayou.liteshop.service.MallGoodsSkuService;
 import com.ohayou.liteshop.service.MallGoodsSpuService;
 import com.ohayou.liteshop.service.MallTopicService;
 import com.ohayou.liteshop.vo.BannerVo;
@@ -18,7 +21,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author liyan
@@ -26,7 +31,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/home")
-public class HomeController implements InitializingBean {
+public class HomeController {
 
     @Autowired
     MallTopicService mallTopicService;
@@ -42,6 +47,10 @@ public class HomeController implements InitializingBean {
 
     @Autowired
     RedisService redisService;
+
+    @Autowired
+    MallGoodsSkuService skuService;
+
 
     @ApiDesc("获取首页轮播图")
     @GetMapping("/banner")
@@ -71,15 +80,23 @@ public class HomeController implements InitializingBean {
         return Result.success("list",list);
     }
 
-    /**
-     * 初始化controller时将热门推荐商品存入到redis
-     * @throws Exception
-     */
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        List<HotGoodsVo> hotGoodsVoList = goodsSpuService.getAllHotGoodsList();
-        HotGoodsVoListKey hotGoodsVoListKey = new HotGoodsVoListKey();
-        redisService.del(hotGoodsVoListKey.getPrefix());
-        redisService.lSet(hotGoodsVoListKey.getPrefix(),hotGoodsVoList.toArray());
-    }
+//    /**
+//     * 初始化controller时将热门推荐商品存入到redis
+//     * 并且将商品库存加载到redis
+//     * @throws Exception
+//     */
+//    @Override
+//    public void afterPropertiesSet() throws Exception {
+//        List<HotGoodsVo> hotGoodsVoList = goodsSpuService.getAllHotGoodsList();
+//        HotGoodsVoListKey hotGoodsVoListKey = new HotGoodsVoListKey();
+//        redisService.del(hotGoodsVoListKey.getPrefix());
+//        redisService.lSet(hotGoodsVoListKey.getPrefix(),hotGoodsVoList.toArray());
+//
+//        List<MallGoodsSku> list = skuService.list();
+//        Map<String,Object> stockMap = new HashMap<>();
+//        list.forEach(mallGoodsSku -> {
+//            stockMap.put(String.valueOf(mallGoodsSku.getId()),mallGoodsSku.getStock());
+//        });
+//        redisService.hmset(new GoodsStockKey().getPrefix(),stockMap);
+//    }
 }

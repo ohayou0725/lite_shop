@@ -9,6 +9,12 @@
         <option value="$PROJECT_DIR$/pom.xml" />
       </list>
     </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/liteshop-payment/pom.xml" />
+        <option value="$PROJECT_DIR$/payment/pom.xml" />
+      </set>
+    </option>
   </component>
   <component name="ProjectRootManager" version="2" project-jdk-name="1.8 (2)" project-jdk-type="JavaSDK" />
 </project>

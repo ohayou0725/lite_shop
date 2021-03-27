@@ -15,6 +15,16 @@ spring:
     password: 2633
     port: 6379
     host: 127.0.0.1
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
+    virtual-host: /lite_shop
+    listener:
+      simple:
+      #手动确认
+        acknowledge-mode: manual
 localDate:
   date-format: "yyyy-MM-dd"
 
@@ -26,6 +36,8 @@ mybatis-plus:
     db-config:
       logic-delete-value: 1
       logic-not-delete-value: 0
+
+
 
 
 logging:

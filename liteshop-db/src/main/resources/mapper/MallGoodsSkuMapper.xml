@@ -22,4 +22,12 @@
         id, goods_id, reservePrice, sales, stock,stock_warning_count, img, spec_sn, create_time, update_time, deleted
     </sql>
 
+    <update id="updateStock">
+        update mall_goods_sku
+            set stock = ${stock},update_time=now()
+            where id = ${skuId}
+            and stock - ${stock} >= 0
+
+    </update>
+
 </mapper>

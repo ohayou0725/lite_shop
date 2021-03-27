@@ -70,7 +70,7 @@ public class AdminUserController {
     }
     @ApiDesc("查询后台管理员列表")
     @GetMapping("/system/user/list")
-    public Result userList(AdminUserDto adminUserDto, Map<String,Object> queryParam) {
+    public Result userList(AdminUserDto adminUserDto,@RequestParam Map<String,Object> queryParam) {
         PageQuery<AdminUser> adminUserPageQuery = new PageQuery<>();
         IPage<AdminUser> page = adminUserPageQuery.getPage(queryParam);
         PageUtils pageUtils = adminUserService.queryPage(adminUserDto,page);

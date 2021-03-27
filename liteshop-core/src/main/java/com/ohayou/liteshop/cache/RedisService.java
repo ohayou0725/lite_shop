@@ -1,15 +1,16 @@
 package com.ohayou.liteshop.cache;
 
+import com.ohayou.liteshop.cache.cachekey.RequestTokenKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -21,6 +22,20 @@ import java.util.stream.Collectors;
 public class RedisService {
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+    public boolean validToken(String token, String value) {
+        //Lua脚本,来保证redis原子性
+        //判断是否存在token, 如果存在则删除，验证通过，如果不存在则说明为重复请求
+        String key = new RequestTokenKey(token).getPrefix();
+        String script = "if redis.call('get',KEYS[1]) == KEYS[2] then return redis.call('del',KEYS[1]) else return 0 end";
+        RedisScript<Long> redisScript = new DefaultRedisScript<>(script,Long.class);
+        String s = stringRedisTemplate.opsForValue().get(key);
+        Long result = stringRedisTemplate.execute(redisScript, Arrays.asList(key, value));
+        return null != result && result != 0L;
+    }
 
     /**
      * 指定缓存失效时间

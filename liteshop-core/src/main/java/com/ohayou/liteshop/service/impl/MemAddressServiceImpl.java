@@ -261,12 +261,14 @@ public class MemAddressServiceImpl extends ServiceImpl<MemAddressMapper, MemAddr
             Long value = Long.parseLong(String.valueOf(map.get(String.valueOf(goodsId))));memAddress = this.getById(value);
         } else {
             //如果没有指定商品地址则返回默认地址
-            memAddress  = this.getOne(new LambdaQueryWrapper<MemAddress>().eq(MemAddress::getIsDefault, 1));
+            memAddress  = this.getOne(new LambdaQueryWrapper<MemAddress>().eq(MemAddress::getIsDefault, 1).eq(MemAddress::getUserId,userId));
         }
 
         MemberAddressVo memberAddressVo = new MemberAddressVo();
-        BeanUtils.copyProperties(memAddress,memberAddressVo);
-        memberAddressVo.setDefault(memAddress.getIsDefault().equals(1));
+        if (null != memAddress) {
+            BeanUtils.copyProperties(memAddress,memberAddressVo);
+            memberAddressVo.setDefault(memAddress.getIsDefault().equals(1));
+        }
         return memberAddressVo;
     }
 }

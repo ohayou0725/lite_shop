@@ -6,6 +6,7 @@ import com.ohayou.liteshop.dto.GoodsCommentDto;
 import com.ohayou.liteshop.entity.MallGoodsComment;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ohayou.liteshop.utils.PageUtils;
+import com.ohayou.liteshop.vo.CommentFormVo;
 import com.ohayou.liteshop.vo.CommentVo;
 
 import java.util.List;
@@ -28,4 +29,7 @@ public interface MallGoodsCommentService extends IService<MallGoodsComment> {
 
     CommentVo getCommentVo(Long goodsId);
 
+    boolean commit(CommentFormVo commentFormVo, Long userId);
+
+    void commitByTimeOut(Long orderId, Long userId);
 }

@@ -5,7 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.ohayou.liteshop.entity.MemOpinion">
         <id column="id" property="id" />
-        <result column="user_id" property="userId" />
+        <result column="user_id" property="userMobile" />
         <result column="opinion_type_id" property="opinionType" />
         <result column="content" property="content" />
         <result column="img" property="img" />

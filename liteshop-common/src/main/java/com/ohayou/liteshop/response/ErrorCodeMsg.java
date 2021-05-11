@@ -15,7 +15,7 @@ public enum ErrorCodeMsg {
     SERVER_ERROR(99999,"系统异常"),
     GET_TOKEN_ERROR(88888,"获取token失败"),
     REPEAT_REQUEST(77777,"请勿重复请求"),
-    THREE_PARTY_PAYMENT_FAILED(66666,"调用第三方支付失败"),
+    THREE_PARTY_PAYMENT_FAILED(66666,"调用第三方支付失败，请稍后再试"),
     PAYMENT_ERROR(55555,"支付失败，请稍后再试"),
     UNAUTHENTICATED_ERROR(400201,"认证失败，用户名或密码有误"),
     USER_NOT_ENABLED_ERROR(400202,"该账号不可用,请联系管理员"),
@@ -93,6 +93,8 @@ public enum ErrorCodeMsg {
 
 
     COMMENT_NOT_FOUND(400701,"没有此评论，或该评论已删除"),
+    COMMENT_HAS_COMMIT(400702,"已对该商品作出评价，不能重复评价"),
+    COMMENT_ERROR(400703,"提交评论失败"),
 
     ORDER_NOT_EXIST(400801,"该订单不存在"),
     ORDER_STATUS_ERROR(400802,"订单状态错误"),

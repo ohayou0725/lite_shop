@@ -5,7 +5,7 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.ohayou.liteshop.entity.MallGoodsCommentReply">
         <id column="id" property="id" />
-        <result column="user_id" property="userId" />
+        <result column="user_id" property="userMobile" />
         <result column="comment_id" property="commentId" />
         <result column="content" property="content" />
         <result column="parent_id" property="parentId" />

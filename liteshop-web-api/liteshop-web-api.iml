@@ -156,6 +156,8 @@
     <orderEntry type="library" name="Maven: org.springframework.amqp:spring-amqp:2.2.6.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.retry:spring-retry:1.2.5.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.jsoup:jsoup:1.12.1" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-websocket:2.3.0.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-websocket:5.2.6.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.redisson:redisson:3.11.1" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-common:4.1.49.Final" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-codec:4.1.49.Final" level="project" />

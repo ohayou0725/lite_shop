@@ -45,4 +45,7 @@ public interface AdminUserService extends IService<AdminUser> {
     boolean updatePassword(Long id, String oldPassword, String newPassword);
 
     boolean updateUserInfo(AdminUserVo adminUserVo);
+
+    void readChatRecord(long id, String userMobile);
+
 }

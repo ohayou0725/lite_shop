@@ -45,8 +45,8 @@ logging:
 qiniu:
   accesskey: bNiSCBezONeIP9QxeDNMeAHPJAYrWmki925F2BLp
   secretKey: CWCbnnukD05mhiAgiL54wJmN9Rz_Hi-mJj_3VomQ
-  bucketName: liteshopcool2
-  fileDomain: http://qii5ng5sw.hb-bkt.clouddn.com
+  bucketName: liteshopcool
+  fileDomain: http://m.liteshop123.top
 
 kdniao:
   EBusinessID: 1674459
@@ -81,6 +81,7 @@ payment:
     mchid: 1606659654
     key: uHZAHJ3vWoyK4PMP
     mwebUrl: https://payjs.cn/api/cashier
+    refundUrl: https://payjq.cn/api/refund
     openId: o7LFAweB2JqWkiW3iNVSkPon7PKI
     notifyUrl: http://liteshop.free.idcfengye.com/pay/notify
     callbackUrl : http://puju54.natappfree.cc/#/order/success

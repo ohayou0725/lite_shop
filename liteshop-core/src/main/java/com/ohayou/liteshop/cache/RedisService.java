@@ -448,6 +448,8 @@ public class RedisService {
         }
     }
 
+
+
     /**
      * 获取list缓存的长度
      *
@@ -463,6 +465,13 @@ public class RedisService {
         }
     }
 
+    public Object lPop(String key) {
+        try {
+            return redisTemplate.opsForList().leftPop(key);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }    }
     /**
      * 通过索引 获取list中的值
      *

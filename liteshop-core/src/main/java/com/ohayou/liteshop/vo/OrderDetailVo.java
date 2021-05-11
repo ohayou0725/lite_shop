@@ -13,6 +13,8 @@ public class OrderDetailVo {
 
     private String OrderSn;
 
+    private Long orderId;
+
     //商品数量
     private Integer total;
     //商品总价
@@ -36,6 +38,25 @@ public class OrderDetailVo {
 
     private MemberAddressVo addressVo;
 
+    private Integer status;
+
+    private String logistics;
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public String getLogistics() {
+        return logistics;
+    }
+
+    public void setLogistics(String logistics) {
+        this.logistics = logistics;
+    }
 
     public String getOrderSn() {
         return OrderSn;
@@ -130,6 +151,15 @@ public class OrderDetailVo {
     }
 
     public void setAddressVo(MemberAddressVo addressVo) {
+
         this.addressVo = addressVo;
+    }
+
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
     }
 }

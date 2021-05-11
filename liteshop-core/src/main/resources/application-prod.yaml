@@ -38,8 +38,6 @@ mybatis-plus:
       logic-not-delete-value: 0
 
 
-
-
 logging:
   level:
     com.ohayou.liteshop.dao: debug
@@ -47,13 +45,17 @@ logging:
 qiniu:
   accesskey: bNiSCBezONeIP9QxeDNMeAHPJAYrWmki925F2BLp
   secretKey: CWCbnnukD05mhiAgiL54wJmN9Rz_Hi-mJj_3VomQ
-  bucketName: liteshopcool2
-  fileDomain: http://qii5ng5sw.hb-bkt.clouddn.com
+  bucketName: liteshopcool
+  fileDomain: http://m.liteshop123.top
 
 kdniao:
   EBusinessID: 1674459
   AppKey: 60738b04-cd7d-4424-915e-0cc794da9fef
   ReqURL: http://api.kdniao.com/Ebusiness/EbusinessOrderHandle.aspx
+
+express:
+  appKey: 5d4a2dcbdc23ede8
+  url: https://api.jisuapi.com/express/query
 
 jwt:
   tokenHeader: Authorization #JWT存储的请求头
@@ -73,3 +75,12 @@ admin:
 portal:
   sessionExpireTime : 604800 #前台用户session过期时间
 
+#微信支付配置
+payment:
+  wechat:
+    mchid: 1606659654
+    key: uHZAHJ3vWoyK4PMP
+    mwebUrl: https://payjs.cn/api/cashier
+    openId: o7LFAweB2JqWkiW3iNVSkPon7PKI
+    notifyUrl: http://liteshop123.top:9090/pay/notify
+    callbackUrl : http://liteshop123.top/#/order/success

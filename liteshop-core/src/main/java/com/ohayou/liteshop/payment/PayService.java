@@ -14,4 +14,6 @@ import java.math.BigDecimal;
 public interface PayService {
 
     String pay(BigDecimal totalPrice, String orderSn, PayType payType);
+
+    boolean refund(String payId);
 }

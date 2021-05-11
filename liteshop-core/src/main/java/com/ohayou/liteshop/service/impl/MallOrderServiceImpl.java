@@ -5,15 +5,19 @@ import cn.hutool.core.collection.ListUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ohayou.liteshop.cache.RedisService;
 import com.ohayou.liteshop.cache.cachekey.ConfirmOrderKey;
 import com.ohayou.liteshop.cache.cachekey.GoodsLockKey;
 import com.ohayou.liteshop.cache.cachekey.GoodsStockKey;
+import com.ohayou.liteshop.cache.cachekey.RefundKey;
 import com.ohayou.liteshop.constant.*;
 import com.ohayou.liteshop.dto.*;
 import com.ohayou.liteshop.entity.*;
 import com.ohayou.liteshop.dao.MallOrderMapper;
+import com.ohayou.liteshop.es.ChatRecord;
+import com.ohayou.liteshop.es.service.ChatRecordService;
 import com.ohayou.liteshop.exception.GlobalException;
 import com.ohayou.liteshop.mq.exchange.OrderTopicExchangeConfig;
 import com.ohayou.liteshop.payment.PayService;
@@ -42,6 +46,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * <p>
@@ -103,6 +108,8 @@ public class MallOrderServiceImpl extends ServiceImpl<MallOrderMapper, MallOrder
     @Autowired
     MallGoodsCommentService commentService;
 
+    @Autowired
+    ChatRecordService recordService;
 
 
     /**
@@ -214,8 +221,15 @@ public class MallOrderServiceImpl extends ServiceImpl<MallOrderMapper, MallOrder
         order.setShipSn(orderDetailDto.getShipSn());
         order.setShipTime(LocalDateTime.now());
         order.setStatus(OrderStatus.SHIPPED.getStatus());
-
-        return this.updateById(order);
+        boolean update = this.updateById(order);
+        if (update) {
+            try {
+                rabbitTemplate.convertAndSend(OrderTopicExchangeConfig.ORDER_EXCHANGE_NAME,"orderConfirm.confirm",objectMapper.writeValueAsString(order));
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        }
+        return update;
     }
 
     /**
@@ -236,7 +250,11 @@ public class MallOrderServiceImpl extends ServiceImpl<MallOrderMapper, MallOrder
         if (status < OrderStatus.COMPLETED.getStatus() || status > OrderStatus.CLOSED.getStatus() ) {
             throw new GlobalException(ErrorCodeMsg.ORDER_STATUS_ERROR);
         }
-        return this.removeById(orderId);
+        boolean remove = this.removeById(orderId);
+        if( remove) {
+            recordService.deleteRecordByOrderId(orderId);
+        }
+        return remove;
     }
 
     /**
@@ -614,9 +632,13 @@ public class MallOrderServiceImpl extends ServiceImpl<MallOrderMapper, MallOrder
         }
 
         //判断优惠券是否过期,是否还有足够优惠券
-        Optional<UserCouponVo> first = orderConfirmVo.getCouponList().stream().filter(UserCouponVo::isSelected).findFirst();
         MallUserCoupon mallUserCoupon = null;
-        UserCouponVo userCouponVo = first.orElse(null);
+        UserCouponVo userCouponVo = null;
+        if (CollectionUtil.isNotEmpty(orderConfirmVo.getCouponList())) {
+            Optional<UserCouponVo> first = orderConfirmVo.getCouponList().stream().filter(UserCouponVo::isSelected).findFirst();
+            userCouponVo = first.orElse(null);
+        }
+
 
         if (null != userCouponVo) {
             Long startAt = userCouponVo.getStartAt();
@@ -728,11 +750,12 @@ public class MallOrderServiceImpl extends ServiceImpl<MallOrderMapper, MallOrder
         if (null == order) {
             throw new GlobalException(ErrorCodeMsg.ORDER_NOT_EXIST);
         }
-        if (order.getStatus() > OrderStatus.UNPAID.getStatus()) {
+        if (order.getStatus() > OrderStatus.PAID.getStatus()) {
             throw new GlobalException(ErrorCodeMsg.ORDER_STATUS_ERROR);
         }
-        //如果订单未支付,释放库存，返还优惠券,修改订单状态,取消订单
+        //如果订单未支付或已支付未发货,释放库存，返还优惠券,修改订单状态,取消订单
         order.setStatus(OrderStatus.CLOSED.getStatus());
+
         boolean update = this.updateById(order);
         if (update) {
             List<MallOrderGoods> list = orderGoodsService.list(new LambdaQueryWrapper<MallOrderGoods>().eq(MallOrderGoods::getOrderId, order.getId()));
@@ -781,6 +804,7 @@ public class MallOrderServiceImpl extends ServiceImpl<MallOrderMapper, MallOrder
         memberAddressVo.setReceiverMobile(order.getMobile());
 
         OrderDetailVo orderDetailVo = new OrderDetailVo();
+        orderDetailVo.setOrderId(order.getId());
         orderDetailVo.setAddressVo(memberAddressVo);
         orderDetailVo.setOrderSn(orderSn);
         orderDetailVo.setCreateTime(order.getCreateTime());
@@ -790,6 +814,8 @@ public class MallOrderServiceImpl extends ServiceImpl<MallOrderMapper, MallOrder
         orderDetailVo.setPayablePrice(order.getActualPayment());
         orderDetailVo.setPaymentTime(order.getPayTime());
         orderDetailVo.setPayType(PayType.getPayType(order.getPayType()).getDescription());
+        orderDetailVo.setStatus(order.getStatus());
+        orderDetailVo.setLogistics(order.getShipChannel());
 
         List<MallOrderGoods> orderGoodsList = orderGoodsService.list(new LambdaQueryWrapper<MallOrderGoods>().eq(MallOrderGoods::getOrderId, order.getId()));
         List<OrderItemVo> collect = orderGoodsList.stream()
@@ -881,18 +907,132 @@ public class MallOrderServiceImpl extends ServiceImpl<MallOrderMapper, MallOrder
 
     /**
      * 用户未付款取消订单
-     * @param orderSn
+     * @param orderId
      * @param userId
+     * @param message
      * @return
      */
     @Override
-    public boolean cancelOrder(String orderSn, Long userId) {
-        LambdaQueryWrapper<MallOrder> wrapper = new LambdaQueryWrapper<MallOrder>().eq(MallOrder::getOrderSn, orderSn).eq(MallOrder::getUserId, userId);
-        if (this.count(wrapper) < 1) {
+    @Transactional(rollbackFor = Exception.class)
+    public boolean cancelOrder(Long orderId, Long userId, String message) {
+        LambdaQueryWrapper<MallOrder> wrapper = new LambdaQueryWrapper<MallOrder>().eq(MallOrder::getId, orderId).eq(MallOrder::getUserId, userId);
+        MallOrder one = this.getOne(wrapper);
+        if (null == one) {
             throw new GlobalException(ErrorCodeMsg.ORDER_NOT_EXIST);
         }
-        return this.cancelOrder(orderSn);
+        if (this.cancelOrder(one.getOrderSn())) {
+            MallOrder order = new MallOrder();
+            order.setRefundMessage(message);
+            order.setId(one.getId());
+            return this.updateById(order);
+        }
+        return false;
     }
+
+    /**
+     *用户未付款取消订单
+     * @param orderId
+     * @param message
+     * @return
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public boolean cancelOrderOnPaid(Long orderId, Long userId, String message) {
+        MallOrder one = this.getById(orderId);
+        if (null == one || !one.getUserId().equals(userId)) {
+            throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
+        }
+
+        //判断订单状态是否已经支付
+        Integer status = one.getStatus();
+        if (!status.equals(OrderStatus.PAID.getStatus())) {
+            throw new GlobalException(ErrorCodeMsg.ORDER_STATUS_ERROR);
+        }
+
+        boolean result = this.cancelOrder(one.getOrderSn());
+        if (result) {
+            MallOrder order = new MallOrder();
+            order.setRefundMessage(message);
+            order.setId(one.getId());
+            order.setRefundAmount(order.getActualPayment());
+            order.setRefundType(order.getPayType());
+            order.setRefundMessage(message);
+            this.updateById(order);
+            //将支付Id加入到redis队列里，启动定时任务调用第三方支付接口进行退款
+            redisService.lSet(new RefundKey().getPrefix(),one.getPayId());
+        }
+        return false;
+    }
+
+
+    /**
+     * 用户确认订单
+     * @param orderId
+     * @param userId
+     * @return
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public boolean confirm(Long orderId,Long userId) {
+        int count = this.count(new LambdaQueryWrapper<MallOrder>().eq(MallOrder::getId, orderId).eq(MallOrder::getUserId, userId));
+        if (count < 1) {
+            throw new GlobalException(ErrorCodeMsg.ORDER_NOT_EXIST);
+        }
+
+        boolean result =  this.confirm(orderId);
+        if (result) {
+            Map<String,Long> map = new HashMap<>();
+            map.put("orderId",orderId);
+            map.put("userId",userId);
+            try {
+                rabbitTemplate.convertAndSend(OrderTopicExchangeConfig.ORDER_EXCHANGE_NAME,"orderComment.comment",objectMapper.writeValueAsString(map));
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public  boolean confirm(Long orderId) {
+        MallOrder order = this.getById(orderId);
+
+        Integer status = order.getStatus();
+        if (!status.equals(OrderStatus.SHIPPED.getStatus())) {
+            throw new GlobalException(ErrorCodeMsg.ORDER_STATUS_ERROR);
+        }
+        order.setConfirmTime(LocalDateTime.now());
+        order.setStatus(OrderStatus.COMPLETED.getStatus());
+        return this.updateById(order);
+    }
+
+    /**
+     * 获取订单中未评论的商品列表
+     * @param orderId
+     * @return
+     */
+    @Override
+    public List<OrderItemVo> getNotCommentedItem(Long orderId,Long userId) {
+        MallOrder order = this.getById(userId);
+        if (null == order || !order.getUserId().equals(userId)) {
+            throw new GlobalException(ErrorCodeMsg.ORDER_NOT_EXIST);
+        }
+
+        List<MallOrderGoods> list = orderGoodsService.list(new LambdaQueryWrapper<MallOrderGoods>().eq(MallOrderGoods::getOrderId, orderId));
+        return  list.stream().filter(orderGoods -> {
+            return orderGoods.getComment() == 0;
+        }).map(orderGoods -> {
+            OrderItemVo orderItemVo = new OrderItemVo();
+            orderItemVo.setImg(orderGoods.getGoodsImg());
+            orderItemVo.setPrice(orderGoods.getPrice());
+            orderItemVo.setTitle(orderGoods.getGoodsName());
+            orderItemVo.setNum(orderGoods.getNumber());
+            orderItemVo.setSkuId(orderGoods.getSkuId());
+            return orderItemVo;
+        }).collect(Collectors.toList());
+    }
+
 
     /**
      * 分页查询订单列表
@@ -926,6 +1066,12 @@ public class MallOrderServiceImpl extends ServiceImpl<MallOrderMapper, MallOrder
                         orderListItemVo.setComments(order.getComments());
                         List<MallOrderGoods> orderGoodsList = orderGoodsService.list(new LambdaQueryWrapper<MallOrderGoods>().eq(MallOrderGoods::getOrderId, order.getId()));
                         List<OrderItemVo> collect = orderGoodsList.stream()
+                                .filter(orderGoods -> {
+                                    if (OrderStatus.COMPLETED.getStatus().equals(status)) {
+                                        return orderGoods.getComment() == 0;
+                                    }
+                                    return true;
+                                })
                                 .map(orderGoods -> {
                                     OrderItemVo orderItemVo = new OrderItemVo();
                                     orderItemVo.setImg(orderGoods.getGoodsImg());
@@ -941,7 +1087,14 @@ public class MallOrderServiceImpl extends ServiceImpl<MallOrderMapper, MallOrder
                         orderListItemVo.setItemList(collect);
 
                         return orderListItemVo;
-                    }).collect(Collectors.toList());
+                    })
+                    .filter(orderListItemVo -> {
+                        if (OrderStatus.COMPLETED.getStatus().equals(status)) {
+                            return CollectionUtil.isNotEmpty(orderListItemVo.getItemList());
+                        }
+                        return true;
+                    })
+                    .collect(Collectors.toList());
             return collect1;
         }
         return ListUtil.empty();
@@ -954,6 +1107,7 @@ public class MallOrderServiceImpl extends ServiceImpl<MallOrderMapper, MallOrder
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public boolean deleteByMember(Long orderId, Long userId) {
         MallOrder order = this.getById(orderId);
         if (null == order || !order.getUserId().equals(userId)) {
@@ -980,7 +1134,7 @@ public class MallOrderServiceImpl extends ServiceImpl<MallOrderMapper, MallOrder
                 .collect(Collectors.groupingBy((MallOrder::getStatus)));
 
         if (null != collect.get(OrderStatus.UNPAID.getStatus())){
-            orderCountVo.setUnPaidOrderCount(OrderStatus.UNPAID.getStatus());
+            orderCountVo.setUnPaidOrderCount(collect.get(OrderStatus.UNPAID.getStatus()).size());
         }
 
         if (null != collect.get(OrderStatus.PAID.getStatus())) {

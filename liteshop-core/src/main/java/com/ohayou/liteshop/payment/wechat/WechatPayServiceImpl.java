@@ -1,19 +1,20 @@
 package com.ohayou.liteshop.payment.wechat;
 
 import cn.hutool.core.lang.UUID;
-import cn.hutool.crypto.SecureUtil;
-import cn.hutool.crypto.asymmetric.Sign;
-import cn.hutool.crypto.asymmetric.SignAlgorithm;
+
 import cn.hutool.http.HttpUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ohayou.liteshop.cache.cachekey.OrderPaymentKey;
 import com.ohayou.liteshop.cache.cachekey.RequestTokenKey;
 import com.ohayou.liteshop.constant.PayType;
+import com.ohayou.liteshop.exception.GlobalException;
 import com.ohayou.liteshop.payment.PayService;
-import com.ohayou.liteshop.security.SecurityUtil;
+import com.ohayou.liteshop.response.ErrorCodeMsg;
 import com.ohayou.liteshop.utils.SignUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -39,11 +40,14 @@ public class WechatPayServiceImpl implements PayService {
     @Autowired
     StringRedisTemplate redisTemplate;
 
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(WechatPayServiceImpl.class);
+
     @Override
     public String pay(BigDecimal totalPrice, String orderSn, PayType payType) {
         Map<String,Object> payData = new HashMap<>();
         payData.put("mchid", wechatPayConfig.getMchid());
-        payData.put("total_fee", '1');
+        payData.put("total_fee", "1");
 //        payData.put("total_fee", totalPrice.multiply(new BigDecimal(100)).stripTrailingZeros().toPlainString());
         payData.put("out_trade_no", orderSn); // 订单号
         payData.put("body","订单号：" + orderSn);
@@ -65,8 +69,34 @@ public class WechatPayServiceImpl implements PayService {
             redisTemplate.opsForValue().set(new RequestTokenKey(token).getPrefix(),
                     "" + payData.get("total_fee"),
                     1, TimeUnit.HOURS);
+        } else {
+            LOGGER.error("微信支付接口返回错误信息：{}",response);
+            throw new GlobalException(ErrorCodeMsg.THREE_PARTY_PAYMENT_FAILED);
         }
-        System.out.println(url);
         return url;
+    }
+
+    /**
+     * 退款
+     * @param payId
+     * @return
+     */
+    @Override
+    public boolean refund(String payId) {
+        Map<String,Object> payData = new HashMap<>();
+        payData.put("payjs_order_id",payId);
+        payData.put("sign", SignUtil.sign(payData, wechatPayConfig.getKey()));
+
+        String response = HttpUtil.post(wechatPayConfig.getRefundUrl(), payData);
+        RefundReturnDto refundReturnDto = null;
+        try {
+            refundReturnDto = objectMapper.readValue(response, RefundReturnDto.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            throw new GlobalException(ErrorCodeMsg.SERVER_ERROR);
+        }
+        LOGGER.info("支付订单{}发起退款，返回{}",payId,refundReturnDto.getReturn_msg());
+        Integer return_code = refundReturnDto.getReturn_code();
+        return return_code.equals(1);
     }
 }

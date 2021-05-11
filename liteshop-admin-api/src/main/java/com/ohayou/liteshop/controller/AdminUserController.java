@@ -4,15 +4,19 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ohayou.liteshop.aop.ApiDesc;
 import com.ohayou.liteshop.dto.AdminUserDto;
 import com.ohayou.liteshop.entity.AdminUser;
+import com.ohayou.liteshop.es.ChatRecord;
+import com.ohayou.liteshop.es.service.ChatRecordService;
 import com.ohayou.liteshop.exception.GlobalException;
 import com.ohayou.liteshop.response.ErrorCodeMsg;
 import com.ohayou.liteshop.response.Result;
 import com.ohayou.liteshop.security.AdminUserDetails;
+import com.ohayou.liteshop.security.SecurityUtil;
 import com.ohayou.liteshop.service.AdminUserService;
 import com.ohayou.liteshop.service.UploadService;
 import com.ohayou.liteshop.utils.PageQuery;
 import com.ohayou.liteshop.utils.PageUtils;
 import com.ohayou.liteshop.vo.AdminUserVo;
+import com.ohayou.liteshop.vo.UserMessageVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -25,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,6 +45,9 @@ public class AdminUserController {
 
     @Autowired
     UploadService qiniuUploadService;
+
+    @Autowired
+    ChatRecordService recordService;
 
     /**
      * 用户登录
@@ -163,5 +171,33 @@ public class AdminUserController {
             adminUserService.removeCacheByRoleId(adminUserVo.getId());
         }
         return result ? Result.success() : Result.error(ErrorCodeMsg.USER_UPDATE_ERROR);
+    }
+
+    @ApiDesc("获取与客户聊天纪录")
+    @GetMapping("/user/service/chatRecord")
+    public Result getServiceChatRecord(Authentication authentication) {
+        AdminUserDetails adminUser = SecurityUtil.getAdminUser(authentication);
+        List<UserMessageVo> list = recordService.chatRecordListByAdminId(adminUser.getId());
+        return Result.success("list",list);
+    }
+
+    @ApiDesc("上传用户聊天图片")
+    @PostMapping("/user/upload")
+    public Result chatImgUpload(@RequestParam("file")MultipartFile file) {
+        String fileName = "admin/chat/";
+        String url = qiniuUploadService.upload(file, fileName);
+        return Result.success("url",url);
+    }
+
+
+    @ApiDesc("用户已读聊天记录")
+    @PostMapping("/user/service/readRecord")
+    public Result readRecord(Authentication authentication, @RequestParam("userMobile") String userMobile) {
+        if (StringUtils.isBlank(userMobile)) {
+            throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
+        }
+        AdminUserDetails adminUser = SecurityUtil.getAdminUser(authentication);
+        adminUserService.readChatRecord(adminUser.getId(),userMobile);
+        return Result.success();
     }
 }

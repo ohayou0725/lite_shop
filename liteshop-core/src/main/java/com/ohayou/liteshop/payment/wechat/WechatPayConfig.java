@@ -3,6 +3,7 @@ package com.ohayou.liteshop.payment.wechat;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
+
 /**
  * @author liyan
  * @date 2021/2/27 上午11:15
@@ -19,6 +20,9 @@ public class WechatPayConfig {
     //H5支付Api地址
     @Value(value = "${payment.wechat.mwebUrl}")
     private String mwebUrl;
+
+    @Value(value = "${payment.wechat.refundUrl}")
+    private String refundUrl;
 
     //回调地址
     @Value(value = "${payment.wechat.notifyUrl}")
@@ -76,5 +80,13 @@ public class WechatPayConfig {
 
     public void setMwebUrl(String mwebUrl) {
         this.mwebUrl = mwebUrl;
+    }
+
+    public String getRefundUrl() {
+        return refundUrl;
+    }
+
+    public void setRefundUrl(String refundUrl) {
+        this.refundUrl = refundUrl;
     }
 }

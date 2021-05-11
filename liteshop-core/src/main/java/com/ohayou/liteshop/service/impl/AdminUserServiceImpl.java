@@ -14,6 +14,7 @@ import com.ohayou.liteshop.entity.AdminRole;
 import com.ohayou.liteshop.entity.AdminUser;
 import com.ohayou.liteshop.dao.AdminUserMapper;
 import com.ohayou.liteshop.entity.AdminUserRoleRelation;
+import com.ohayou.liteshop.es.service.ChatRecordService;
 import com.ohayou.liteshop.exception.GlobalException;
 import com.ohayou.liteshop.exception.UnAuthenticationException;
 import com.ohayou.liteshop.response.ErrorCodeMsg;
@@ -36,7 +37,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -80,6 +80,9 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
 
     @Autowired
     AdminUserRoleRelationService adminUserRoleRelationService;
+
+    @Autowired
+    ChatRecordService recordService;
 
 
 
@@ -395,5 +398,10 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
         AdminUser user = new AdminUser();
         BeanUtils.copyProperties(adminUserVo,user);
         return this.updateById(user);
+    }
+
+    @Override
+    public void readChatRecord(long id, String userMobile) {
+        recordService.updateRecordHaveRead(id,userMobile);
     }
 }

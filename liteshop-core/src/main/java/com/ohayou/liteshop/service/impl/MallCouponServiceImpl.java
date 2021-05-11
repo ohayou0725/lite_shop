@@ -2,6 +2,7 @@ package com.ohayou.liteshop.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.ListUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -359,7 +360,7 @@ public class MallCouponServiceImpl extends ServiceImpl<MallCouponMapper, MallCou
                 .eq(MallUserCoupon::getUserId, userId));
 
         if (CollectionUtil.isEmpty(list)) {
-            return CollectionUtil.empty(CouponVo.class);
+            return new ArrayList<UserCouponVo>();
         }
         List<Long> collect = list.stream().map(MallUserCoupon::getCouponId).collect(Collectors.toList());
 

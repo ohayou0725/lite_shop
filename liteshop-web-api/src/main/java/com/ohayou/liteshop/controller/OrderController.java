@@ -142,16 +142,22 @@ public class OrderController {
         return Result.success("url",url);
     }
 
-    @ApiDesc("用户取消订单")
+    @ApiDesc("用户未支付取消订单")
     @PostMapping("/cancelOrder")
-    public Result cancelOrder(@RequestParam("orderSn") String orderSn, Authentication authentication) {
-        if (StringUtils.isBlank(orderSn)) {
-            throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
-        }
+    public Result cancelOrder(@RequestBody @Valid CancelOrderVo cancelOrderVo, Authentication authentication) {
 
         MemberUserDetails memberUser = SecurityUtil.getMemberUser(authentication);
-        boolean result = orderService.cancelOrder(orderSn,memberUser.getId());
+        boolean result = orderService.cancelOrder(cancelOrderVo.getOrderId(),memberUser.getId(), cancelOrderVo.getMessage());
         return result ? Result.success() : Result.error(ErrorCodeMsg.ORDER_ERROR);
+    }
+
+    @ApiDesc("用户已支付取消订单")
+    @PostMapping("/cancelAndRefund")
+    public Result cancelAncRefund(@RequestBody @Valid CancelOrderVo cancelOrderVo, Authentication authentication) {
+        MemberUserDetails memberUser = SecurityUtil.getMemberUser(authentication);
+        boolean result = orderService.cancelOrderOnPaid(cancelOrderVo.getOrderId(), memberUser.getId(), cancelOrderVo.getMessage());
+        return result ? Result.success() : Result.error(ErrorCodeMsg.ORDER_ERROR);
+
     }
 
 
@@ -189,5 +195,30 @@ public class OrderController {
         ShipTraceVo shipTraceVo = orderService.getOrderTrace(orderId,memberUser.getId());
         return Result.success("trace",shipTraceVo);
     }
+
+    @ApiDesc("获取未评论订单列表")
+    @GetMapping("/notCommented/{orderId}")
+    public Result getNotCommented(@PathVariable Long orderId,Authentication authentication) {
+        if (null == orderId || orderId < 1) {
+            throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
+        }
+        MemberUserDetails memberUser = SecurityUtil.getMemberUser(authentication);
+
+        List<OrderItemVo> list = orderService.getNotCommentedItem(orderId,memberUser.getId());
+        return Result.success("list",list);
+    }
+
+    @ApiDesc("确认收货")
+    @PostMapping("/confirm/{orderId}")
+    public Result confirm(@PathVariable("orderId") Long orderId, Authentication authentication) {
+        if (null == orderId || orderId < 1) {
+            throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
+        }
+        MemberUserDetails memberUser = SecurityUtil.getMemberUser(authentication);
+
+        boolean result = orderService.confirm(orderId, memberUser.getId());
+        return result ? Result.success() : Result.error(ErrorCodeMsg.ORDER_STATUS_ERROR);
+    }
+
 
 }

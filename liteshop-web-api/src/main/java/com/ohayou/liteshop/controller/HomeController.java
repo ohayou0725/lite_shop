@@ -2,9 +2,7 @@ package com.ohayou.liteshop.controller;
 
 import com.ohayou.liteshop.aop.ApiDesc;
 import com.ohayou.liteshop.cache.RedisService;
-import com.ohayou.liteshop.cache.cachekey.GoodsStockKey;
-import com.ohayou.liteshop.cache.cachekey.HotGoodsVoListKey;
-import com.ohayou.liteshop.entity.MallGoodsSku;
+
 import com.ohayou.liteshop.response.Result;
 import com.ohayou.liteshop.service.MallCategoryService;
 import com.ohayou.liteshop.service.MallGoodsSkuService;
@@ -14,16 +12,13 @@ import com.ohayou.liteshop.vo.BannerVo;
 import com.ohayou.liteshop.vo.CategoryVo;
 import com.ohayou.liteshop.vo.FeaturedTopicVo;
 import com.ohayou.liteshop.vo.HotGoodsVo;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author liyan

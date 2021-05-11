@@ -29,7 +29,7 @@
         <include refid="Base_Column_List"></include>
          from mall_cart_item ci
             join mall_cart c  on c.id = ci.cart_id
-            where c.user_id = #{userId}
+            where c.user_id = #{userMobile}
             and ci.deleted = 0
 
     </select>

@@ -63,7 +63,7 @@ public class UnpaidOrderConsumer {
                 channel.basicNack(message.getMessageProperties().getDeliveryTag(),false,true);
             }
         } catch (GlobalException e) {
-            LOGGER.info("订单编号：{}，该订单已支付，取消订单失败", orderConfirmVo.getOrderSn());
+            LOGGER.info("订单编号：{}，该订单已支付或已取消，取消订单失败", orderConfirmVo.getOrderSn());
             channel.basicAck(message.getMessageProperties().getDeliveryTag(),true);
         }
     }

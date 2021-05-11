@@ -76,7 +76,7 @@ public class MemberController {
 
     @GetMapping("/address/list")
     @ApiDesc("查询收货地址")
-    public Result addressList(@Valid MemAddrDto addrDto, Map<String,Object> pageParam) {
+    public Result addressList(@Valid MemAddrDto addrDto,@RequestParam Map<String,Object> pageParam) {
         PageQuery<MemAddress> pageQuery = new PageQuery<>();
         PageUtils pageUtils = memAddressService.addrQueryPage(addrDto,pageQuery.getPage(pageParam));
         return Result.success("page",pageUtils);
@@ -91,7 +91,7 @@ public class MemberController {
      */
     @GetMapping("/collect/list")
     @ApiDesc("查询会员收藏列表")
-    public Result collectList(@Valid MemCollectDto collectDto, Map<String,Object> pageParam) {
+    public Result collectList(@Valid MemCollectDto collectDto,@RequestParam Map<String,Object> pageParam) {
         PageQuery<MemCollect> pageQuery = new PageQuery<>();
         PageUtils pageUtils = memCollectService.collectQueryPage(collectDto,pageQuery.getPage(pageParam));
         return Result.success("page",pageUtils);
@@ -105,7 +105,7 @@ public class MemberController {
      */
     @GetMapping("/history/list")
     @ApiDesc("查询会员浏览历史")
-    public Result historyList(@Valid MemHistoryDto historyDto, Map<String,Object> pageParam) {
+    public Result historyList(@Valid MemHistoryDto historyDto, @RequestParam Map<String,Object> pageParam) {
         PageQuery<MemHistory> pageQuery = new PageQuery<>();
         PageUtils pageUtils = memHistoryService.historyQueryPage(historyDto,pageQuery.getPage(pageParam));
         return Result.success("page",pageUtils);
@@ -120,7 +120,7 @@ public class MemberController {
 
     @GetMapping("/opinion/list")
     @ApiDesc("查询会员意见反馈")
-    public Result opinionList(MemOpinionDto memOpinionDto, Map<String,Object> paramParam) {
+    public Result opinionList(MemOpinionDto memOpinionDto,@RequestParam Map<String,Object> paramParam) {
         PageQuery<MemOpinion> pageQuery = new PageQuery<>();
         PageUtils pageUtils = memOpinionService.opinionQueryPage(memOpinionDto,pageQuery.getPage(paramParam));
         return Result.success("page",pageUtils);

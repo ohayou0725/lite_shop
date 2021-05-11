@@ -76,7 +76,7 @@ public class MallOrderGoods implements Serializable {
     /**
      * 订单商品评论，如果是-1，则超期不能评价；如果是0，则可以评价；如果其他值，则是comment表里面的评论ID。
      */
-    private Integer comment;
+    private Long comment;
 
     /**
      * 是否申请退款
@@ -157,11 +157,11 @@ public class MallOrderGoods implements Serializable {
     public void setGoodsImg(String goodsImg) {
         this.goodsImg = goodsImg;
     }
-    public Integer getComment() {
+    public Long getComment() {
         return comment;
     }
 
-    public void setComment(Integer comment) {
+    public void setComment(Long comment) {
         this.comment = comment;
     }
     public LocalDateTime getCreateTime() {

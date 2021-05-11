@@ -10,6 +10,8 @@ import com.ohayou.liteshop.constant.MemberRank;
 import com.ohayou.liteshop.dto.*;
 import com.ohayou.liteshop.entity.MemUser;
 import com.ohayou.liteshop.dao.MemUserMapper;
+import com.ohayou.liteshop.es.ChatRecord;
+import com.ohayou.liteshop.es.service.ChatRecordService;
 import com.ohayou.liteshop.exception.GlobalException;
 import com.ohayou.liteshop.exception.UnAuthenticationException;
 import com.ohayou.liteshop.response.ErrorCodeMsg;
@@ -19,6 +21,7 @@ import com.ohayou.liteshop.utils.DateTimeUtil;
 import com.ohayou.liteshop.utils.LoginCaptchaUtil;
 import com.ohayou.liteshop.utils.PageUtils;
 import com.ohayou.liteshop.utils.TokenUtil;
+import com.ohayou.liteshop.vo.UserMessageVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +56,9 @@ public class MemUserServiceImpl extends ServiceImpl<MemUserMapper, MemUser> impl
 
     @Autowired
     MemUserService memUserService;
+
+    @Autowired
+    ChatRecordService chatRecordService;
 
 
     @Value("${portal.sessionExpireTime}")
@@ -220,11 +226,27 @@ public class MemUserServiceImpl extends ServiceImpl<MemUserMapper, MemUser> impl
         memUser.setStatus(1);
         memUser.setRank(MemberRank.GENERAL_USER.getRank());
         memUser.setNickname(registerFormDto.getMobile());
+        memUser.setAvatar("http://m.liteshop123.top/admin/avatar/56a5228b-85da-4484-95f9-e31ca89e220a");
         boolean save = this.save(memUser);
         if (save) {
             applicationEventPublisher.publishEvent(new UserRegisterEvent(this,memUser.getId()));
         }
         return save;
+    }
+
+    /**
+     * 获取该订单下用户与客服聊天记录
+     * @return
+     * @param userMobile
+     * @param orderId
+     */
+    @Override
+    public UserMessageVo getServiceChatRecordByOrder(String userMobile, Long orderId) {
+        List<ChatRecord> chatRecords = chatRecordService.chatRecordListByUserMobileAndOrderId(userMobile,orderId);
+        UserMessageVo userMessageVo = new UserMessageVo();
+        userMessageVo.setUserMobile(userMobile);
+        userMessageVo.setRecords(chatRecords);
+        return userMessageVo;
     }
 
     private boolean verifyCaptcha(String captcha, String captchaId) {

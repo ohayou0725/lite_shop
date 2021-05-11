@@ -12,17 +12,21 @@ import com.ohayou.liteshop.exception.GlobalException;
 import com.ohayou.liteshop.response.ErrorCodeMsg;
 import com.ohayou.liteshop.response.Result;
 import com.ohayou.liteshop.security.MemberUserDetails;
+import com.ohayou.liteshop.security.SecurityUtil;
 import com.ohayou.liteshop.service.MemAddressService;
 import com.ohayou.liteshop.service.MemUserService;
+import com.ohayou.liteshop.service.UploadService;
 import com.ohayou.liteshop.utils.LoginCaptchaUtil;
 import com.ohayou.liteshop.vo.MemberAddressVo;
 import com.ohayou.liteshop.vo.MemberInfoVo;
 import com.ohayou.liteshop.dto.RegisterFormDto;
+import com.ohayou.liteshop.vo.UserMessageVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -48,6 +52,10 @@ public class MemberController {
 
     @Autowired
     MemAddressService memAddressService;
+
+
+    @Autowired
+    UploadService qiniuUploadService;
 
     @GetMapping("/getCaptcha")
     @ApiDesc("获取登录图形验证码")
@@ -164,6 +172,27 @@ public class MemberController {
         MemberUserDetails memberUserDetails =  (MemberUserDetails)authentication.getPrincipal();
         MemberAddressVo memberAddressVo = memAddressService.getGoodsAddress(goodsId, memberUserDetails.getId());
         return Result.success("address",memberAddressVo);
+    }
+
+    @ApiDesc("用户上传客服聊天图片")
+    @PostMapping("/upload")
+    public Result uploadImg(@RequestParam("file") MultipartFile file) {
+        String fileName = "serviceChat/";
+        String url = qiniuUploadService.upload(file,fileName);
+        return Result.success("url",url);
+    }
+
+    @ApiDesc("客服聊天记录")
+    @GetMapping("/serviceChatRecord")
+    public Result getServiceChatRecord(@RequestParam("orderId") Long orderId, Authentication authentication) {
+        if (null == orderId || orderId < 1) {
+            throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
+        }
+
+        MemberUserDetails memberUser = SecurityUtil.getMemberUser(authentication);
+
+        UserMessageVo userMessageVoList = memUserService.getServiceChatRecordByOrder(memberUser.getMobile(),orderId);
+        return Result.success("list",userMessageVoList);
     }
 
 }

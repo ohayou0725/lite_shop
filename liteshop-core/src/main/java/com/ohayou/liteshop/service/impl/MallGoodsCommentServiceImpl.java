@@ -5,23 +5,22 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ohayou.liteshop.dto.CommentDetailDto;
 import com.ohayou.liteshop.dto.GoodsCommentDto;
-import com.ohayou.liteshop.entity.MallGoodsComment;
+import com.ohayou.liteshop.entity.*;
 import com.ohayou.liteshop.dao.MallGoodsCommentMapper;
-import com.ohayou.liteshop.entity.MallGoodsSku;
-import com.ohayou.liteshop.entity.MallGoodsSpu;
-import com.ohayou.liteshop.entity.MemUser;
 import com.ohayou.liteshop.exception.GlobalException;
 import com.ohayou.liteshop.response.ErrorCodeMsg;
 import com.ohayou.liteshop.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ohayou.liteshop.utils.PageUtils;
 import com.ohayou.liteshop.utils.RateUtil;
+import com.ohayou.liteshop.vo.CommentFormVo;
 import com.ohayou.liteshop.vo.CommentItemVo;
 import com.ohayou.liteshop.vo.CommentVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -47,6 +46,12 @@ public class MallGoodsCommentServiceImpl extends ServiceImpl<MallGoodsCommentMap
 
     @Autowired
     MallGoodsCommentReplyService replyService;
+
+    @Autowired
+    MallOrderService orderService;
+
+    @Autowired
+    MallOrderGoodsService orderGoodsService;
 
 
 
@@ -194,6 +199,87 @@ public class MallGoodsCommentServiceImpl extends ServiceImpl<MallGoodsCommentMap
         }
 
         return commentVo;
+    }
+
+    /**
+     * 用户提交评论
+     * @param commentFormVo
+     * @param userId
+     * @return
+     */
+    @Override
+
+    @Transactional(rollbackFor = Exception.class)
+    public boolean commit(CommentFormVo commentFormVo, Long userId) {
+
+        MallOrder order = orderService.getById(commentFormVo.getOrderId());
+        if (null == order || !order.getUserId().equals(userId)) {
+            throw new GlobalException(ErrorCodeMsg.ORDER_NOT_EXIST);
+        }
+
+        //查询该订单下是否有所评论商品
+        MallOrderGoods orderGoods = orderGoodsService.getOne(new LambdaQueryWrapper<MallOrderGoods>().eq(MallOrderGoods::getOrderId, order.getId())
+                .eq(MallOrderGoods::getSkuId, commentFormVo.getSkuId()));
+
+        if (null == orderGoods || orderGoods.getComment() < 0) {
+            throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
+        }
+        //判断订单中该商品是否已经评价过
+        if (orderGoods.getComment() > 0) {
+            throw new GlobalException(ErrorCodeMsg.COMMENT_HAS_COMMIT);
+        }
+
+        MallGoodsSku sku = skuService.getById(commentFormVo.getSkuId());
+
+
+//        int count = this.count(new LambdaQueryWrapper<MallGoodsComment>().eq(MallGoodsComment::getOrderId, order.getId())
+//                .eq(MallGoodsComment::getGoodsId, sku.getGoodsId()));
+//        if (count > 1) {
+//            throw new GlobalException(ErrorCodeMsg.COMMENT_HAS_COMMIT);
+//        }
+        MallGoodsComment mallGoodsComment = new MallGoodsComment();
+        mallGoodsComment.setGoodsId(sku.getGoodsId());
+        mallGoodsComment.setOrderId(commentFormVo.getOrderId());
+        mallGoodsComment.setScore(Integer.valueOf(commentFormVo.getScore()));
+        mallGoodsComment.setSpecSn(sku.getSpecSn());
+        if (null != commentFormVo.getImgs() && commentFormVo.getImgs().length > 0) {
+            mallGoodsComment.setImg(String.join(",",commentFormVo.getImgs()));
+        }
+        mallGoodsComment.setUserId(userId);
+        if (StringUtils.isBlank(commentFormVo.getContent())) {
+            //如果用户没有评价,则设置默认评价
+            mallGoodsComment.setContent("此用户没有填写评价");
+        } else {
+            mallGoodsComment.setContent(commentFormVo.getContent());
+        }
+        boolean save = this.save(mallGoodsComment);
+        if (save) {
+            order.setComments(order.getComments() - 1);
+            orderGoods.setComment(mallGoodsComment.getId());
+            return orderService.updateById(order) && orderGoodsService.updateById(orderGoods);
+
+        }
+        return false;
+    }
+
+    /**
+     * 超时评论自动好评
+     * @param orderId
+     * @param userId
+     * @return
+     */
+    @Override
+    public void commitByTimeOut(Long orderId, Long userId) {
+        CommentFormVo commentFormVo = new CommentFormVo();
+        commentFormVo.setOrderId(orderId);
+        commentFormVo.setScore("5");
+
+        List<MallOrderGoods> orderGoodsList = orderGoodsService.list(new LambdaQueryWrapper<MallOrderGoods>().eq(MallOrderGoods::getOrderId, orderId));
+        for (MallOrderGoods orderGoods : orderGoodsList) {
+            commentFormVo.setSkuId(orderGoods.getSkuId());
+            this.commit(commentFormVo,userId);
+        }
+
     }
 
 }

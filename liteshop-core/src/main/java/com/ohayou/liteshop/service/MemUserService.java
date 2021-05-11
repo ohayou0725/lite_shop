@@ -5,8 +5,7 @@ import com.ohayou.liteshop.dto.*;
 import com.ohayou.liteshop.entity.MemUser;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ohayou.liteshop.utils.PageUtils;
-
-import java.util.List;
+import com.ohayou.liteshop.vo.UserMessageVo;
 
 /**
  * <p>
@@ -32,4 +31,6 @@ public interface MemUserService extends IService<MemUser> {
     String login(MemberLoginFormDto memberLoginFormDto);
 
     boolean registry(RegisterFormDto registerFormDto);
+
+    UserMessageVo getServiceChatRecordByOrder(String userMobile, Long orderId);
 }

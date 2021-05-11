@@ -15,8 +15,11 @@ import javax.annotation.Resource;
 @Configuration
 public class OrderBindingConfig {
 
-    @Resource(name = "orderSkuQueue")
-    private Queue orderSkuQueue;
+    @Resource(name = "orderConfirmQueue")
+    private Queue orderConfirmQueue;
+
+    @Resource(name = "orderCommentQueue")
+    private Queue orderCommentQueue;
 
     @Resource(name = "orderDLXQueue")
     private Queue orderDLXQueue;
@@ -30,6 +33,11 @@ public class OrderBindingConfig {
     @Resource(name = "orderDLXExchange")
     private Exchange orderDLXExchange;
 
+    @Resource(name = "orderConfirmDLXQueue")
+    private Queue orderConfirmDLXQueue;
+
+    @Resource(name = "orderCommentDLXQueue")
+    private Queue orderCommentDLXQueue;
     /**
      * 订单交换机与订单库存队列进行绑定，队列收到消息后异步修改库存
      * @return
@@ -56,11 +64,45 @@ public class OrderBindingConfig {
     }
 
     @Bean
+    public Binding orderConfirmDLXQueueBinding() {
+        return BindingBuilder.bind(orderConfirmDLXQueue)
+                .to(orderExchange)
+                .with("orderConfirm.#")
+                .noargs();
+    }
+
+    @Bean
+    public Binding orderCommentDLXQueueBinding() {
+        return BindingBuilder.bind(orderCommentDLXQueue)
+                .to(orderExchange)
+                .with("orderComment.#")
+                .noargs();
+    }
+
+    @Bean
+    public Binding orderConfirmDelayQueue() {
+        return BindingBuilder.bind(orderConfirmQueue)
+                .to(orderDLXExchange)
+                .with("delayOrderConfirm.#")
+                .noargs();
+    }
+
+    @Bean
     public Binding orderDelayQueue() {
         return BindingBuilder.bind(orderUnpaidQueue)
                 .to(orderDLXExchange)
                 .with("delayOrder.#")
                 .noargs();
     }
+
+    @Bean
+    public Binding orderCommentDelayQueue() {
+        return BindingBuilder.bind(orderCommentQueue)
+                .to(orderDLXExchange)
+                .with("delayOrderComment.#")
+                .noargs();
+    }
+
+
 
 }

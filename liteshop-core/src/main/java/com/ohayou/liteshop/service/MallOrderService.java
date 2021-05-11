@@ -1,7 +1,6 @@
 package com.ohayou.liteshop.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ohayou.liteshop.dto.*;
 import com.ohayou.liteshop.entity.MallOrder;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -60,7 +59,7 @@ public interface MallOrderService extends IService<MallOrder> {
 
     boolean doPayed(NotifyDTO notifyDTO);
 
-    boolean cancelOrder(String orderSn, Long id);
+    boolean cancelOrder(Long orderId, Long id,String message);
 
     List<OrderListItemVo> queryOrderList(int page, int size, int status,Long userId);
 
@@ -69,6 +68,14 @@ public interface MallOrderService extends IService<MallOrder> {
     OrderCountVo getOrderCount(Long id);
 
     ShipTraceVo getOrderTrace(Long orderId, Long userId);
+
+    boolean cancelOrderOnPaid(Long orderId, Long userId, String message);
+
+    boolean confirm(Long orderId,Long userId);
+
+    boolean confirm(Long orderId);
+
+    List<OrderItemVo> getNotCommentedItem(Long orderId,Long userId);
 }
 
 

@@ -19,13 +19,21 @@ public class OrderQueueConfig {
     @Autowired
     SysOrderConfigService sysOrderConfigService;
 
-    public static final String ORDER_SKU_QUEUE = "order_sku_queue";
+    public static final String ORDER_CONFIRM_DELAY_QUEUE = "order_confirm_delay_queue";
+    public static final String ORDER_CONFIRM_DLX_QUEUE = "order_confirm_DLX_queue";
     public static final String ORDER_DLX_QUEUE="order_DLX_queue";
     public static final String ORDER_DELAY_QUEUE = "order_delay_queue";
+    public static final String ORDER_COMMENT_DELAY_QUEUE = "order_comment_delay_queue";
+    public static final String ORDER_COMMENT_DLX_QUEUE = "order_comment_DLX_queue";
 
-    @Bean("orderSkuQueue")
-    public Queue orderSkuQueue() {
-        return QueueBuilder.durable(ORDER_SKU_QUEUE).build();
+    @Bean("orderConfirmQueue")
+    public Queue orderConfirm() {
+        return QueueBuilder.durable(ORDER_CONFIRM_DELAY_QUEUE).build();
+    }
+
+    @Bean("orderCommentQueue")
+    public Queue orderComment() {
+        return QueueBuilder.durable(ORDER_COMMENT_DELAY_QUEUE).build();
     }
 
     /*
@@ -43,6 +51,38 @@ public class OrderQueueConfig {
     }
 
     /**
+     * 订单确认队列
+     *    消息成为死信后将消息发送到死信交换机
+     * @return
+     */
+    @Bean("orderConfirmDLXQueue")
+    public Queue orderConfirmDLXQueue() {
+        SysOrderConfig orderConfig = sysOrderConfigService.getById(1);
+        String confirmDays = orderConfig.getConfirmDays();
+        return QueueBuilder.durable(ORDER_CONFIRM_DLX_QUEUE)
+                .deadLetterExchange(OrderTopicExchangeConfig.DLX_EXCHANGE_NAME)
+                .deadLetterRoutingKey("delayOrderConfirm.confirm")
+                .ttl(1000*60*60*24*Integer.parseInt(confirmDays))
+                .build();
+    }
+
+    /**
+     * 订单评论延迟队列
+     *     消息成为死信后将消息发送到死信交换机
+     * @return
+     */
+    @Bean( "orderCommentDLXQueue")
+    public Queue orderCommentDLXQueue() {
+        SysOrderConfig orderConfig = sysOrderConfigService.getById(1);
+        String commentDays = orderConfig.getCommentDays();
+        return QueueBuilder.durable(ORDER_COMMENT_DLX_QUEUE)
+                .deadLetterExchange(OrderTopicExchangeConfig.DLX_EXCHANGE_NAME)
+                .deadLetterRoutingKey("delayOrderComment.comment")
+                .ttl(1000*60*60*24*Integer.parseInt(commentDays))
+                .build();
+    }
+
+    /**
      * 订单延迟队列
      * @return
      */
@@ -50,4 +90,5 @@ public class OrderQueueConfig {
     public Queue orderDelayQueue() {
         return QueueBuilder.durable(ORDER_DELAY_QUEUE).build();
     }
+
 }

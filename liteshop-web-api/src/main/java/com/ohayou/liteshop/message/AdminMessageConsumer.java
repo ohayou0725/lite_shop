@@ -1,9 +1,12 @@
 package com.ohayou.liteshop.message;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ohayou.liteshop.es.ChatRecord;
-import com.ohayou.liteshop.es.service.ChatRecordService;
+import com.ohayou.liteshop.entity.ChatRecord;
+import com.ohayou.liteshop.entity.MallOrder;
 import com.ohayou.liteshop.mq.queue.ServiceChatQueueConfig;
+import com.ohayou.liteshop.service.ChatRecordService;
+import com.ohayou.liteshop.service.MallOrderService;
 import com.ohayou.liteshop.vo.MessageVo;
 import com.rabbitmq.client.Channel;
 import org.springframework.amqp.core.Message;
@@ -26,32 +29,41 @@ public class AdminMessageConsumer {
     SimpMessagingTemplate messagingTemplate;
 
     @Autowired
-    ChatRecordService chatRecordService;
+    ChatRecordService recordService;
+
+    @Autowired
+    MallOrderService orderService;
 
     @RabbitListener(queues = ServiceChatQueueConfig.ADMIN_TO_USER_QUEUE)
     public void process(Message message, Channel channel) throws Exception {
 
         MessageVo messageVo = objectMapper.readValue(message.getBody(), MessageVo.class);
+        //判断订单是否存在
+        Long orderId = messageVo.getOrderId();
+        if (orderService.count(new LambdaQueryWrapper<MallOrder>().eq(MallOrder::getId,orderId)) < 1) {
+            channel.basicAck(message.getMessageProperties().getDeliveryTag(), true);
+            return;
+        }
 
         //将消息推送到前台用户
         messagingTemplate.convertAndSend("/topic/" + messageVo.getUserMobile(), objectMapper.writeValueAsString(messageVo));
 
 
-        //将聊天记录存入到es
+
         ChatRecord chatRecord = new ChatRecord();
         chatRecord.setUserMobile(messageVo.getUserMobile());
-        chatRecord.setAck(messageVo.isAck());
+        chatRecord.setAck(1);
         chatRecord.setAdminId(messageVo.getAdminId());
         chatRecord.setContent(messageVo.getContent());
-        chatRecord.setMessageId(messageVo.getMessageId());
+        chatRecord.setId(messageVo.getMessageId());
         chatRecord.setSendTime(messageVo.getSendTime());
         chatRecord.setSrc(messageVo.getSrc());
         chatRecord.setType(messageVo.getType());
         chatRecord.setUserNickname(messageVo.getUserNickname());
         chatRecord.setAdminName(messageVo.getAdminName());
-        chatRecord.setAdminSend(messageVo.isAdminSend());
+        chatRecord.setAdminSend(1);
         chatRecord.setOrderId(messageVo.getOrderId());
-        chatRecordService.save(chatRecord);
+        recordService.save(chatRecord);
         channel.basicAck(message.getMessageProperties().getDeliveryTag(), true);
 
     }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ohayou.liteshop.dao.ChatRecordMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.ohayou.liteshop.entity.ChatRecord">
+        <id column="id" property="id" />
+        <result column="user_mobile" property="userMobile" />
+        <result column="user_nickname" property="userNickname" />
+        <result column="admin_name" property="adminName" />
+        <result column="admin_id" property="adminId" />
+        <result column="content" property="content" />
+        <result column="type" property="type" />
+        <result column="src" property="src" />
+        <result column="ack" property="ack" />
+        <result column="admin_send" property="adminSend" />
+        <result column="order_id" property="orderId" />
+        <result column="send_time" property="sendTime" />
+        <result column="deleted" property="deleted" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_mobile, user_nickname, admin_name, admin_id, content, type, src, ack, admin_send, order_id, send_time, deleted
+    </sql>
+
+</mapper>

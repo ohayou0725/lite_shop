@@ -1,6 +1,7 @@
 package com.ohayou.liteshop.vo;
 
-import com.ohayou.liteshop.es.ChatRecord;
+
+import com.ohayou.liteshop.entity.ChatRecord;
 
 import java.util.List;
 
@@ -13,6 +14,10 @@ public class UserMessageVo {
     private String userMobile;
 
     private String userNickname;
+
+    private String orderSn;
+
+    private Long orderId;
 
     private String avatar;
 
@@ -58,5 +63,21 @@ public class UserMessageVo {
 
     public void setRecords(List<ChatRecord> records) {
         this.records = records;
+    }
+
+    public String getOrderSn() {
+        return orderSn;
+    }
+
+    public void setOrderSn(String orderSn) {
+        this.orderSn = orderSn;
+    }
+
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
     }
 }

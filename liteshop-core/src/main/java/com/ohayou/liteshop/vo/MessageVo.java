@@ -10,8 +10,9 @@ import java.time.LocalDateTime;
  */
 public class MessageVo {
 
-    private String messageId;
+    private Long messageId;
 
+    private String orderSn;
 
     private String content;
 
@@ -55,11 +56,11 @@ public class MessageVo {
         this.ack = ack;
     }
 
-    public String getMessageId() {
+    public Long getMessageId() {
         return messageId;
     }
 
-    public void setMessageId(String messageId) {
+    public void setMessageId(Long messageId) {
         this.messageId = messageId;
     }
 
@@ -162,5 +163,13 @@ public class MessageVo {
 
     public void setOrderId(Long orderId) {
         this.orderId = orderId;
+    }
+
+    public String getOrderSn() {
+        return orderSn;
+    }
+
+    public void setOrderSn(String orderSn) {
+        this.orderSn = orderSn;
     }
 }

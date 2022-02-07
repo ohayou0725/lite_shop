@@ -26,82 +26,36 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1425b217-c159-47b6-ae26-4671dd22623b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_boot_spring_boot_starter_websocket_2_3_0_RELEASE.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_websocket_5_2_6_RELEASE.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/liteshop-admin-api/src/main/java/com/ohayou/liteshop/WebSocketController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/liteshop-admin-api/src/main/java/com/ohayou/liteshop/message/UserMessageConsumer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/cache/cachekey/RefundKey.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/config/WebSocketConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/es/ChatRecord.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/es/repository/ChatRecordRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/es/service/ChatRecordService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/es/service/ChatRecordServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/mq/bind/ServiceChatBindingConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/mq/consumer/OrderCommentConsumer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/mq/consumer/OrderConfirmConsumer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/mq/exchange/ServiceChatTopicExchangeConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/payment/wechat/RefundReturnDto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/scheduleTask/RefundScheduleTask.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/vo/CancelOrderVo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/vo/CommentFormVo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/vo/MessageVo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/vo/UserMessageVo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/liteshop-web-api/src/main/java/com/ohayou/liteshop/controller/CommentController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/liteshop-web-api/src/main/java/com/ohayou/liteshop/message/AdminMessageConsumer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/liteshop-web-api/src/main/java/com/ohayou/liteshop/websocket/WebSocketController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/ChatRecordService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/impl/ChatRecordServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/liteshop-db/src/main/java/com/ohayou/liteshop/dao/ChatRecordMapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/liteshop-db/src/main/java/com/ohayou/liteshop/entity/ChatRecord.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/liteshop-db/src/main/resources/mapper/ChatRecordMapper.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-admin-api/liteshop-admin-api.iml" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-admin-api/liteshop-admin-api.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/liteshop-admin-api/src/main/java/com/ohayou/liteshop/WebSocketController.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-admin-api/src/main/java/com/ohayou/liteshop/WebSocketController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/liteshop-admin-api/src/main/java/com/ohayou/liteshop/controller/AdminUserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-admin-api/src/main/java/com/ohayou/liteshop/controller/AdminUserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-admin-api/src/main/java/com/ohayou/liteshop/controller/MemberController.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-admin-api/src/main/java/com/ohayou/liteshop/controller/MemberController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-admin-api/src/main/resources/ignoreUrl.properties" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-admin-api/src/main/resources/ignoreUrl.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-common/src/main/java/com/ohayou/liteshop/response/ErrorCodeMsg.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-common/src/main/java/com/ohayou/liteshop/response/ErrorCodeMsg.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-core/liteshop-core.iml" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/liteshop-core.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-core/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/cache/RedisService.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/cache/RedisService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/es/config/ElasticsearchConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/es/config/ElasticsearchConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/mq/bind/OrderBindingConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/mq/bind/OrderBindingConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/mq/consumer/UnpaidOrderConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/mq/consumer/UnpaidOrderConsumer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/mq/exchange/OrderTopicExchangeConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/mq/exchange/OrderTopicExchangeConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/mq/queue/OrderQueueConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/mq/queue/OrderQueueConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/payment/PayService.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/payment/PayService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/payment/wechat/WechatPayConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/payment/wechat/WechatPayConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/payment/wechat/WechatPayServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/payment/wechat/WechatPayServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/security/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/liteshop-admin-api/src/main/java/com/ohayou/liteshop/message/UserMessageConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-admin-api/src/main/java/com/ohayou/liteshop/message/UserMessageConsumer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/es/ChatRecord.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/es/repository/ChatRecordRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/es/service/ChatRecordService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/es/service/ChatRecordServiceImpl.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/AdminUserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/AdminUserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/MallGoodsCommentService.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/MallGoodsCommentService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/MallOrderService.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/MallOrderService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/MemUserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/MemUserService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/impl/AdminUserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/impl/AdminUserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/impl/MallCouponServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/impl/MallCouponServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/impl/MallGoodsCommentServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/impl/MallGoodsCommentServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/impl/MallOrderServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/impl/MallOrderServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/impl/MemUserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/impl/MemUserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/vo/OrderDetailVo.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/vo/OrderDetailVo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/resources/application-dev.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/resources/application-dev.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/vo/MessageVo.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/vo/MessageVo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/vo/UserMessageVo.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/vo/UserMessageVo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/liteshop-core/src/main/resources/application-prod.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-core/src/main/resources/application-prod.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-db/src/main/java/com/ohayou/liteshop/entity/MallOrderGoods.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-db/src/main/java/com/ohayou/liteshop/entity/MallOrderGoods.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-db/src/main/resources/mapper/AdminUserRoleRelationMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-db/src/main/resources/mapper/AdminUserRoleRelationMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-db/src/main/resources/mapper/MallAftersaleMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-db/src/main/resources/mapper/MallAftersaleMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-db/src/main/resources/mapper/MallCartItemMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-db/src/main/resources/mapper/MallCartItemMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-db/src/main/resources/mapper/MallCartMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-db/src/main/resources/mapper/MallCartMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-db/src/main/resources/mapper/MallGoodsCommentMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-db/src/main/resources/mapper/MallGoodsCommentMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-db/src/main/resources/mapper/MallGoodsCommentReplyMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-db/src/main/resources/mapper/MallGoodsCommentReplyMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-db/src/main/resources/mapper/MallOrderMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-db/src/main/resources/mapper/MallOrderMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-db/src/main/resources/mapper/MallUserCouponMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-db/src/main/resources/mapper/MallUserCouponMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-db/src/main/resources/mapper/MemAddressMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-db/src/main/resources/mapper/MemAddressMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-db/src/main/resources/mapper/MemCollectMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-db/src/main/resources/mapper/MemCollectMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-db/src/main/resources/mapper/MemHistoryMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-db/src/main/resources/mapper/MemHistoryMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-db/src/main/resources/mapper/MemOpinionMapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-db/src/main/resources/mapper/MemOpinionMapper.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-web-api/liteshop-web-api.iml" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-web-api/liteshop-web-api.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-web-api/src/main/java/com/ohayou/liteshop/controller/HomeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-web-api/src/main/java/com/ohayou/liteshop/controller/HomeController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-web-api/src/main/java/com/ohayou/liteshop/controller/MemberController.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-web-api/src/main/java/com/ohayou/liteshop/controller/MemberController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-web-api/src/main/java/com/ohayou/liteshop/controller/OrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-web-api/src/main/java/com/ohayou/liteshop/controller/OrderController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/liteshop-web-api/src/main/resources/loginRequiredUrls.properties" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-web-api/src/main/resources/loginRequiredUrls.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/liteshop-web-api/src/main/java/com/ohayou/liteshop/message/AdminMessageConsumer.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-web-api/src/main/java/com/ohayou/liteshop/message/AdminMessageConsumer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/liteshop-web-api/src/main/java/com/ohayou/liteshop/websocket/WebSocketController.java" beforeDir="false" afterPath="$PROJECT_DIR$/liteshop-web-api/src/main/java/com/ohayou/liteshop/websocket/WebSocketController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CompilerWorkspaceConfiguration">
+    <option name="MAKE_PROJECT_ON_SAVE" value="true" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -115,6 +69,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="JRebelWorkspace">
+    <option name="jrebelEnabledAutocompile" value="true" />
   </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
@@ -155,21 +112,24 @@
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="MavenSettings" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="ReactorSettings">
     <option name="notificationShown" value="true" />
   </component>
+  <component name="RebelAgentSelection">
+    <selection>jr</selection>
+  </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/liteshop-admin-api/src/main/resources" />
-      <recent name="$PROJECT_DIR$/liteshop-db/src/main/resources" />
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.ohayou.liteshop.es.service" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="" />
     </key>
-    <key name="CreateClassDialog.RecentsKey">
-      <recent name="com.ohayou.liteshop.es.service" />
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/liteshop-admin-api/src/main/resources" />
+      <recent name="$PROJECT_DIR$/liteshop-db/src/main/resources" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
       <recent name="com.ohayou.liteshop.dto" />
@@ -179,11 +139,11 @@
       <recent name="com.ohayou.liteshop.security" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop" />
-      <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/liteshop-db/sql" />
       <recent name="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service/impl" />
       <recent name="$PROJECT_DIR$/liteshop-core/src/main/java/com/ohayou/liteshop/service" />
+      <recent name="$PROJECT_DIR$/liteshop-db/src/main/resources/mapper" />
+      <recent name="$PROJECT_DIR$/liteshop-db/src/main/java/com/ohayou/liteshop/dao" />
+      <recent name="$PROJECT_DIR$/liteshop-db/src/main/java/com/ohayou/liteshop/entity" />
     </key>
   </component>
   <component name="RestClientSettings">
@@ -207,15 +167,9 @@
     </option>
   </component>
   <component name="RunManager" selected="Spring Boot.AdminApplication">
-    <configuration name="MemberController" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.ohayou.liteshop.controller.MemberController" />
-      <module name="liteshop-web-api" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.ohayou.liteshop.websocket.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
+    <configuration name="GenerateCode" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="GenerateCode" />
+      <module name="liteshop-db" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -265,8 +219,8 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Application.MemberController" />
       <item itemvalue="Application.OrderSnUtil" />
+      <item itemvalue="Application.GenerateCode" />
       <item itemvalue="Database Script.console.sql" />
       <item itemvalue="Spring Boot.AdminApplication" />
       <item itemvalue="Spring Boot.WebApiApplication" />
@@ -275,9 +229,9 @@
       <list>
         <item itemvalue="Spring Boot.AdminApplication" />
         <item itemvalue="Spring Boot.WebApiApplication" />
+        <item itemvalue="Application.GenerateCode" />
         <item itemvalue="Application.OrderSnUtil" />
         <item itemvalue="Database Script.console.sql" />
-        <item itemvalue="Application.MemberController" />
       </list>
     </recent_temporary>
   </component>
@@ -311,7 +265,25 @@
       <workItem from="1613829522993" duration="150650000" />
       <workItem from="1615687675027" duration="153471000" />
       <workItem from="1618494167828" duration="102740000" />
-      <workItem from="1619964770979" duration="79195000" />
+      <workItem from="1619964770979" duration="111747000" />
+      <workItem from="1621350211936" duration="560000" />
+      <workItem from="1622556913236" duration="12419000" />
+      <workItem from="1624944556710" duration="708000" />
+      <workItem from="1624974389923" duration="6533000" />
+      <workItem from="1625925396657" duration="2441000" />
+      <workItem from="1627783878424" duration="1502000" />
+      <workItem from="1629613386346" duration="594000" />
+      <workItem from="1630678495385" duration="1091000" />
+      <workItem from="1630680922462" duration="565000" />
+      <workItem from="1630682708899" duration="558000" />
+      <workItem from="1630939112038" duration="499000" />
+      <workItem from="1631021978208" duration="577000" />
+      <workItem from="1631452299965" duration="5266000" />
+      <workItem from="1633330600163" duration="1799000" />
+      <workItem from="1633874497744" duration="1614000" />
+      <workItem from="1634442365591" duration="449000" />
+      <workItem from="1634448958169" duration="163000" />
+      <workItem from="1634449225255" duration="498000" />
     </task>
     <servers />
   </component>
@@ -343,160 +315,16 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="274" y="60" key="#Inspections" timestamp="1613572082063">
-      <screen x="0" y="23" width="1280" height="707" />
-    </state>
-    <state x="274" y="60" key="#Inspections/0.23.1280.707@0.23.1280.707" timestamp="1613572082062" />
-    <state x="128" y="23" key="#Project_Structure" timestamp="1614394880199">
+    <state x="149" y="23" width="982" height="707" key="SettingsEditor" timestamp="1634308373835">
       <screen x="0" y="23" width="1280" height="709" />
     </state>
-    <state x="128" y="23" key="#Project_Structure/0.23.1280.709@0.23.1280.709" timestamp="1614394880199" />
-    <state x="154" y="23" key="#WebApiApplication" timestamp="1612535502161">
-      <screen x="0" y="23" width="1280" height="707" />
-    </state>
-    <state x="154" y="23" key="#WebApiApplication/0.23.1280.707@0.23.1280.707" timestamp="1612535502161" />
-    <state x="102" y="37" width="1178" height="676" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1613465732521">
-      <screen x="0" y="23" width="1280" height="707" />
-    </state>
-    <state x="102" y="37" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.23.1280.707@0.23.1280.707" timestamp="1613465732520" />
-    <state x="53" y="76" key="#com.intellij.ide.util.MemberChooser" timestamp="1620655520129">
-      <screen x="0" y="23" width="1280" height="707" />
-    </state>
-    <state x="53" y="76" key="#com.intellij.ide.util.MemberChooser/0.23.1280.707@0.23.1280.707" timestamp="1620655520129" />
-    <state x="453" y="93" key="#com.intellij.ide.util.MemberChooser/0.23.1280.709@0.23.1280.709" timestamp="1619864841990" />
-    <state x="453" y="93" key="#com.intellij.ide.util.MemberChooser/0.23.1280.712@0.23.1280.712" timestamp="1614410890918" />
-    <state x="218" y="302" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog" timestamp="1619744623279">
-      <screen x="0" y="23" width="1280" height="707" />
-    </state>
-    <state x="218" y="302" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog/0.23.1280.707@0.23.1280.707" timestamp="1619744623279" />
-    <state x="218" y="303" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog/0.23.1280.709@0.23.1280.709" timestamp="1612185704663" />
-    <state x="0" y="23" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1617287024279">
+    <state x="149" y="23" width="982" height="707" key="SettingsEditor/0.23.1280.707@0.23.1280.707" timestamp="1629465461864" />
+    <state x="149" y="23" key="SettingsEditor/0.23.1280.709@0.23.1280.709" timestamp="1634308373835" />
+    <state x="34" y="23" width="1212" height="707" key="new project wizard" timestamp="1634308437456">
       <screen x="0" y="23" width="1280" height="709" />
     </state>
-    <state x="0" y="23" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.23.1280.709@0.23.1280.709" timestamp="1617287024279" />
-    <state x="332" y="120" key="#console.sql" timestamp="1613466011662">
-      <screen x="0" y="23" width="1280" height="707" />
-    </state>
-    <state x="332" y="120" key="#console.sql/0.23.1280.707@0.23.1280.707" timestamp="1613466011662" />
-    <state x="383" y="207" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1614395357581">
-      <screen x="0" y="23" width="1280" height="709" />
-    </state>
-    <state x="383" y="207" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.23.1280.709@0.23.1280.709" timestamp="1614395357581" />
-    <state width="993" height="345" key="GridCell.Tab.0.bottom" timestamp="1620743029282">
-      <screen x="0" y="23" width="1280" height="707" />
-    </state>
-    <state width="993" height="345" key="GridCell.Tab.0.bottom/0.23.1280.707@0.23.1280.707" timestamp="1620743029282" />
-    <state width="993" height="345" key="GridCell.Tab.0.bottom/0.23.1280.709@0.23.1280.709" timestamp="1620008232952" />
-    <state width="1238" height="351" key="GridCell.Tab.0.bottom/0.23.1280.712@0.23.1280.712" timestamp="1616857370580" />
-    <state width="993" height="345" key="GridCell.Tab.0.center" timestamp="1620743029281">
-      <screen x="0" y="23" width="1280" height="707" />
-    </state>
-    <state width="993" height="345" key="GridCell.Tab.0.center/0.23.1280.707@0.23.1280.707" timestamp="1620743029281" />
-    <state width="993" height="345" key="GridCell.Tab.0.center/0.23.1280.709@0.23.1280.709" timestamp="1620008232951" />
-    <state width="1238" height="351" key="GridCell.Tab.0.center/0.23.1280.712@0.23.1280.712" timestamp="1616857370579" />
-    <state width="993" height="345" key="GridCell.Tab.0.left" timestamp="1620743029280">
-      <screen x="0" y="23" width="1280" height="707" />
-    </state>
-    <state width="993" height="345" key="GridCell.Tab.0.left/0.23.1280.707@0.23.1280.707" timestamp="1620743029280" />
-    <state width="993" height="345" key="GridCell.Tab.0.left/0.23.1280.709@0.23.1280.709" timestamp="1620008232950" />
-    <state width="1238" height="351" key="GridCell.Tab.0.left/0.23.1280.712@0.23.1280.712" timestamp="1616857370578" />
-    <state width="993" height="345" key="GridCell.Tab.0.right" timestamp="1620743029281">
-      <screen x="0" y="23" width="1280" height="707" />
-    </state>
-    <state width="993" height="345" key="GridCell.Tab.0.right/0.23.1280.707@0.23.1280.707" timestamp="1620743029281" />
-    <state width="993" height="345" key="GridCell.Tab.0.right/0.23.1280.709@0.23.1280.709" timestamp="1620008232951" />
-    <state width="1238" height="351" key="GridCell.Tab.0.right/0.23.1280.712@0.23.1280.712" timestamp="1616857370580" />
-    <state width="993" height="345" key="GridCell.Tab.1.bottom" timestamp="1620743029283">
-      <screen x="0" y="23" width="1280" height="707" />
-    </state>
-    <state width="993" height="345" key="GridCell.Tab.1.bottom/0.23.1280.707@0.23.1280.707" timestamp="1620743029283" />
-    <state width="993" height="345" key="GridCell.Tab.1.bottom/0.23.1280.709@0.23.1280.709" timestamp="1620008232954" />
-    <state width="993" height="345" key="GridCell.Tab.1.bottom/0.23.1280.712@0.23.1280.712" timestamp="1614433894119" />
-    <state width="993" height="345" key="GridCell.Tab.1.center" timestamp="1620743029283">
-      <screen x="0" y="23" width="1280" height="707" />
-    </state>
-    <state width="993" height="345" key="GridCell.Tab.1.center/0.23.1280.707@0.23.1280.707" timestamp="1620743029283" />
-    <state width="993" height="345" key="GridCell.Tab.1.center/0.23.1280.709@0.23.1280.709" timestamp="1620008232953" />
-    <state width="993" height="345" key="GridCell.Tab.1.center/0.23.1280.712@0.23.1280.712" timestamp="1614433894119" />
-    <state width="993" height="345" key="GridCell.Tab.1.left" timestamp="1620743029282">
-      <screen x="0" y="23" width="1280" height="707" />
-    </state>
-    <state width="993" height="345" key="GridCell.Tab.1.left/0.23.1280.707@0.23.1280.707" timestamp="1620743029282" />
-    <state width="993" height="345" key="GridCell.Tab.1.left/0.23.1280.709@0.23.1280.709" timestamp="1620008232953" />
-    <state width="993" height="345" key="GridCell.Tab.1.left/0.23.1280.712@0.23.1280.712" timestamp="1614433894118" />
-    <state width="993" height="345" key="GridCell.Tab.1.right" timestamp="1620743029283">
-      <screen x="0" y="23" width="1280" height="707" />
-    </state>
-    <state width="993" height="345" key="GridCell.Tab.1.right/0.23.1280.707@0.23.1280.707" timestamp="1620743029283" />
-    <state width="993" height="345" key="GridCell.Tab.1.right/0.23.1280.709@0.23.1280.709" timestamp="1620008232954" />
-    <state width="993" height="345" key="GridCell.Tab.1.right/0.23.1280.712@0.23.1280.712" timestamp="1614433894119" />
-    <state width="993" height="345" key="GridCell.Tab.2.bottom" timestamp="1620743029285">
-      <screen x="0" y="23" width="1280" height="707" />
-    </state>
-    <state width="993" height="345" key="GridCell.Tab.2.bottom/0.23.1280.707@0.23.1280.707" timestamp="1620743029285" />
-    <state width="993" height="345" key="GridCell.Tab.2.bottom/0.23.1280.709@0.23.1280.709" timestamp="1620008232956" />
-    <state width="993" height="345" key="GridCell.Tab.2.bottom/0.23.1280.712@0.23.1280.712" timestamp="1614433894121" />
-    <state width="993" height="345" key="GridCell.Tab.2.center" timestamp="1620743029284">
-      <screen x="0" y="23" width="1280" height="707" />
-    </state>
-    <state width="993" height="345" key="GridCell.Tab.2.center/0.23.1280.707@0.23.1280.707" timestamp="1620743029284" />
-    <state width="993" height="345" key="GridCell.Tab.2.center/0.23.1280.709@0.23.1280.709" timestamp="1620008232955" />
-    <state width="993" height="345" key="GridCell.Tab.2.center/0.23.1280.712@0.23.1280.712" timestamp="1614433894120" />
-    <state width="993" height="345" key="GridCell.Tab.2.left" timestamp="1620743029284">
-      <screen x="0" y="23" width="1280" height="707" />
-    </state>
-    <state width="993" height="345" key="GridCell.Tab.2.left/0.23.1280.707@0.23.1280.707" timestamp="1620743029284" />
-    <state width="993" height="345" key="GridCell.Tab.2.left/0.23.1280.709@0.23.1280.709" timestamp="1620008232955" />
-    <state width="993" height="345" key="GridCell.Tab.2.left/0.23.1280.712@0.23.1280.712" timestamp="1614433894120" />
-    <state width="993" height="345" key="GridCell.Tab.2.right" timestamp="1620743029285">
-      <screen x="0" y="23" width="1280" height="707" />
-    </state>
-    <state width="993" height="345" key="GridCell.Tab.2.right/0.23.1280.707@0.23.1280.707" timestamp="1620743029285" />
-    <state width="993" height="345" key="GridCell.Tab.2.right/0.23.1280.709@0.23.1280.709" timestamp="1620008232956" />
-    <state width="993" height="345" key="GridCell.Tab.2.right/0.23.1280.712@0.23.1280.712" timestamp="1614433894121" />
-    <state width="241" height="539" key="HiddenNamespacesPopup" timestamp="1616305694338">
-      <screen x="0" y="23" width="1280" height="707" />
-    </state>
-    <state width="241" height="539" key="HiddenNamespacesPopup/0.23.1280.707@0.23.1280.707" timestamp="1616305694338" />
-    <state x="149" y="23" width="982" height="707" key="SettingsEditor" timestamp="1618326019796">
-      <screen x="0" y="23" width="1280" height="709" />
-    </state>
-    <state x="149" y="23" width="982" height="707" key="SettingsEditor/0.23.1280.707@0.23.1280.707" timestamp="1612535882457" />
-    <state x="149" y="23" width="982" height="709" key="SettingsEditor/0.23.1280.709@0.23.1280.709" timestamp="1618326019796" />
-    <state width="526" height="556" key="SwitcherDM" timestamp="1620740840298">
-      <screen x="0" y="23" width="1280" height="707" />
-    </state>
-    <state width="526" height="556" key="SwitcherDM/0.23.1280.707@0.23.1280.707" timestamp="1620740840298" />
-    <state width="526" height="556" key="SwitcherDM/0.23.1280.709@0.23.1280.709" timestamp="1620007972054" />
-    <state width="526" height="560" key="SwitcherDM/0.23.1280.712@0.23.1280.712" timestamp="1614433486734" />
-    <state x="100" y="123" width="1080" height="495" key="dock-window-1" timestamp="1620008709241">
-      <screen x="0" y="23" width="1280" height="707" />
-    </state>
-    <state x="100" y="123" width="1080" height="495" key="dock-window-1/0.23.1280.707@0.23.1280.707" timestamp="1620008709241" />
-    <state x="100" y="123" width="1080" height="496" key="dock-window-1/0.23.1280.709@0.23.1280.709" timestamp="1613398976048" />
-    <state x="378" y="65" key="extract.method.dialog" timestamp="1614503751079">
-      <screen x="0" y="23" width="1280" height="707" />
-    </state>
-    <state x="378" y="65" key="extract.method.dialog/0.23.1280.707@0.23.1280.707" timestamp="1614503751079" />
-    <state x="341" y="116" width="598" height="518" key="find.popup" timestamp="1620531631612">
-      <screen x="0" y="23" width="1280" height="707" />
-    </state>
-    <state x="341" y="116" width="598" height="518" key="find.popup/0.23.1280.707@0.23.1280.707" timestamp="1620531631612" />
-    <state x="34" y="23" key="new project wizard" timestamp="1617856717175">
-      <screen x="0" y="23" width="1280" height="707" />
-    </state>
-    <state x="34" y="23" key="new project wizard/0.23.1280.707@0.23.1280.707" timestamp="1617856717175" />
-    <state x="34" y="23" key="new project wizard/0.23.1280.709@0.23.1280.709" timestamp="1614350128216" />
-    <state x="305" y="167" key="run.anything.popup" timestamp="1619945232295">
-      <screen x="0" y="23" width="1280" height="707" />
-    </state>
-    <state x="305" y="167" key="run.anything.popup/0.23.1280.707@0.23.1280.707" timestamp="1619945232295" />
-    <state x="305" y="51" width="670" height="679" key="search.everywhere.popup" timestamp="1620537532110">
-      <screen x="0" y="23" width="1280" height="707" />
-    </state>
-    <state x="305" y="51" width="670" height="679" key="search.everywhere.popup/0.23.1280.707@0.23.1280.707" timestamp="1620537532110" />
-    <state x="305" y="51" width="670" height="681" key="search.everywhere.popup/0.23.1280.709@0.23.1280.709" timestamp="1619857637293" />
-    <state x="305" y="51" width="670" height="684" key="search.everywhere.popup/0.23.1280.712@0.23.1280.712" timestamp="1614001377941" />
+    <state x="34" y="23" width="1212" height="707" key="new project wizard/0.23.1280.707@0.23.1280.707" timestamp="1626531540084" />
+    <state x="34" y="23" key="new project wizard/0.23.1280.709@0.23.1280.709" timestamp="1634308437456" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>

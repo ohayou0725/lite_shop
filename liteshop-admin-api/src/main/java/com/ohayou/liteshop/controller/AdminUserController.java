@@ -4,19 +4,19 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ohayou.liteshop.aop.ApiDesc;
 import com.ohayou.liteshop.dto.AdminUserDto;
 import com.ohayou.liteshop.entity.AdminUser;
-import com.ohayou.liteshop.es.ChatRecord;
-import com.ohayou.liteshop.es.service.ChatRecordService;
 import com.ohayou.liteshop.exception.GlobalException;
 import com.ohayou.liteshop.response.ErrorCodeMsg;
 import com.ohayou.liteshop.response.Result;
 import com.ohayou.liteshop.security.AdminUserDetails;
 import com.ohayou.liteshop.security.SecurityUtil;
 import com.ohayou.liteshop.service.AdminUserService;
+import com.ohayou.liteshop.service.ChatRecordService;
 import com.ohayou.liteshop.service.UploadService;
 import com.ohayou.liteshop.utils.PageQuery;
 import com.ohayou.liteshop.utils.PageUtils;
 import com.ohayou.liteshop.vo.AdminUserVo;
 import com.ohayou.liteshop.vo.UserMessageVo;
+import io.netty.util.internal.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -47,7 +47,7 @@ public class AdminUserController {
     UploadService qiniuUploadService;
 
     @Autowired
-    ChatRecordService recordService;
+    ChatRecordService chatRecordService;
 
     /**
      * 用户登录
@@ -177,7 +177,7 @@ public class AdminUserController {
     @GetMapping("/user/service/chatRecord")
     public Result getServiceChatRecord(Authentication authentication) {
         AdminUserDetails adminUser = SecurityUtil.getAdminUser(authentication);
-        List<UserMessageVo> list = recordService.chatRecordListByAdminId(adminUser.getId());
+        List<UserMessageVo> list = chatRecordService.chatRecordListByAdminId(adminUser.getId());
         return Result.success("list",list);
     }
 
@@ -192,12 +192,11 @@ public class AdminUserController {
 
     @ApiDesc("用户已读聊天记录")
     @PostMapping("/user/service/readRecord")
-    public Result readRecord(Authentication authentication, @RequestParam("userMobile") String userMobile) {
-        if (StringUtils.isBlank(userMobile)) {
+    public Result readRecord(@RequestParam("orderId") Long orderId) {
+        if (null == orderId || orderId < 1) {
             throw new GlobalException(ErrorCodeMsg.PARAMETER_VALIDATED_ERROR);
         }
-        AdminUserDetails adminUser = SecurityUtil.getAdminUser(authentication);
-        adminUserService.readChatRecord(adminUser.getId(),userMobile);
+        chatRecordService.readChatRecord(orderId);
         return Result.success();
     }
 }

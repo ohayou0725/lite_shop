@@ -8,13 +8,13 @@ import com.ohayou.liteshop.cache.cachekey.CaptchaKey;
 import com.ohayou.liteshop.cache.cachekey.MemberUserTokenKey;
 import com.ohayou.liteshop.constant.MemberRank;
 import com.ohayou.liteshop.dto.*;
+import com.ohayou.liteshop.entity.ChatRecord;
 import com.ohayou.liteshop.entity.MemUser;
 import com.ohayou.liteshop.dao.MemUserMapper;
-import com.ohayou.liteshop.es.ChatRecord;
-import com.ohayou.liteshop.es.service.ChatRecordService;
 import com.ohayou.liteshop.exception.GlobalException;
 import com.ohayou.liteshop.exception.UnAuthenticationException;
 import com.ohayou.liteshop.response.ErrorCodeMsg;
+import com.ohayou.liteshop.service.ChatRecordService;
 import com.ohayou.liteshop.service.MemUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ohayou.liteshop.utils.DateTimeUtil;
@@ -59,6 +59,7 @@ public class MemUserServiceImpl extends ServiceImpl<MemUserMapper, MemUser> impl
 
     @Autowired
     ChatRecordService chatRecordService;
+
 
 
     @Value("${portal.sessionExpireTime}")
@@ -242,10 +243,12 @@ public class MemUserServiceImpl extends ServiceImpl<MemUserMapper, MemUser> impl
      */
     @Override
     public UserMessageVo getServiceChatRecordByOrder(String userMobile, Long orderId) {
-        List<ChatRecord> chatRecords = chatRecordService.chatRecordListByUserMobileAndOrderId(userMobile,orderId);
+        LambdaQueryWrapper<com.ohayou.liteshop.entity.ChatRecord> wrapper = new LambdaQueryWrapper<com.ohayou.liteshop.entity.ChatRecord>().eq(com.ohayou.liteshop.entity.ChatRecord::getOrderId, orderId);
+
+        List<ChatRecord> records = chatRecordService.list(wrapper);
         UserMessageVo userMessageVo = new UserMessageVo();
         userMessageVo.setUserMobile(userMobile);
-        userMessageVo.setRecords(chatRecords);
+        userMessageVo.setRecords(records);
         return userMessageVo;
     }
 

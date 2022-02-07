@@ -1,9 +1,9 @@
 package com.ohayou.liteshop.message;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ohayou.liteshop.es.ChatRecord;
-import com.ohayou.liteshop.es.service.ChatRecordService;
+import com.ohayou.liteshop.entity.ChatRecord;
 import com.ohayou.liteshop.mq.queue.ServiceChatQueueConfig;
+import com.ohayou.liteshop.service.ChatRecordService;
 import com.ohayou.liteshop.vo.MessageVo;
 import com.rabbitmq.client.Channel;
 import org.springframework.amqp.core.Message;
@@ -39,23 +39,23 @@ public class UserMessageConsumer {
         MessageVo messageVo = objectMapper.readValue(message.getBody(), MessageVo.class);
 
         //将消息推送到后台
-        messagingTemplate.convertAndSend("/topic/" + messageVo.getAdminName(),objectMapper.writeValueAsString(messageVo));
+        messagingTemplate.convertAndSend("/topic/" + messageVo.getAdminId(),objectMapper.writeValueAsString(messageVo));
 
 
         //将聊天记录存入到es
         ChatRecord chatRecord = new ChatRecord();
         chatRecord.setUserMobile(messageVo.getUserMobile());
-        chatRecord.setAck(messageVo.isAck());
         chatRecord.setAdminId(messageVo.getAdminId());
         chatRecord.setContent(messageVo.getContent());
-        chatRecord.setMessageId(messageVo.getMessageId());
+        chatRecord.setId(messageVo.getMessageId());
         chatRecord.setSendTime(messageVo.getSendTime());
         chatRecord.setSrc(messageVo.getSrc());
         chatRecord.setType(messageVo.getType());
         chatRecord.setUserNickname(messageVo.getUserNickname());
         chatRecord.setAdminName(messageVo.getAdminName());
-        chatRecord.setAdminSend(false);
+        chatRecord.setAdminSend(0);
         chatRecord.setOrderId(messageVo.getOrderId());
+        chatRecord.setAck(messageVo.isAck() ? 1 : 0);
         chatRecordService.save(chatRecord);
         channel.basicAck(message.getMessageProperties().getDeliveryTag(),true);
 

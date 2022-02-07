@@ -16,8 +16,6 @@ import com.ohayou.liteshop.constant.*;
 import com.ohayou.liteshop.dto.*;
 import com.ohayou.liteshop.entity.*;
 import com.ohayou.liteshop.dao.MallOrderMapper;
-import com.ohayou.liteshop.es.ChatRecord;
-import com.ohayou.liteshop.es.service.ChatRecordService;
 import com.ohayou.liteshop.exception.GlobalException;
 import com.ohayou.liteshop.mq.exchange.OrderTopicExchangeConfig;
 import com.ohayou.liteshop.payment.PayService;
@@ -109,7 +107,7 @@ public class MallOrderServiceImpl extends ServiceImpl<MallOrderMapper, MallOrder
     MallGoodsCommentService commentService;
 
     @Autowired
-    ChatRecordService recordService;
+    ChatRecordService chatRecordService;
 
 
     /**
@@ -252,7 +250,7 @@ public class MallOrderServiceImpl extends ServiceImpl<MallOrderMapper, MallOrder
         }
         boolean remove = this.removeById(orderId);
         if( remove) {
-            recordService.deleteRecordByOrderId(orderId);
+            chatRecordService.remove(new LambdaQueryWrapper<ChatRecord>().eq(ChatRecord::getOrderId,orderId));
         }
         return remove;
     }

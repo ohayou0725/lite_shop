@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.additional.update.impl.LambdaUpdateChainWrapper;
 import com.ohayou.liteshop.cache.RedisService;
 import com.ohayou.liteshop.cache.cachekey.AdminLoginTimeAndIpKey;
 import com.ohayou.liteshop.cache.cachekey.AdminUserDetailsKey;
@@ -14,17 +15,14 @@ import com.ohayou.liteshop.entity.AdminRole;
 import com.ohayou.liteshop.entity.AdminUser;
 import com.ohayou.liteshop.dao.AdminUserMapper;
 import com.ohayou.liteshop.entity.AdminUserRoleRelation;
-import com.ohayou.liteshop.es.service.ChatRecordService;
+import com.ohayou.liteshop.entity.ChatRecord;
 import com.ohayou.liteshop.exception.GlobalException;
 import com.ohayou.liteshop.exception.UnAuthenticationException;
 import com.ohayou.liteshop.response.ErrorCodeMsg;
 import com.ohayou.liteshop.security.AdminUserDetails;
 import com.ohayou.liteshop.security.JWTTokenUtil;
 import com.ohayou.liteshop.security.SecurityUtil;
-import com.ohayou.liteshop.service.AdminMenuService;
-import com.ohayou.liteshop.service.AdminRoleService;
-import com.ohayou.liteshop.service.AdminUserRoleRelationService;
-import com.ohayou.liteshop.service.AdminUserService;
+import com.ohayou.liteshop.service.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ohayou.liteshop.utils.ListUtil;
 import com.ohayou.liteshop.utils.PageUtils;
@@ -82,8 +80,7 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
     AdminUserRoleRelationService adminUserRoleRelationService;
 
     @Autowired
-    ChatRecordService recordService;
-
+    ChatRecordService chatRecordService;
 
 
     @Value("${keyPrefix.expireTime.invalidToken}")
@@ -401,7 +398,10 @@ public class AdminUserServiceImpl extends ServiceImpl<AdminUserMapper, AdminUser
     }
 
     @Override
-    public void readChatRecord(long id, String userMobile) {
-        recordService.updateRecordHaveRead(id,userMobile);
+    public void readChatRecord(long messageId) {
+        LambdaUpdateChainWrapper<ChatRecord> set = chatRecordService.lambdaUpdate().eq(ChatRecord::getId, messageId)
+                .set(ChatRecord::getAck, 1);
+
+        chatRecordService.update(set);
     }
 }

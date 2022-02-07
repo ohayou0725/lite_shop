@@ -3,7 +3,7 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://localhost/lite_shop?useUnicode=true&useSSL=false&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
     username: root
-    password: 2633792
+    password: Ly@2633792
     xa:
       properties:
         userInformationSchema: true
@@ -81,6 +81,7 @@ payment:
     mchid: 1606659654
     key: uHZAHJ3vWoyK4PMP
     mwebUrl: https://payjs.cn/api/cashier
+    refundUrl: https://payjq.cn/api/refund
     openId: o7LFAweB2JqWkiW3iNVSkPon7PKI
     notifyUrl: http://liteshop123.top:9090/pay/notify
     callbackUrl : http://liteshop123.top/#/order/success

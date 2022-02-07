@@ -32,7 +32,6 @@ public class WebSocketController {
         messageVo.setAvatar(message.getAvatar());
         messageVo.setAdminName(message.getAdminName());
         messageVo.setUserNickname(message.getUserNickname());
-        messageVo.setMessageId(UUID.randomUUID().toString().replace("-",""));
         messageVo.setAck(false);
         messageVo.setUploaded(message.isUploaded());
         messageVo.setViewed(message.isViewed());
@@ -44,6 +43,7 @@ public class WebSocketController {
         messageVo.setUserMobile(message.getUserMobile());
         messageVo.setSrc(message.getSrc());
         messageVo.setOrderId(message.getOrderId());
+        messageVo.setOrderSn(message.getOrderSn());
         rabbitTemplate.convertAndSend(ServiceChatTopicExchangeConfig.SERVICE_CHAT_EXCHANGE_NAME,
                 "admin_to_user.message",
                 objectMapper.writeValueAsString(messageVo));

@@ -14,6 +14,14 @@ lite_shop是一套小型电商系统，该项目为B2C模式电商系统，包�
 
 后台管理系统lite_shop_admin地址: https://github.com/ohayou0725/lite_shop_admin
 
+![11644241501_.pic.jpg](https://s2.loli.net/2022/02/07/KQeqcARCNtpTB65.jpg)
+
+![21644241502_.pic.jpg](https://s2.loli.net/2022/02/07/8lxZvDRi2HJW4PC.jpg)
+
+
+
+
+
 ![后台截图1.png](https://i.loli.net/2020/09/20/YPAkIb32zMHXvFr.png)
 
 
@@ -43,8 +51,8 @@ lite_shop是一套小型电商系统，该项目为B2C模式电商系统，包�
 |          jjwt          | JWT支持            | 0.9.0  |
 |         七牛云         | 对象存储           | 7.2.0  |
 |         hutool         | 工具包             | 5.3.8  |
-|     elasticsearhc      | 分布式全文搜索引擎 | 7.6.2  |
-|        RabbitMq        | 消息队列           | 3.9.0  |
+|     elasticsearch      | 分布式全文搜索引擎 | 7.6.2  |
+|        RabbitMQ        | 消息队列           | 3.9.0  |
 
 前端技术
 

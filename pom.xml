@@ -24,7 +24,7 @@
     </parent>
 
     <properties>
-        <mysql.version>5.1.47</mysql.version>
+        <mysql.version>8.0.28</mysql.version>
         <mybatis-plus.version>3.2.0</mybatis-plus.version>
         <mybatis-generator.version>3.2.0</mybatis-generator.version>
         <hutool.version>5.3.8</hutool.version>
